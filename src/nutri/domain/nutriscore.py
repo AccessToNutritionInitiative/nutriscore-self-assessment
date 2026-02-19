@@ -1,4 +1,19 @@
 from dataclasses import dataclass
+from enum import StrEnum
+
+
+class ProductCategory(StrEnum):
+    GENERAL = "general"
+    FATS = "fats"
+    BEVERAGE = "beverage"
+
+
+class NutriscoreGrade(StrEnum):
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+    E = "E"
 
 
 @dataclass
@@ -12,3 +27,4 @@ class Product:
     protein_g: float
     has_sweeteners: bool
     is_water: bool
+    category: ProductCategory

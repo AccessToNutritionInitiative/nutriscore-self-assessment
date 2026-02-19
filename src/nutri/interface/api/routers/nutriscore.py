@@ -10,5 +10,5 @@ router = APIRouter(prefix="/nutriscore", tags=["Nutriscore"])
 @router.post("")
 async def calculate_nutriscore(payload: NutriscoreRequest) -> NutriscoreResponse:
     product = payload.to_product()
-    score, grade = NutriscoreService.calculate_nutriscore_beverage(product=product)
+    score, grade = NutriscoreService().calculate_nutriscore(product=product)
     return NutriscoreResponse(score=score, grade=grade)

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from nutri.domain.nutriscore import Product
+from nutri.domain.nutriscore import NutriscoreGrade, Product, ProductCategory
 
 
 class NutriscoreRequest(BaseModel):
@@ -13,6 +13,7 @@ class NutriscoreRequest(BaseModel):
     protein_g: float = 0
     has_sweeteners: bool = False
     is_water: bool = False
+    category: ProductCategory = ProductCategory.GENERAL
 
     def to_product(self) -> Product:
         return Product(
@@ -25,9 +26,10 @@ class NutriscoreRequest(BaseModel):
             protein_g=self.protein_g,
             has_sweeteners=self.has_sweeteners,
             is_water=self.is_water,
+            category=self.category,
         )
 
 
 class NutriscoreResponse(BaseModel):
     score: int
-    grade: str
+    grade: NutriscoreGrade
