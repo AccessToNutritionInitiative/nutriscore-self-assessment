@@ -1,0 +1,24 @@
+[project]
+name = "nutri"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "jeremyarancio", email = "jeremyarancio@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.129.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.13.0",
+]
+
+[project.scripts]
+nutri = "nutri:main"
+
+[build-system]
+requires = ["uv_build>=0.8.2,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 150
