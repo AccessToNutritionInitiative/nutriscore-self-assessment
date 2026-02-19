@@ -13,7 +13,7 @@ class NutriscoreRequest(BaseModel):
     protein_g: float = 0
     has_sweeteners: bool = False
     is_water: bool = False
-    category: ProductCategory = ProductCategory.GENERAL
+    category: ProductCategory
 
     def to_product(self) -> Product:
         return Product(
