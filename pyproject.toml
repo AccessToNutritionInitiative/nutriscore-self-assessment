@@ -27,4 +27,5 @@ line-length = 150
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
+    "streamlit>=1.54.0",
 ]

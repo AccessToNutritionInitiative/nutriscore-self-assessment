@@ -5,3 +5,6 @@ dev:
 
 test:
     uv run pytest -vv
+
+ui:
+    uv run streamlit run ui/app.py
