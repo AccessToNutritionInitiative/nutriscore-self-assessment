@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from nutri.domain.nutriscore import NutriscoreGrade, Product, ProductCategory
 
 
-class NutriscoreRequest(BaseModel):
+class ProductRequest(BaseModel):
     energy_kj: float
     sugar_g: float
     sat_fat_g: float = 0
@@ -33,3 +33,8 @@ class NutriscoreRequest(BaseModel):
 class NutriscoreResponse(BaseModel):
     score: int
     grade: NutriscoreGrade
+
+
+class NutriscoreBulkResponse(BaseModel):
+    results: list[NutriscoreResponse]
+    total: int

@@ -1,0 +1,7 @@
+energy_kj,sugar_g,sat_fat_g,salt_g,fruit_veg_pct,fibre_g,protein_g,has_sweeteners,is_water,category
+0,0,0,0,0,0,0,false,true,beverage
+201,9,0,0,100,0,0.5,false,false,beverage
+2,0,0,0.04,0,0,0,true,false,beverage
+195,11,0,0.1,0,0,0,true,false,beverage
+180,10.6,0,0,0,0,0,false,false,beverage
+29,1.2,0,0,0,0,0.1,true,false,beverage
