@@ -23,9 +23,16 @@ build-backend = "uv_build"
 
 [tool.ruff]
 line-length = 150
+include = ["src/**/*.py", "tests/**/*.py"]
 
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
     "streamlit>=1.54.0",
+]
+
+[tool.ty.src]
+include = [
+    "src",
+    "tests",
 ]

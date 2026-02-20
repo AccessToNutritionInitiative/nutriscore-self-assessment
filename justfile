@@ -8,3 +8,12 @@ test:
 
 ui:
     uv run streamlit run ui/app.py
+
+format:
+    uvx ruff format .
+    uvx ruff check --fix .
+
+type-check:
+    uvx ty check
+
+pre-commit: format type-check
