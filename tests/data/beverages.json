@@ -17,32 +17,15 @@
     "expected_grade": "A"
   },
   {
-    "name": "Sparkling water (unflavoured)",
-    "product": {
-      "energy_kj": 0,
-      "sugar_g": 0,
-      "sat_fat_g": 0,
-      "salt_g": 0,
-      "fruit_veg_pct": 0,
-      "fibre_g": 0,
-      "protein_g": 0,
-      "has_sweeteners": false,
-      "is_water": false,
-      "category": "beverage"
-    },
-    "expected_score": 0,
-    "expected_grade": "B"
-  },
-  {
     "name": "Orange juice 100%",
     "product": {
-      "energy_kj": 184,
-      "sugar_g": 8.4,
+      "energy_kj": 201,
+      "sugar_g": 9,
       "sat_fat_g": 0,
-      "salt_g": 0.01,
+      "salt_g": 0,
       "fruit_veg_pct": 100,
-      "fibre_g": 0.2,
-      "protein_g": 0.7,
+      "fibre_g": 0,
+      "protein_g": 0.5,
       "has_sweeteners": false,
       "is_water": false,
       "category": "beverage"
@@ -68,21 +51,21 @@
     "expected_grade": "C"
   },
   {
-    "name": "Energy drink",
+    "name": "Redbull",
     "product": {
-      "energy_kj": 230,
-      "sugar_g": 5.5,
+      "energy_kj": 195,
+      "sugar_g": 11,
       "sat_fat_g": 0,
       "salt_g": 0.1,
       "fruit_veg_pct": 0,
       "fibre_g": 0,
       "protein_g": 0,
-      "has_sweeteners": false,
+      "has_sweeteners": true,
       "is_water": false,
       "category": "beverage"
     },
-    "expected_score": 8,
-    "expected_grade": "D"
+    "expected_score": 16,
+    "expected_grade": "E"
   },
   {
     "name": "Cola",
@@ -100,5 +83,22 @@
     },
     "expected_score": 12,
     "expected_grade": "E"
+  },
+  {
+    "name": "Soft drink with sweeteners",
+    "product": {
+      "energy_kj": 29,
+      "sugar_g": 1.2,
+      "sat_fat_g": 0,
+      "salt_g": 0,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 0.1,
+      "has_sweeteners": true,
+      "is_water": false,
+      "category": "beverage"
+    },
+    "expected_score": 5,
+    "expected_grade": "C"
   }
 ]
