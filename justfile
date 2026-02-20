@@ -1,5 +1,11 @@
 app := "src/nutri/interface/api/main.py"
 
+default:
+    @just --choose
+    
+init:
+    uv sync
+
 dev:
     uv run fastapi dev {{app}}
 
