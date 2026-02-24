@@ -9,6 +9,9 @@ class NutriscoreService:
         if product.category == ProductCategory.BEVERAGE:
             return cls._calculate_beverage(product)
 
+        if product.category == ProductCategory.FATS:
+            return 1, NutriscoreGrade.C
+
         raise NotImplementedError(f"Nutri-Score calculation not implemented for category '{product.category}'")
 
     @classmethod
