@@ -4,13 +4,13 @@ from nutri.domain.nutriscore import NutriscoreGrade, Product, ProductCategory
 
 
 class ProductRequest(BaseModel):
-    energy_kj: float
-    sugar_g: float
-    sat_fat_g: float = 0
-    salt_g: float = 0
+    energy_kj: float = Field(ge=0, le=3700)
+    sugar_g: float = Field(ge=0, le=100)
+    sat_fat_g: float = Field(default=0, ge=0, le=100)
+    salt_g: float = Field(default=0, ge=0, le=100)
     fruit_veg_pct: float = Field(default=0, ge=0, le=100)
-    fibre_g: float = 0
-    protein_g: float = 0
+    fibre_g: float = Field(default=0, ge=0, le=100)
+    protein_g: float = Field(default=0, ge=0, le=100)
     has_sweeteners: bool = False
     is_water: bool = False
     category: ProductCategory

@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from nutri.interface.api import routers
 
@@ -26,6 +28,18 @@ app.add_middleware(
 )
 
 app.include_router(routers.nutri_router)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    errors = [{"field": e["loc"][-1], "message": e["msg"]} for e in exc.errors()]
+    return JSONResponse(
+        status_code=422,
+        content={
+            "message": "Invalid product data. Please check the submitted values.",
+            "errors": errors,
+        },
+    )
 
 
 @app.get("/")
