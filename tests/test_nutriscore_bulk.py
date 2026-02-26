@@ -12,7 +12,7 @@ client = TestClient(app)
 
 def test_bulk_returns_200():
     with CSV_FILE.open("rb") as f:
-        response = client.post("/nutriscore/bulk", files={"file": ("beverages.csv", f, "text/csv")})
+        response = client.post("/nutriscores", files={"file": ("beverages.csv", f, "text/csv")})
     assert response.status_code == 200
     response = NutriscoreBulkResponse.model_validate(response.json())
     assert response.total == 6
@@ -28,7 +28,7 @@ def test_bulk_scores_and_grades():
         {"score": 5, "grade": "C"},  # Soft drink with sweeteners
     ]
     with CSV_FILE.open("rb") as f:
-        response = client.post("/nutriscore/bulk", files={"file": ("beverages.csv", f, "text/csv")})
+        response = client.post("/nutriscores", files={"file": ("beverages.csv", f, "text/csv")})
     response = NutriscoreBulkResponse.model_validate(response.json())
     for exp, resp in zip(expected, response.results, strict=True):
         assert exp["score"] == resp.score
@@ -37,7 +37,7 @@ def test_bulk_scores_and_grades():
 
 def test_bulk_rejects_non_csv():
     response = client.post(
-        "/nutriscore/bulk",
+        "/nutriscores",
         files={"file": ("data.json", b'{"key": "value"}', "application/json")},
     )
     assert response.status_code == 400
