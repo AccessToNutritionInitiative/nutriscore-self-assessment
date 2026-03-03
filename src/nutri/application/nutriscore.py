@@ -44,6 +44,9 @@ class NutriscoreService:
 
         return score, grade
 
+    def test_general():
+        return 0
+
     @staticmethod
     def _score_from_thresholds(
         value: float,
