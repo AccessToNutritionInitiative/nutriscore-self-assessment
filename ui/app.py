@@ -1,8 +1,10 @@
+import os
+
 import pandas as pd
 import requests
 import streamlit as st
 
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 CATEGORIES = ["beverage", "general", "fats"]
 UNSUPPORTED_CATEGORIES = {"general", "fats"}
 GRADE_COLORS = {
@@ -126,7 +128,7 @@ with tab_bulk:
             with st.spinner("Sending to API…"):
                 try:
                     response = requests.post(
-                        f"{API_BASE_URL}/nutriscore/bulk",
+                        f"{API_BASE_URL}/nutriscores",
                         files={"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")},
                         timeout=30,
                     )

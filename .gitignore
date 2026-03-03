@@ -11,4 +11,8 @@ wheels/
 
 .vscode
 scripts/
-.env
+.env*
+!.env.template
+
+# Traefik Let's Encrypt certificates (contains private keys)
+traefik/acme.json
