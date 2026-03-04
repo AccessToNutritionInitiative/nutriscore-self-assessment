@@ -1,28 +1,9 @@
+# We remove HTTPS connection since handled directly by Cloudflare - Flexible mode
 services:
-  traefik:
-    command:
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.http.redirections.entrypoint.to=websecure
-      - --entrypoints.web.http.redirections.entrypoint.scheme=https
-      - --entrypoints.web.http.redirections.entrypoint.permanent=true
-      - --certificatesresolvers.le.acme.email=${ACME_EMAIL}
-      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.le.acme.tlschallenge=true
-    ports:
-      - "443:443"
-    volumes:
-      - letsencrypt:/letsencrypt
-
-
   api:
     build:
       context: .
     labels:
-      - traefik.http.routers.api.entrypoints=websecure
-      - traefik.http.routers.api.tls.certresolver=le
       - traefik.http.routers.api.middlewares=ratelimit
       - traefik.http.middlewares.ratelimit.ratelimit.average=100
       - traefik.http.middlewares.ratelimit.ratelimit.burst=50
@@ -30,9 +11,3 @@ services:
   ui:
     build:
       context: ui/
-    labels:
-      - traefik.http.routers.ui.entrypoints=websecure
-      - traefik.http.routers.ui.tls.certresolver=le
-
-volumes:
-  letsencrypt:
