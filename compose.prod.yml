@@ -9,12 +9,12 @@ services:
       - --entrypoints.web.http.redirections.entrypoint.scheme=https
       - --entrypoints.web.http.redirections.entrypoint.permanent=true
       - --certificatesresolvers.le.acme.email=${ACME_EMAIL}
-      - --certificatesresolvers.le.acme.storage=/acme.json
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.le.acme.tlschallenge=true
     ports:
       - "443:443"
     volumes:
-      - ./traefik/acme.json:/acme.json
+      - letsencrypt:/letsencrypt
 
 
   api:
@@ -33,3 +33,6 @@ services:
     labels:
       - traefik.http.routers.ui.entrypoints=websecure
       - traefik.http.routers.ui.tls.certresolver=le
+
+volumes:
+  letsencrypt:
