@@ -23,6 +23,9 @@ services:
     labels:
       - traefik.http.routers.api.entrypoints=websecure
       - traefik.http.routers.api.tls.certresolver=le
+      - traefik.http.routers.api.middlewares=ratelimit
+      - traefik.http.middlewares.ratelimit.ratelimit.average=100
+      - traefik.http.middlewares.ratelimit.ratelimit.burst=50
 
   ui:
     build:
