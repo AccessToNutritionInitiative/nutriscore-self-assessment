@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, UploadFile
 from pydantic import ValidationError
 
 from nutri.application.hsr import HsrCalculator
-from nutri.interface.schemas.nutriscore import (
+from nutri.interface.schemas.hsr import (
     ProductRequest,
     HsrResponse,
 )
