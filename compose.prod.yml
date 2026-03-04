@@ -1,5 +1,11 @@
 # We remove HTTPS connection since handled directly by Cloudflare - Flexible mode
 services:
+  traefik:
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      
   api:
     build:
       context: .
