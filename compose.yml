@@ -1,0 +1,27 @@
+services:
+  traefik:
+    image: traefik:v3.3
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  api:
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.api.loadbalancer.server.port=8000
+      - traefik.http.routers.api.rule=Host(`api.${DOMAIN}`)
+      - traefik.http.routers.api.entrypoints=web
+
+
+  ui:
+    restart: unless-stopped
+    environment:
+      - API_BASE_URL=http://api:8000
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.ui.loadbalancer.server.port=8501
+      - traefik.http.routers.ui.rule=Host(`app.${DOMAIN}`)
+      - traefik.http.routers.ui.entrypoints=web
