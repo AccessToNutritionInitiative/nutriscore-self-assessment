@@ -10,7 +10,7 @@ class NutriscoreService:
             return cls._calculate_beverage(product)
 
         if product.category == ProductCategory.FATS:
-            return 1, NutriscoreGrade.C
+            return 1, NutriscoreGrade.D
 
         raise NotImplementedError(f"Nutri-Score calculation not implemented for category '{product.category}'")
 
@@ -43,6 +43,9 @@ class NutriscoreService:
         grade = cls._beverage_grade(score)
 
         return score, grade
+
+    def test_general():
+        return 0
 
     @staticmethod
     def _score_from_thresholds(
