@@ -64,7 +64,7 @@ class HsrScoring:
             case ProductCategory.BEVERAGE_1:
                 return 0
             case _:
-                return self._protein_threshold(product.protein_g, Thresholds.PROTEIN)
+                return self._protein_threshold(product.protein_g or 0, Thresholds.PROTEIN)
 
     def _score_fibre(self, product: Product) -> int:
         match product.category:
@@ -84,7 +84,7 @@ class HsrScoring:
             case _:
                 return self._apply_threshold(product.fvnl_percent or 0, Thresholds.NONCONC_FVNL)
 
-    def _apply_threshold(self, value: float, threshold: Thresholds, right: bool = True) -> int:
+    def _apply_threshold(self, value: float, threshold: list[float], right: bool = True) -> int:
         """
         Upper-bound based threshold scorer.
         Example:
@@ -102,7 +102,7 @@ class HsrScoring:
     def _protein_threshold(
         self,
         value: float,
-        threshold: Thresholds,
+        threshold: list[float],
     ) -> int:
         for i, upper in enumerate(threshold):
             if i == 1:

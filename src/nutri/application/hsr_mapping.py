@@ -42,7 +42,7 @@ class HsrRules:
                 return 1.5
             case s if s <= 11:
                 return 1.0
-            case s if s >= 12:
+            case _:
                 return 0.5
 
     @staticmethod
@@ -68,7 +68,7 @@ class HsrRules:
                 return 1.5
             case 6:
                 return 1.0
-            case s if s >= 7:
+            case _:
                 return 0.5
 
     @staticmethod
@@ -94,7 +94,7 @@ class HsrRules:
                 return 1.5
             case s if s <= 24:
                 return 1.0
-            case s if s >= 25:
+            case _:
                 return 0.5
 
     @staticmethod
@@ -120,7 +120,7 @@ class HsrRules:
                 return 1.5
             case s if s <= 12:
                 return 1.0
-            case s if s >= 13:
+            case _:
                 return 0.5
 
     @staticmethod
@@ -146,7 +146,7 @@ class HsrRules:
                 return 1.5
             case s if s <= 41:
                 return 1.0
-            case s if s >= 42:
+            case _:
                 return 0.5
 
     @staticmethod
@@ -172,5 +172,5 @@ class HsrRules:
                 return 1.5
             case s if s <= 39:
                 return 1.0
-            case s if s >= 40:
+            case _:
                 return 0.5

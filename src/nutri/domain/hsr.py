@@ -31,14 +31,14 @@ class Thresholds:
     """
 
     # Energy kj thresholds
-    KJ_FOOD = [335, 670, 1005, 1340, 1675, 2010, 2345, 2680, 3015, 3350, 3685]
-    KJ_BEVERAGE = [30 * i + 1 for i in range(1, 10)]
+    KJ_FOOD: list[float] = [335, 670, 1005, 1340, 1675, 2010, 2345, 2680, 3015, 3350, 3685]
+    KJ_BEVERAGE: list[float] = [30 * i + 1 for i in range(1, 10)]
 
     # Sodium thresholds
-    SODIUM_FOOD = [90 * i for i in range(1, 31)]
+    SODIUM_FOOD: list[float] = [90 * i for i in range(1, 31)]
 
     # Saturate fat thresholds
-    SATFAT_FOOD_12 = [
+    SATFAT_FOOD_12: list[float] = [
         1.0,
         2.0,
         3.0,
@@ -70,7 +70,7 @@ class Thresholds:
         80.6,
         90.0,
     ]
-    SATFAT_FOOD_3 = [float(i) for i in range(1, 31)]
+    SATFAT_FOOD_3: list[float] = [float(i) for i in range(1, 31)]
 
     # Total sugar thresholds
     SUGAR_FOOD_12: list[float] = [
