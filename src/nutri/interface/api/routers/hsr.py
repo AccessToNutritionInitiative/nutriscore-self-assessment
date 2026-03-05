@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter
 
 from nutri.application.hsr import HsrCalculator
