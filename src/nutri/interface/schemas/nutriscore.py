@@ -41,6 +41,6 @@ class NutriscoreBulkResponse(BaseModel):
     total: int
 
 
-class HsrResponse(BaseModel): 
+class HsrResponse(BaseModel):
     final_score: int
     star_rating: float

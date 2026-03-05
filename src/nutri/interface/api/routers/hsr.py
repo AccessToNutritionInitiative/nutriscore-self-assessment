@@ -1,8 +1,5 @@
-import csv
-import io
 
-from fastapi import APIRouter, HTTPException, UploadFile
-from pydantic import ValidationError
+from fastapi import APIRouter
 
 from nutri.application.hsr import HsrCalculator
 from nutri.interface.schemas.hsr import (
@@ -11,6 +8,7 @@ from nutri.interface.schemas.hsr import (
 )
 
 router = APIRouter(prefix="", tags=[""])
+
 
 @router.post("")
 async def calculate_hsr(payload: ProductRequest) -> HsrResponse:

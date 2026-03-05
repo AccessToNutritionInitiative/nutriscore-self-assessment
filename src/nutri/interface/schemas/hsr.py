@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 
 from nutri.domain.hsr import Product, ProductCategory
 
+
 class ProductRequest(BaseModel):
     category: ProductCategory
     energy_kj: float = Field(ge=0, le=3700)
@@ -10,7 +11,7 @@ class ProductRequest(BaseModel):
     sugar_g: float = Field(ge=0, le=100)
     protein_g: float = Field(default=0, ge=0, le=100)
     fibre_g: float = Field(default=0, ge=0, le=100)
-    fvnl_percent: float = Field(default=0, ge=0, le=100)  
+    fvnl_percent: float = Field(default=0, ge=0, le=100)
     is_conc: bool = False
 
     def to_product(self) -> Product:
@@ -23,10 +24,10 @@ class ProductRequest(BaseModel):
             protein_g=self.protein_g,
             fibre_g=self.fibre_g,
             fvnl_percent=self.fvnl_percent,
-            is_concentrated=self.is_conc,         
+            is_concentrated=self.is_conc,
         )
 
 
-class HsrResponse(BaseModel): 
+class HsrResponse(BaseModel):
     final_score: int
     star_rating: float
