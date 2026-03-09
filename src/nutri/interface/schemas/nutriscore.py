@@ -13,7 +13,6 @@ class ProductRequest(BaseModel):
     protein_g: float = Field(default=0, ge=0, le=100)
     has_sweeteners: bool = False
     is_water: bool = False
-    is_conc: bool = False
     category: ProductCategory
 
     def to_product(self) -> Product:
