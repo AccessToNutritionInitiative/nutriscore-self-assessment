@@ -7,13 +7,24 @@ services:
       - --providers.docker.exposedbydefault=false
       
   api:
-    build:
-      context: .
+    image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
     labels:
       - traefik.http.routers.api.middlewares=ratelimit
       - traefik.http.middlewares.ratelimit.ratelimit.average=100
       - traefik.http.middlewares.ratelimit.ratelimit.burst=50
-
+      - com.centurylinklabs.watchtower.enable
   ui:
-    build:
-      context: ui/
+    image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/ui:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - --label-enable
+      - --rolling-restart
+      - --interval
+      - 300
