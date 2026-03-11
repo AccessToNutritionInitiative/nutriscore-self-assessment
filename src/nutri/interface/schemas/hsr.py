@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from hsr.domain.hsr import Product, ProductCategory
+from nutri.domain.hsr import Product, ProductCategory
 
 
 class ProductRequest(BaseModel):

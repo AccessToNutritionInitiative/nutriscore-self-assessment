@@ -1,6 +1,6 @@
-from hsr.application.hsr_scoring import HsrScoring
-from hsr.application.hsr_mapping import HsrRules
-from hsr.domain.hsr import Product
+from nutri.application.hsr_scoring import HsrScoring
+from nutri.application.hsr_mapping import HsrRules
+from nutri.domain.hsr import Product
 
 
 class HsrCalculator:

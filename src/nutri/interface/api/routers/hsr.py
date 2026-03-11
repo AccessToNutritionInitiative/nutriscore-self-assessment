@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from hsr.application.hsr import HsrCalculator
-from hsr.interface.schemas.hsr import (
+from nutri.application.hsr import HsrCalculator
+from nutri.interface.schemas.hsr import (
     ProductRequest,
     HsrResponse,
 )
