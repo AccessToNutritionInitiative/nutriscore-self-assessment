@@ -36,7 +36,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE_BASE }}/api:latest
+            ${{ env.IMAGE_BASE }}/api
+            ${{ env.IMAGE_BASE }}/api:sha-${{ github.sha }}
 
       - name: Build & push UI
         uses: docker/build-push-action@v6
@@ -44,4 +45,5 @@ jobs:
           context: ui/
           push: true
           tags: |
-            ${{ env.IMAGE_BASE }}/ui:latest
+            ${{ env.IMAGE_BASE }}/ui
+            ${{ env.IMAGE_BASE }}/ui:sha-${{ github.sha }}
