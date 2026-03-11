@@ -27,4 +27,4 @@ services:
       - --label-enable
       - --rolling-restart
       - --interval
-      - 300
+      - "300"
