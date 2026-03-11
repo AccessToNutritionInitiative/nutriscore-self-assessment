@@ -1,4 +1,4 @@
-from nutri.domain.hsr import Product, ProductCategory, Thresholds
+from hsr.domain.hsr import Product, ProductCategory, Thresholds
 import bisect
 
 

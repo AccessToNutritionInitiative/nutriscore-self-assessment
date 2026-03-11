@@ -1,4 +1,4 @@
-from nutri.domain.hsr import ProductCategory
+from hsr.domain.hsr import ProductCategory
 
 
 class HsrRules:

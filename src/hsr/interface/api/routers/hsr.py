@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 
-from nutri.application.hsr import HsrCalculator
-from nutri.interface.schemas.hsr import (
+from hsr.application.hsr import HsrCalculator
+from hsr.interface.schemas.hsr import (
     ProductRequest,
     HsrResponse,
 )
 
-router = APIRouter(prefix="", tags=[""])
+router = APIRouter(prefix="/hsr", tags=["HSR"])
 
 
 @router.post("")
