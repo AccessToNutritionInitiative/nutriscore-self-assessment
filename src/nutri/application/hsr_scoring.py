@@ -4,15 +4,15 @@ import bisect
 
 class HsrScoring:
     """Apply scoring to a single scalar value"""
-
-    def compute_hsrscore(self, product: Product) -> int:
-        base_energy = self._score_energy(product=product)
-        base_satfat = self._score_satfat(product=product)
-        base_sodium = self._score_sodium(product=product)
-        base_sugar = self._score_sugar(product=product)
-        mod_fibre = self._score_fibre(product=product)
-        mod_fvnl = self._score_fvnl(product=product)
-        mod_protein = self._score_protein(product=product)
+    @classmethod
+    def compute_hsrscore(cls, product: Product) -> int:
+        base_energy = cls._score_energy(product=product)
+        base_satfat = cls._score_satfat(product=product)
+        base_sodium = cls._score_sodium(product=product)
+        base_sugar = cls._score_sugar(product=product)
+        mod_fibre = cls._score_fibre(product=product)
+        mod_fvnl = cls._score_fvnl(product=product)
+        mod_protein = cls._score_protein(product=product)
 
         baseline_pts = base_energy + base_satfat + base_sodium + base_sugar
         modifying_pts = mod_fibre + mod_fvnl
@@ -26,65 +26,73 @@ class HsrScoring:
 
         return hsr_score
 
-    def _score_energy(self, product: Product) -> int:
+    @classmethod
+    def _score_energy(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1:
                 # starts from score = 1 for the lowest score
-                return self._apply_threshold(product.energy_kj, Thresholds.KJ_BEVERAGE) + 1
+                return cls._apply_threshold(product.energy_kj, Thresholds.KJ_BEVERAGE) + 1
             case _:
-                return self._apply_threshold(product.energy_kj, Thresholds.KJ_FOOD)
+                return cls._apply_threshold(product.energy_kj, Thresholds.KJ_FOOD)
 
-    def _score_sodium(self, product: Product) -> int:
+    @classmethod
+    def _score_sodium(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1:
                 return 0
             case _:
-                return self._apply_threshold(product.sodium_mg, Thresholds.SODIUM_FOOD)
+                return cls._apply_threshold(product.sodium_mg, Thresholds.SODIUM_FOOD)
 
-    def _score_satfat(self, product: Product) -> int:
+    @classmethod
+    def _score_satfat(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1:
                 return 0
             case ProductCategory.DAIRY_BEVERAGE_1D | ProductCategory.FOOD_2 | ProductCategory.DAIRY_FOOD_2D:
-                return self._apply_threshold(product.satfat_g, Thresholds.SATFAT_FOOD_12)
+                return cls._apply_threshold(product.satfat_g, Thresholds.SATFAT_FOOD_12)
             case _:
-                return self._apply_threshold(product.satfat_g, Thresholds.SATFAT_FOOD_3)
+                return cls._apply_threshold(product.satfat_g, Thresholds.SATFAT_FOOD_3)
 
-    def _score_sugar(self, product: Product) -> int:
+    @classmethod
+    def _score_sugar(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1:
-                return self._apply_threshold(product.sugar_g, Thresholds.SUGAR_BEV)
+                return cls._apply_threshold(product.sugar_g, Thresholds.SUGAR_BEV)
             case ProductCategory.DAIRY_BEVERAGE_1D | ProductCategory.FOOD_2 | ProductCategory.DAIRY_FOOD_2D:
-                return self._apply_threshold(product.sugar_g, Thresholds.SUGAR_FOOD_12)
+                return cls._apply_threshold(product.sugar_g, Thresholds.SUGAR_FOOD_12)
             case _:
-                return self._apply_threshold(product.sugar_g, Thresholds.SUGAR_FOOD_3)
+                return cls._apply_threshold(product.sugar_g, Thresholds.SUGAR_FOOD_3)
 
-    def _score_protein(self, product: Product) -> int:
+    @classmethod
+    def _score_protein(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1:
                 return 0
             case _:
-                return self._protein_threshold(product.protein_g or 0, Thresholds.PROTEIN)
-
-    def _score_fibre(self, product: Product) -> int:
+                return cls._protein_threshold(product.protein_g or 0, Thresholds.PROTEIN)
+    
+    @classmethod
+    def _score_fibre(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1 | ProductCategory.DAIRY_BEVERAGE_1D:
                 return 0
             case _:
-                return self._apply_threshold(product.fibre_g or 0, Thresholds.FIBRE)
-
-    def _score_fvnl(self, product: Product) -> int:
+                return cls._apply_threshold(product.fibre_g or 0, Thresholds.FIBRE)
+    
+    @classmethod
+    def _score_fvnl(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1:
-                return self._apply_threshold(product.fvnl_percent or 0, Thresholds.FVNL_BEV, right=False)
+                return cls._apply_threshold(product.fvnl_percent or 0, Thresholds.FVNL_BEV, right=False)
             case _ if product.fvnl_percent == 100:
                 return 8
             case _ if product.is_concentrated:
-                return self._apply_threshold(product.fvnl_percent or 0, Thresholds.CONC_FVNL, right=False)
+                return cls._apply_threshold(product.fvnl_percent or 0, Thresholds.CONC_FVNL, right=False)
             case _:
-                return self._apply_threshold(product.fvnl_percent or 0, Thresholds.NONCONC_FVNL)
+                return cls._apply_threshold(product.fvnl_percent or 0, Thresholds.NONCONC_FVNL)
 
-    def _apply_threshold(self, value: float, threshold: list[float], right: bool = True) -> int:
+    @staticmethod
+    def _apply_threshold(value: float, threshold: list[float], right: bool = True) -> int:
         """
         Upper-bound based threshold scorer.
         Example:
@@ -99,8 +107,8 @@ class HsrScoring:
 
         return bisect.bisect_right(threshold, value)  # for lower <= x < upper
 
+    @staticmethod
     def _protein_threshold(
-        self,
         value: float,
         threshold: list[float],
     ) -> int:
