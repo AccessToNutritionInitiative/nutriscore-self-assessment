@@ -28,3 +28,6 @@ services:
       - --rolling-restart
       - --interval
       - "300"
+    environment:
+      - REPO_USER=${GH_USER}
+      - REPO_PASS=${GH_PASSWORD}
