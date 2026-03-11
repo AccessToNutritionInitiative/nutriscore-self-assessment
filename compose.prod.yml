@@ -12,11 +12,11 @@ services:
       - traefik.http.routers.api.middlewares=ratelimit
       - traefik.http.middlewares.ratelimit.ratelimit.average=100
       - traefik.http.middlewares.ratelimit.ratelimit.burst=50
-      - com.centurylinklabs.watchtower.enable
+      - com.centurylinklabs.watchtower.enable=true
   ui:
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/ui:latest
     labels:
-      - com.centurylinklabs.watchtower.enable
+      - com.centurylinklabs.watchtower.enable=true
 
   watchtower:
     image: containrrr/watchtower
