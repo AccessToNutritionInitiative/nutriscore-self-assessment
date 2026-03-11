@@ -27,7 +27,7 @@ services:
       - --label-enable
       - --rolling-restart
       - --interval
-      - "15"
+      - "120"
     environment:
       - REPO_USER=${GH_USER}
       - REPO_PASS=${GH_PASSWORD}
