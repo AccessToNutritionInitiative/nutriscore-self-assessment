@@ -3,7 +3,7 @@
     "id": "9386368",
     "description": "Dairy Beverage",
     "product": {
-      "category": "1D",
+      "category": "1D-dairy-beverage",
       "energy_kj": 79.42,
       "sodium_mg": 36.0,
       "satfat_g": 0.1,
@@ -20,7 +20,7 @@
     "id": "1991643",
     "description": "Dairy Beverage",
     "product": {
-      "category": "1D",
+      "category": "1D-dairy-beverage",
       "energy_kj": 260.0,
       "sodium_mg": 49.0,
       "satfat_g": 2.1,
@@ -37,7 +37,7 @@
     "id": "1991650",
     "description": "Dairy Beverage",
     "product": {
-      "category": "1D",
+      "category": "1D-dairy-beverage",
       "energy_kj": 215.0,
       "sodium_mg": 50.0,
       "satfat_g": 1.2,
@@ -54,7 +54,7 @@
     "id": "10403477",
     "description": "Dairy Beverage",
     "product": {
-      "category": "1D",
+      "category": "1D-dairy-beverage",
       "energy_kj": 280.06,
       "sodium_mg": 47.0,
       "satfat_g": 2.4,
@@ -71,7 +71,7 @@
     "id": "4360412",
     "description": "Dairy Beverage",
     "product": {
-      "category": "1D",
+      "category": "1D-dairy-beverage",
       "energy_kj": 313.5,
       "sodium_mg": 72.0,
       "satfat_g": 2.5,
@@ -88,7 +88,7 @@
     "id": "8441739",
     "description": "Dairy Beverage",
     "product": {
-      "category": "1D",
+      "category": "1D-dairy-beverage",
       "energy_kj": 276.716,
       "sodium_mg": 41.0,
       "satfat_g": 2.2,
@@ -105,7 +105,7 @@
     "id": "2306515",
     "description": "Food",
     "product": {
-      "category": "2",
+      "category": "2-food",
       "energy_kj": 1808.0,
       "sodium_mg": 6.0,
       "satfat_g": 2.4,
@@ -122,7 +122,7 @@
     "id": "4827132",
     "description": "Food",
     "product": {
-      "category": "2",
+      "category": "2-food",
       "energy_kj": 1233.1,
       "sodium_mg": 28.0,
       "satfat_g": 0.5,
@@ -139,7 +139,7 @@
     "id": "9112551",
     "description": "Food",
     "product": {
-      "category": "2",
+      "category": "2-food",
       "energy_kj": 1043.0,
       "sodium_mg": 22.0,
       "satfat_g": 0.1,
@@ -156,7 +156,7 @@
     "id": "5861631",
     "description": "Food",
     "product": {
-      "category": "2",
+      "category": "2-food",
       "energy_kj": 1308.34,
       "sodium_mg": 243.0,
       "satfat_g": 0.1,
@@ -173,7 +173,7 @@
     "id": "9409659",
     "description": "Food",
     "product": {
-      "category": "2",
+      "category": "2-food",
       "energy_kj": 2374.658,
       "sodium_mg": 108.0,
       "satfat_g": 21.2,
@@ -190,7 +190,7 @@
     "id": "9863622",
     "description": "Food",
     "product": {
-      "category": "2",
+      "category": "2-food",
       "energy_kj": 1040.82,
       "sodium_mg": 22.0,
       "satfat_g": 0.1,
@@ -207,7 +207,7 @@
     "id": "9400277",
     "description": "Dairy Food",
     "product": {
-      "category": "2D",
+      "category": "2D-dairy-food",
       "energy_kj": 326.04,
       "sodium_mg": 38.0,
       "satfat_g": 1.0,
@@ -224,7 +224,7 @@
     "id": "4360369",
     "description": "Dairy Food",
     "product": {
-      "category": "2D",
+      "category": "2D-dairy-food",
       "energy_kj": 363.66,
       "sodium_mg": 62.0,
       "satfat_g": 2.6,
@@ -241,7 +241,7 @@
     "id": "5446542",
     "description": "Dairy Food",
     "product": {
-      "category": "2D",
+      "category": "2D-dairy-food",
       "energy_kj": 1412.84,
       "sodium_mg": 30.0,
       "satfat_g": 22.0,
@@ -258,7 +258,7 @@
     "id": "9689069",
     "description": "Dairy Food",
     "product": {
-      "category": "2D",
+      "category": "2D-dairy-food",
       "energy_kj": 462.0,
       "sodium_mg": 33.0,
       "satfat_g": 3.2,
@@ -275,7 +275,7 @@
     "id": "10398002",
     "description": "Dairy Food",
     "product": {
-      "category": "2D",
+      "category": "2D-dairy-food",
       "energy_kj": 418.0,
       "sodium_mg": 33.0,
       "satfat_g": 3.2,
@@ -292,7 +292,7 @@
     "id": "8086310",
     "description": "Dairy Food",
     "product": {
-      "category": "2D",
+      "category": "2D-dairy-food",
       "energy_kj": 2380.51,
       "sodium_mg": 14.0,
       "satfat_g": 44.2,
@@ -309,7 +309,7 @@
     "id": "9543774",
     "description": "Fat Oil",
     "product": {
-      "category": "3",
+      "category": "3-fat",
       "energy_kj": 2959.44,
       "sodium_mg": 428.0,
       "satfat_g": 39.1,
@@ -326,7 +326,7 @@
     "id": "9346741",
     "description": "Fat Oil",
     "product": {
-      "category": "3",
+      "category": "3-fat",
       "energy_kj": 1379.4,
       "sodium_mg": 450.0,
       "satfat_g": 12.9,
@@ -343,7 +343,7 @@
     "id": "9328683",
     "description": "Fat Oil",
     "product": {
-      "category": "3",
+      "category": "3-fat",
       "energy_kj": 1479.72,
       "sodium_mg": 450.0,
       "satfat_g": 17.9,
@@ -360,7 +360,7 @@
     "id": "7486279",
     "description": "Fat Oil",
     "product": {
-      "category": "3",
+      "category": "3-fat",
       "energy_kj": 3314.74,
       "sodium_mg": 1.0,
       "satfat_g": 7.0,
@@ -377,7 +377,7 @@
     "id": "3689419",
     "description": "Fat Oil",
     "product": {
-      "category": "3",
+      "category": "3-fat",
       "energy_kj": 3373.26,
       "sodium_mg": 0.0,
       "satfat_g": 13.7,
@@ -394,7 +394,7 @@
     "id": "10099187",
     "description": "Fat Oil",
     "product": {
-      "category": "3",
+      "category": "3-fat",
       "energy_kj": 3377.44,
       "sodium_mg": 1.0,
       "satfat_g": 13.7,
@@ -411,7 +411,7 @@
     "id": "7755913",
     "description": "Cheese",
     "product": {
-      "category": "3D",
+      "category": "3D-cheese",
       "energy_kj": 1524.446,
       "sodium_mg": 831.0,
       "satfat_g": 20.5,
@@ -428,7 +428,7 @@
     "id": "8086268",
     "description": "Cheese",
     "product": {
-      "category": "3D",
+      "category": "3D-cheese",
       "energy_kj": 1179.0,
       "sodium_mg": 77.0,
       "satfat_g": 16.7,
@@ -445,7 +445,7 @@
     "id": "7755792",
     "description": "Cheese",
     "product": {
-      "category": "3D",
+      "category": "3D-cheese",
       "energy_kj": 1509.398,
       "sodium_mg": 659.0,
       "satfat_g": 18.7,
@@ -462,7 +462,7 @@
     "id": "8241682",
     "description": "Cheese",
     "product": {
-      "category": "3D",
+      "category": "3D-cheese",
       "energy_kj": 1573.352,
       "sodium_mg": 710.0,
       "satfat_g": 21.6,
@@ -479,7 +479,7 @@
     "id": "7755812",
     "description": "Cheese",
     "product": {
-      "category": "3D",
+      "category": "3D-cheese",
       "energy_kj": 1509.398,
       "sodium_mg": 659.0,
       "satfat_g": 18.7,
@@ -496,7 +496,7 @@
     "id": "8241522",
     "description": "Cheese",
     "product": {
-      "category": "3D",
+      "category": "3D-cheese",
       "energy_kj": 1524.446,
       "sodium_mg": 831.0,
       "satfat_g": 20.5,
@@ -513,7 +513,7 @@
     "id": "3737964",
     "description": "Beverage",
     "product": {
-      "category": "1",
+      "category": "1-beverage",
       "energy_kj": 100.32,
       "sodium_mg": 0.0,
       "satfat_g": 0.0,
@@ -530,7 +530,7 @@
     "id": "4367011",
     "description": "Beverage",
     "product": {
-      "category": "1",
+      "category": "1-beverage",
       "energy_kj": 196.46,
       "sodium_mg": 0.0,
       "satfat_g": 0.0,
@@ -547,7 +547,7 @@
     "id": "4367005",
     "description": "Beverage",
     "product": {
-      "category": "1",
+      "category": "1-beverage",
       "energy_kj": 200.64,
       "sodium_mg": 0.0,
       "satfat_g": 0.0,
@@ -564,7 +564,7 @@
     "id": "10111190",
     "description": "Beverage",
     "product": {
-      "category": "1",
+      "category": "1-beverage",
       "energy_kj": 139.8628,
       "sodium_mg": 0.0,
       "satfat_g": 0.0,
@@ -581,7 +581,7 @@
     "id": "4776608",
     "description": "Beverage",
     "product": {
-      "category": "1",
+      "category": "1-beverage",
       "energy_kj": 125.4,
       "sodium_mg": 0.0,
       "satfat_g": 0.0,
@@ -598,7 +598,7 @@
     "id": "5991011",
     "description": "Beverage",
     "product": {
-      "category": "1",
+      "category": "1-beverage",
       "energy_kj": 133.76,
       "sodium_mg": 0.0,
       "satfat_g": 0.0,

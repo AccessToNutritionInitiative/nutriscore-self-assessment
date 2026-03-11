@@ -3,12 +3,12 @@ from enum import StrEnum
 
 
 class ProductCategory(StrEnum):
-    BEVERAGE_1 = "1"
-    DAIRY_BEVERAGE_1D = "1D"
-    FOOD_2 = "2"
-    DAIRY_FOOD_2D = "2D"
-    FAT_OIL_3 = "3"
-    CHEESE_3D = "3D"
+    BEVERAGE_1 = "1-beverage"
+    DAIRY_BEVERAGE_1D = "1D-dairy-beverage"
+    FOOD_2 = "2-food"
+    DAIRY_FOOD_2D = "2D-dairy-food"
+    FAT_OIL_3 = "3-fat"
+    CHEESE_3D = "3D-cheese"
 
 
 @dataclass
