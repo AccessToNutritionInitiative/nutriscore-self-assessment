@@ -17,7 +17,7 @@ GRADE_COLORS = {
 
 st.set_page_config(page_title="Nutri-Score Calculator", page_icon="🥗", layout="centered")
 st.title("🥗 Nutri-Score Calculator")
-st.caption("Powered by the ATNi Nutri-Score API")
+st.caption("Powered by the ATNi Nutriscore API")
 
 tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
