@@ -4,6 +4,7 @@ import bisect
 
 class HsrScoring:
     """Apply scoring to a single scalar value"""
+
     @classmethod
     def compute_hsrscore(cls, product: Product) -> int:
         base_energy = cls._score_energy(product=product)
@@ -70,7 +71,7 @@ class HsrScoring:
                 return 0
             case _:
                 return cls._protein_threshold(product.protein_g or 0, Thresholds.PROTEIN)
-    
+
     @classmethod
     def _score_fibre(cls, product: Product) -> int:
         match product.category:
@@ -78,7 +79,7 @@ class HsrScoring:
                 return 0
             case _:
                 return cls._apply_threshold(product.fibre_g or 0, Thresholds.FIBRE)
-    
+
     @classmethod
     def _score_fvnl(cls, product: Product) -> int:
         match product.category:
