@@ -23,11 +23,12 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /root/.docker/config.json:/config.json #Docker login required
     command:
       - --label-enable
       - --rolling-restart
       - --interval
-      - "300"
+      - "15"
     environment:
+      - REPO_USER=${GH_USER}
+      - REPO_PASS=${GH_PASSWORD}
       - DOCKER_API_VERSION=1.53 #Bug with watchtower (https://github.com/containrrr/watchtower/issues/2126)
