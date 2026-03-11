@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from hsr.application.hsr import HsrCalculator
-from hsr.interface.schemas.hsr import ProductRequest
+from nutri.application.hsr import HsrCalculator
+from nutri.interface.schemas.hsr import ProductRequest
 
 DATA_FILE = Path(__file__).parent / "data" / "sample_hsr_case.json"
 
