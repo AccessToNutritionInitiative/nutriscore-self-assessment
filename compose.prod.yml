@@ -1,0 +1,34 @@
+# We remove HTTPS connection since handled directly by Cloudflare - Flexible mode
+services:
+  traefik:
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      
+  api:
+    image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
+    labels:
+      - traefik.http.routers.api.middlewares=ratelimit
+      - traefik.http.middlewares.ratelimit.ratelimit.average=100
+      - traefik.http.middlewares.ratelimit.ratelimit.burst=50
+      - com.centurylinklabs.watchtower.enable=true
+  ui:
+    image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/ui:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - --label-enable
+      - --rolling-restart
+      - --interval
+      - "120"
+    environment:
+      - REPO_USER=${GH_USER}
+      - REPO_PASS=${GH_PASSWORD}
+      - DOCKER_API_VERSION=1.53 #Bug with watchtower (https://github.com/containrrr/watchtower/issues/2126)
