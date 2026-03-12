@@ -5,7 +5,7 @@ class HsrRules:
     @classmethod
     def map_hsr(
         cls,
-        product: Product, 
+        product: Product,
         score: int,
     ) -> float:
         match product.category:

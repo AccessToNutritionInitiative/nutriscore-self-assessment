@@ -28,7 +28,7 @@ class ProductRequest(BaseModel):
             fvnl_percent=self.fvnl_percent,
             is_concentrated=self.is_conc,
             is_water=self.is_water,
-            is_unsweeten=self.is_unsweeten
+            is_unsweeten=self.is_unsweeten,
         )
 
 

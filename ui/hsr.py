@@ -2,8 +2,8 @@ import requests
 import streamlit as st
 
 API_BASE_URL = "http://localhost:8000"
-CATEGORIES = ["1D-dairy-beverage", "1-beverage", "2-food", "2D-dairy-food", "3-fat", "3D-cheese"]
-UNSUPPORTED_CATEGORIES = {"1-beverage"}
+CATEGORIES = ["1D-dairy-beverage", "1-beverage", "2D-dairy-food", "2-food", "3D-cheese", "3-fat"]
+UNSUPPORTED_CATEGORIES = {}
 RATING = {
     0.5: "#038141",
     1.0: "#85BB2F",
@@ -28,28 +28,49 @@ with tab_single:
     st.subheader("Calculate score for one product")
     st.caption("The values have to be per 100 g")
 
-    with st.form("single_product_form"):
-        col1, col2 = st.columns(2)
+    is_water = False
+    is_unsweeten = False
+    category = st.selectbox(
+            "Category",
+            CATEGORIES,
+            format_func=lambda c: f"{c} — not fully supported yet" if c in UNSUPPORTED_CATEGORIES else c,
+        )
+    if category in UNSUPPORTED_CATEGORIES:
+        st.warning("This category is not supported yet. Please select other categories.")
 
+    if category == "1-beverage": 
+        water_type = st.radio(
+            "Beverage type", 
+            options=["Neither", "Water", "Unsweetened but flavored water"],
+            index=0,
+            help="Selected 'Unsweetened but flavored water' for packaged beverages similar in nutritional profile to water that may contain only, \
+                carbon dioxide, whether added or naturally occurring, \
+                permitted flavouring substances (as defined by Standard 1.1.2-2 of the Code), \
+                mineral salts at Good Manufacturing Practice (GMP) (Schedule 16 of the Code), \
+                additives that provide a specific safety or stability function at GMP (Schedule 16 of the Code).  \
+                It **MUST NOT** contain added sugars, sweeteners, colours, sodium, caffeine, quinine, or any other ingredient \
+                that contains energy and is not expressly permitted above (e.g. protein)."
+        )
+        is_water = water_type == "Water"
+        is_unsweeten = water_type == "Unsweetened but unflavored water"
+        
+    with st.form("single_product_form"):       
+        col1, col2 = st.columns(2)
+        
         with col1:
             energy_kj = st.number_input("Energy (kJ)", min_value=0.0, value=0.0, step=1.0)
             sugar_g = st.number_input("Sugars (g)", min_value=0.0, value=0.0, step=0.1)
             satfat_g = st.number_input("Saturated fat (g)", min_value=0.0, value=0.0, step=0.1)
             sodium_mg = st.number_input("Sodium (mg)", min_value=0.0, value=0.0, step=0.1)
-            fvnl_percent = st.number_input("Fruits, vegetables, nuts and legumes (%)", min_value=0.0, max_value=100.0, value=0.0, step=1.0)
-
+            
         with col2:
             fibre_g = st.number_input("Fibre (g)", min_value=0.0, value=0.0, step=0.1)
             protein_g = st.number_input("Protein (g)", min_value=0.0, value=0.0, step=0.1)
-            category = st.selectbox(
-                "Category",
-                CATEGORIES,
-                format_func=lambda c: f"{c} — not fully supported yet" if c in UNSUPPORTED_CATEGORIES else c,
-            )
-            is_concentrated = st.checkbox("Is concentrated")
-
-        if category in UNSUPPORTED_CATEGORIES:
-            st.warning("This category is not supported yet. Please select other categories.")
+            fvnl_percent = st.number_input("Fruits, vegetables, nuts and legumes (%)", min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+            is_concentrated = st.checkbox(
+                "Is the fruit and vegetables content concentrated?", 
+                help="Only applies if a product contains solely concentrated fruits or vegetables (including dried), for example dried fruit or tomato paste. " \
+                "Nuts and legumes are specifically excluded from the definition of fruit and vegetables.")
 
         submitted = st.form_submit_button(
             "Calculate health star rating",
@@ -67,6 +88,8 @@ with tab_single:
             "fibre_g": fibre_g,
             "protein_g": protein_g,
             "is_concentrated": is_concentrated,
+            "is_water": is_water, 
+            "is_unsweeten": is_unsweeten,
             "category": category,
         }
         try:
@@ -84,7 +107,7 @@ with tab_single:
                     f"""
                     <div style="
                         background-color:{color};
-                        color:white;
+                        color:black;
                         font-size:4rem;
                         font-weight:bold;
                         text-align:center;
