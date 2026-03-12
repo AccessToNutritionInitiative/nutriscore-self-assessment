@@ -1,4 +1,4 @@
-# Nutriscore Self-Assessment
+# Nutri-Score Self-Assessment
 
 A self-assessment tool for computing the [Nutri-Score](https://www.santepubliquefrance.fr/determinants-de-sante/nutrition-et-activite-physique/articles/nutri-score) of food and beverage products.
 
