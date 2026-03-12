@@ -38,8 +38,3 @@ class NutriscoreResponse(BaseModel):
 class NutriscoreBulkResponse(BaseModel):
     results: list[NutriscoreResponse]
     total: int
-
-
-class HsrResponse(BaseModel):
-    final_score: int
-    star_rating: float

@@ -12,5 +12,5 @@ router = APIRouter(prefix="/hsr", tags=["HSR"])
 @router.post("")
 async def calculate_hsr(payload: ProductRequest) -> HsrResponse:
     product = payload.to_product()
-    score, hsr_stars = HsrCalculator().get_results(product=product)
+    score, hsr_stars = HsrCalculator.get_results(product=product)
     return HsrResponse(final_score=score, star_rating=hsr_stars)

@@ -1,4 +1,3 @@
-import pandas as pd
 import requests
 import streamlit as st
 
@@ -12,9 +11,9 @@ RATING = {
     2.0: "#EE8100",
     2.5: "#E63E11",
     3.0: "white",
-    3.5: "white", 
-    4.0: "white", 
-    4.5: "yellow", 
+    3.5: "white",
+    4.0: "white",
+    4.5: "yellow",
     5.0: "green",
 }
 

@@ -1,5 +1,6 @@
-from nutri.domain.hsr import Product, ProductCategory, Thresholds
 import bisect
+
+from nutri.domain.hsr import Product, ProductCategory, Thresholds
 
 
 class HsrScoring:
@@ -29,20 +30,16 @@ class HsrScoring:
 
     @classmethod
     def _score_energy(cls, product: Product) -> int:
-        match product.category:
-            case ProductCategory.BEVERAGE_1:
-                # starts from score = 1 for the lowest score
-                return cls._apply_threshold(product.energy_kj, Thresholds.KJ_BEVERAGE) + 1
-            case _:
-                return cls._apply_threshold(product.energy_kj, Thresholds.KJ_FOOD)
+        if product.category == ProductCategory.BEVERAGE_1:
+            # starts from score = 1 for the lowest score
+            return cls._apply_threshold(product.energy_kj, Thresholds.KJ_BEVERAGE) + 1
+        return cls._apply_threshold(product.energy_kj, Thresholds.KJ_FOOD)
 
     @classmethod
     def _score_sodium(cls, product: Product) -> int:
-        match product.category:
-            case ProductCategory.BEVERAGE_1:
-                return 0
-            case _:
-                return cls._apply_threshold(product.sodium_mg, Thresholds.SODIUM_FOOD)
+        if product.category == ProductCategory.BEVERAGE_1:
+            return 0
+        return cls._apply_threshold(product.sodium_mg, Thresholds.SODIUM_FOOD)
 
     @classmethod
     def _score_satfat(cls, product: Product) -> int:
@@ -51,8 +48,7 @@ class HsrScoring:
                 return 0
             case ProductCategory.DAIRY_BEVERAGE_1D | ProductCategory.FOOD_2 | ProductCategory.DAIRY_FOOD_2D:
                 return cls._apply_threshold(product.satfat_g, Thresholds.SATFAT_FOOD_12)
-            case _:
-                return cls._apply_threshold(product.satfat_g, Thresholds.SATFAT_FOOD_3)
+        return cls._apply_threshold(product.satfat_g, Thresholds.SATFAT_FOOD_3)
 
     @classmethod
     def _score_sugar(cls, product: Product) -> int:
@@ -61,36 +57,32 @@ class HsrScoring:
                 return cls._apply_threshold(product.sugar_g, Thresholds.SUGAR_BEV)
             case ProductCategory.DAIRY_BEVERAGE_1D | ProductCategory.FOOD_2 | ProductCategory.DAIRY_FOOD_2D:
                 return cls._apply_threshold(product.sugar_g, Thresholds.SUGAR_FOOD_12)
-            case _:
-                return cls._apply_threshold(product.sugar_g, Thresholds.SUGAR_FOOD_3)
+        return cls._apply_threshold(product.sugar_g, Thresholds.SUGAR_FOOD_3)
 
     @classmethod
     def _score_protein(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1:
                 return 0
-            case _:
-                return cls._protein_threshold(product.protein_g or 0, Thresholds.PROTEIN)
+        return cls._protein_threshold(product.protein_g or 0, Thresholds.PROTEIN)
 
     @classmethod
     def _score_fibre(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1 | ProductCategory.DAIRY_BEVERAGE_1D:
                 return 0
-            case _:
-                return cls._apply_threshold(product.fibre_g or 0, Thresholds.FIBRE)
+        return cls._apply_threshold(product.fibre_g or 0, Thresholds.FIBRE)
 
     @classmethod
     def _score_fvnl(cls, product: Product) -> int:
-        match product.category:
-            case ProductCategory.BEVERAGE_1:
-                return cls._apply_threshold(product.fvnl_percent or 0, Thresholds.FVNL_BEV, right=False)
-            case _ if product.fvnl_percent == 100:
-                return 8
-            case _ if product.is_concentrated:
-                return cls._apply_threshold(product.fvnl_percent or 0, Thresholds.CONC_FVNL, right=False)
-            case _:
-                return cls._apply_threshold(product.fvnl_percent or 0, Thresholds.NONCONC_FVNL)
+        fvnl = product.fvnl_percent or 0
+        if product.category == ProductCategory.BEVERAGE_1:
+            return cls._apply_threshold(fvnl, Thresholds.FVNL_BEV, right=False)
+        if fvnl == 100:
+            return 8
+        if product.is_concentrated:
+            return cls._apply_threshold(fvnl, Thresholds.CONC_FVNL, right=False)
+        return cls._apply_threshold(fvnl, Thresholds.NONCONC_FVNL)
 
     @staticmethod
     def _apply_threshold(value: float, threshold: list[float], right: bool = True) -> int:
