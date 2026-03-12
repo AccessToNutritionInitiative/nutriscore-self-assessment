@@ -13,6 +13,8 @@ class ProductRequest(BaseModel):
     fibre_g: float = Field(default=0, ge=0, le=100)
     fvnl_percent: float = Field(default=0, ge=0, le=100)
     is_conc: bool = False
+    is_water: bool = False
+    is_unsweeten: bool = False
 
     def to_product(self) -> Product:
         return Product(
@@ -25,6 +27,8 @@ class ProductRequest(BaseModel):
             fibre_g=self.fibre_g,
             fvnl_percent=self.fvnl_percent,
             is_concentrated=self.is_conc,
+            is_water=self.is_water,
+            is_unsweeten=self.is_unsweeten
         )
 
 

@@ -1,14 +1,18 @@
-from nutri.domain.hsr import ProductCategory
+from nutri.domain.hsr import ProductCategory, Product
 
 
 class HsrRules:
     @classmethod
     def map_hsr(
         cls,
-        product_category: ProductCategory,
+        product: Product, 
         score: int,
     ) -> float:
-        match product_category:
+        match product.category:
+            case ProductCategory.BEVERAGE_1 if product.is_water:
+                return 5.0
+            case ProductCategory.BEVERAGE_1 if product.is_unsweeten:
+                return 4.5
             case ProductCategory.BEVERAGE_1:
                 return cls._map_beverage1_hsr(score)
             case ProductCategory.DAIRY_BEVERAGE_1D:
@@ -22,7 +26,7 @@ class HsrRules:
             case ProductCategory.CHEESE_3D:
                 return cls._map_cheese3d_hsr(score)
             case _:
-                raise ValueError(f"Unknown product category: {product_category}")
+                raise ValueError(f"Unknown product category: {product.category}")
 
     @staticmethod
     def _map_beverage1_hsr(

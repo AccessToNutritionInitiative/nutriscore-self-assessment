@@ -11,7 +11,9 @@
       "protein_g": 0.4,
       "fibre_g": 0.2,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 0,
     "expected_star_rating": 4.0
@@ -28,7 +30,9 @@
       "protein_g": 3.5,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 0,
     "expected_star_rating": 4.0
@@ -45,7 +49,9 @@
       "protein_g": 3.5,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": -1,
     "expected_star_rating": 4.5
@@ -62,7 +68,9 @@
       "protein_g": 3.7,
       "fibre_g": 0.5,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 1,
     "expected_star_rating": 3.5
@@ -79,7 +87,9 @@
       "protein_g": 4.0,
       "fibre_g": 1.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 1,
     "expected_star_rating": 3.5
@@ -96,7 +106,9 @@
       "protein_g": 3.2,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 0,
     "expected_star_rating": 4.0
@@ -113,7 +125,9 @@
       "protein_g": 8.0,
       "fibre_g": 0.2,
       "fvnl_percent": 65.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 22,
     "expected_star_rating": 1.0
@@ -130,7 +144,9 @@
       "protein_g": 1.4,
       "fibre_g": 8.2,
       "fvnl_percent": 90.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 2,
     "expected_star_rating": 3.5
@@ -147,7 +163,9 @@
       "protein_g": 1.4,
       "fibre_g": 2.0,
       "fvnl_percent": 99.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 8,
     "expected_star_rating": 2.5
@@ -164,7 +182,9 @@
       "protein_g": 1.4,
       "fibre_g": 14.0,
       "fvnl_percent": 80.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 4,
     "expected_star_rating": 3.0
@@ -181,7 +201,9 @@
       "protein_g": 13.3,
       "fibre_g": 5.4,
       "fvnl_percent": 42.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 26,
     "expected_star_rating": 0.5
@@ -198,7 +220,9 @@
       "protein_g": 1.4,
       "fibre_g": 2.0,
       "fvnl_percent": 100.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 7,
     "expected_star_rating": 2.5
@@ -215,7 +239,9 @@
       "protein_g": 1.1,
       "fibre_g": 0.4,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 2,
     "expected_star_rating": 4.0
@@ -232,7 +258,9 @@
       "protein_g": 3.0,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 4,
     "expected_star_rating": 3.0
@@ -249,7 +277,9 @@
       "protein_g": 2.2,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 21,
     "expected_star_rating": 0.5
@@ -266,7 +296,9 @@
       "protein_g": 2.7,
       "fibre_g": 0.1,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 5,
     "expected_star_rating": 3.0
@@ -283,7 +315,9 @@
       "protein_g": 2.6,
       "fibre_g": 0.1,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 4,
     "expected_star_rating": 3.0
@@ -300,7 +334,9 @@
       "protein_g": 0.9,
       "fibre_g": 0.5,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 30,
     "expected_star_rating": 0.5
@@ -317,7 +353,9 @@
       "protein_g": 0.5,
       "fibre_g": 1.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 41,
     "expected_star_rating": 1.0
@@ -334,7 +372,9 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 20,
     "expected_star_rating": 4.0
@@ -351,7 +391,9 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 25,
     "expected_star_rating": 3.0
@@ -368,7 +410,9 @@
       "protein_g": 0.5,
       "fibre_g": 1.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 14,
     "expected_star_rating": 4.5
@@ -385,7 +429,9 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 23,
     "expected_star_rating": 3.5
@@ -402,7 +448,9 @@
       "protein_g": 0.1,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 23,
     "expected_star_rating": 3.5
@@ -419,7 +467,9 @@
       "protein_g": 22.8,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 33,
     "expected_star_rating": 2.5
@@ -436,7 +486,9 @@
       "protein_g": 16.7,
       "fibre_g": 0.5,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 19,
     "expected_star_rating": 5.0
@@ -453,7 +505,9 @@
       "protein_g": 22.3,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 29,
     "expected_star_rating": 3.5
@@ -470,7 +524,9 @@
       "protein_g": 22.9,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 32,
     "expected_star_rating": 2.5
@@ -487,7 +543,9 @@
       "protein_g": 22.3,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 29,
     "expected_star_rating": 3.5
@@ -504,7 +562,9 @@
       "protein_g": 22.8,
       "fibre_g": 0.0,
       "fvnl_percent": 0.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 33,
     "expected_star_rating": 2.5
@@ -521,7 +581,9 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 100.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": -2,
     "expected_star_rating": 4.0
@@ -538,7 +600,9 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 28.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 14,
     "expected_star_rating": 0.5
@@ -555,10 +619,12 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 30.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": true
     },
     "expected_score": 14,
-    "expected_star_rating": 0.5
+    "expected_star_rating": 4.5
   },
   {
     "id": "10111190",
@@ -572,7 +638,9 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 100.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 0,
     "expected_star_rating": 4.0
@@ -589,10 +657,12 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 65.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": true,
+      "is_unsweeten": false
     },
     "expected_score": 4,
-    "expected_star_rating": 2.5
+    "expected_star_rating": 5.0
   },
   {
     "id": "5991011",
@@ -606,7 +676,9 @@
       "protein_g": 0.0,
       "fibre_g": 0.0,
       "fvnl_percent": 99.0,
-      "is_concentrated": false
+      "is_concentrated": false,
+      "is_water": false,
+      "is_unsweeten": false
     },
     "expected_score": 0,
     "expected_star_rating": 4.0

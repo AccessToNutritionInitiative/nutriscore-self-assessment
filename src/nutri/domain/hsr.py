@@ -22,6 +22,8 @@ class Product:
     fibre_g: float | None = None
     fvnl_percent: float | None = None
     is_concentrated: bool = False
+    is_water: bool = False
+    is_unsweeten: bool = False
 
 
 class Thresholds:
