@@ -5,6 +5,35 @@ API_BASE_URL = "http://localhost:8000"
 CATEGORIES = ["1-beverage", "1D-dairy-beverage", "2-food", "2D-dairy-food", "3-fat", "3D-cheese"]
 UNSUPPORTED_CATEGORIES = {}
 HEALTHY_THRESHOLD = 3.5
+EXPLAINER_UNSWEETEN = "Selected 'Unsweetened but flavored water' for packaged beverages similar in nutritional profile to water that may contain only \
+                        carbon dioxide (added or naturally occurring), \
+                        permitted flavouring substances (as defined by Standard 1.1.2-2 of the Code), \
+                        mineral salts at Good Manufacturing Practice (GMP) (Schedule 16 of the Code), \
+                        additives that provide a specific safety or stability function at GMP (Schedule 16 of the Code).  \
+                        It **MUST NOT** contain added sugars, sweeteners, colours, sodium, caffeine, quinine, or any other ingredient \
+                        that contains energy and is not expressly permitted above (e.g. protein)."
+EXPLAINER_CONCENC = "Only applies if a product contains solely concentrated fruits or vegetables (including dried), for example dried fruit or tomato paste. \
+                        Nuts and legumes are specifically excluded from the definition of fruit and vegetables."
+EXPLAINER_CATEGORISE = """
+            **Category 1-beverage** includes beverages other dairy beverages, including jellies and water based ice confections.
+                    
+            **Category 1D-beverage** includes: 
+            - milk and dairy beverages with >= 80 mg calcium/serve (sufficient calcium to meet the requirements for a source of calcium)
+            - milk and dairy beverage alternatives derived from legumes that contain no less than 33% m/m protein derived from legumes and have >= 100 mg calcium per 100 ml
+            - milk and dairy beverage alternatives derived from cereals, nuts, seeds, or a combination of those ingredients that contain no less than 0.3% m/m protein derived from cereals, nuts, seeds, \ 
+            or combination of those ingredients, and have >= 100 mg calcium per 100 ml. 
+            - milk, dairy beverages, and milk and dairy beverage alternatives, must contain >=75% dairy or permitted dairy-alternative ingredients. 
+                    
+            **Category 2-food** includes all food other than those included in category 1-beverage, 1D-dairy-beverage, 2D-dairy-food, 3-fat or 3D-cheese
+                    
+            **Category 2D-dairy-food** includes:  
+            - Yoghurts, 
+            - Cheeses with calcium content <= 320 mg/100g, 
+            - Spoonable dairy foods with <= 25% other non dairy ingredients
+            - Dairy foods other than those included in category 1D-dairy-food or 3D-cheese. 
+
+            **Category 3-fat** includes oils and spreads. 
+        """
 
 def render_stars(rating: float) -> str: 
     full_stars = int(rating)
@@ -21,7 +50,7 @@ def render_stars(rating: float) -> str:
 
 st.set_page_config(page_title="Health Star Rating Calculator", page_icon="💫", layout="centered")
 st.title("💫 HSR Calculator")
-st.caption("Powered by the ATNi HSR API")
+st.caption("Powered by the ATNi API")
 
 tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
@@ -41,36 +70,17 @@ with tab_single:
         )
     
     with st.expander("How to categorise the products"): 
-        st.markdown("""
-            Category 1-beverage includes
-                    
-            Category 1D-beverage includes
-                    
-            Category 2-food includes all food other than those included in category 1-beverage, 1D-dairy-beverage, 2D-dairy-food, 3-fat or 3D-cheese
-                    
-            Category 2D-dairy-food includes: 
-                * Yoghurts, 
-                * Cheeses with calcium content <= 320 mg/100g, 
-                * Spoonable dairy foods with <= 25% other non dairy ingredients
-                * Dairy foods other than those included in category 1D-dairy-food or 3D-cheese. 
-        """)
+        st.markdown(EXPLAINER_CATEGORISE)
     
     if category in UNSUPPORTED_CATEGORIES:
         st.warning("This category is not supported yet. Please select other categories.")
     
     if category == "1-beverage": 
-        
         water_type = st.radio(
             "Beverage type", 
             options=["Neither", "Water", "Unsweetened but flavored water"],
             index=0,
-            help="Selected 'Unsweetened but flavored water' for packaged beverages similar in nutritional profile to water that may contain only, \
-                carbon dioxide (added or naturally occurring), \
-                permitted flavouring substances (as defined by Standard 1.1.2-2 of the Code), \
-                mineral salts at Good Manufacturing Practice (GMP) (Schedule 16 of the Code), \
-                additives that provide a specific safety or stability function at GMP (Schedule 16 of the Code).  \
-                It **MUST NOT** contain added sugars, sweeteners, colours, sodium, caffeine, quinine, or any other ingredient \
-                that contains energy and is not expressly permitted above (e.g. protein)."
+            help=EXPLAINER_UNSWEETEN,
         )
         is_water = water_type == "Water"
         is_unsweeten = water_type == "Unsweetened but flavored water"
@@ -89,11 +99,7 @@ with tab_single:
             fibre_g = st.number_input("Fibre (g)", min_value=0.0, value=0.0, step=0.1, disabled=disable_inputs)
             protein_g = st.number_input("Protein (g)", min_value=0.0, value=0.0, step=0.1, disabled=disable_inputs)
             fvnl_percent = st.number_input("Fruits, vegetables, nuts and legumes (%)", min_value=0.0, max_value=100.0, value=0.0, step=1.0, disabled=disable_inputs)
-            is_concentrated = st.checkbox(
-                "Is the fruit and vegetables content concentrated?", 
-                disabled=disable_inputs,
-                help="Only applies if a product contains solely concentrated fruits or vegetables (including dried), for example dried fruit or tomato paste. \
-                Nuts and legumes are specifically excluded from the definition of fruit and vegetables.")
+            is_concentrated = st.checkbox("Is the fruit and vegetables content concentrated?", disabled=disable_inputs, help=EXPLAINER_CONCENC)
 
         submitted = st.form_submit_button(
             "Calculate health star rating",
@@ -149,10 +155,10 @@ with tab_single:
                 )
 
             with col_healthy: 
-                if star_rating >= 3.5: 
+                if star_rating >= HEALTHY_THRESHOLD: 
                     healthy_stat = "Consider healthy"
                 else: 
-                    healthy_stat = "Considered less healthy"
+                    healthy_stat = "Consider less healthy"
                 st.metric("Healthiness assessment", healthy_stat)
             
                 
