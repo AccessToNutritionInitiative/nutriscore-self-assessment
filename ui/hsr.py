@@ -54,7 +54,7 @@ tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
 # ── Single product ─────────────────────────────────────────────────────────────
 with tab_single:
-    st.subheader("Calculate score for one product")
+    st.subheader("Calculate rating for one product")
 
     is_water = False
     is_unsweeten = False
@@ -171,7 +171,7 @@ with tab_single:
 
 # ── Bulk CSV ───────────────────────────────────────────────────────────────────
 with tab_bulk: 
-    st.subheader("Calculate scores for multiple products")
+    st.subheader("Calculate rating for multiple products")
 
     st.download_button(
         label= "Download template", 
