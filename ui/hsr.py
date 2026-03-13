@@ -219,8 +219,9 @@ with tab_bulk:
                         axis=1
                     )
 
-                    combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: Feature.get_stars(r, html=False))
                     combined_df["healthy/less healthy"] = np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
+                    to_write_df = combined_df.copy()
+                    combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: Feature.get_stars(r, html=False))
 
                     st.success(f"Scored **{total}** products.")
                     st.dataframe(
@@ -228,7 +229,7 @@ with tab_bulk:
                         use_container_width=True,
                     )
 
-                    csv_bytes = combined_df.to_csv(index=False).encode()
+                    csv_bytes = to_write_df.to_csv(index=False).encode()
                     st.download_button(
                         "Download results as CSV", 
                         data=csv_bytes, 
