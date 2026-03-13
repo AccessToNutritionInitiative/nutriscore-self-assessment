@@ -28,6 +28,7 @@ app.add_middleware(
 )
 
 app.include_router(routers.nutri_router)
+app.include_router(routers.hsr_router)
 
 
 @app.exception_handler(RequestValidationError)
