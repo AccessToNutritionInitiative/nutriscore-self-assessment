@@ -182,9 +182,9 @@ with tab_bulk:
     )
 
     st.info(
-        "Upload a csv with the following columns:\n"
-        "`energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fvnl_percent`, " \
-        "`is_concentrated`, `is_water`, `is_unsweeten`"
+        "Upload a csv with the following columns: \n\n"
+        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
+        "Category has to be in the exact wording of `1-beverage`, `1D-dairy-beverage`, `2-food`, `2D-dairy-food`, `3-fat`, `3D-cheese`."
     )
 
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
