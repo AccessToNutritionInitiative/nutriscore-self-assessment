@@ -1,5 +1,8 @@
 import requests
 import streamlit as st
+import pandas as pd
+import numpy as np
+from nutri.domain.hsr import Feature
 
 API_BASE_URL = "http://localhost:8000"
 HSR_PAGE_URL = "https://www.healthstarrating.gov.au/sites/default/files/2025-07/HSR%20System%20Calculator%20and%20Style%20Guide%20v8.1.pdf"
@@ -42,19 +45,6 @@ EXPLAINER_CATEGORISE = """
             - cheese (including surface ripened cheeses) and processed cheese with a calcium content > 320 mg/100g. Must consist of >= 75% dairy ingredients,
             - cheese alternative derived from legumes that contain no less than 15% m/m protein derived from legumes and have a calcium content > 320 mg/100 g and contain >= 75% permitted dairy-alternative ingredients. 
         """
-
-def render_stars(rating: float) -> str: 
-    full_stars = int(rating)
-    half_star = 1 if (rating % 1) == 0.5 else 0
-    empty_stars = 5 - full_stars - half_star
-
-    return(
-        '<span style = "color: #1b75ba; font-size:2rem;">'
-        + "★" * full_stars
-        + ("⯪" if half_star else "")
-        + '<span style="color: #1b75ba;">☆</span>' * empty_stars
-        + "</span>"
-    )
 
 st.set_page_config(page_title="Health Star Rating Calculator", page_icon="💫", layout="centered")
 st.title("💫 Health Star Rating Calculator")
@@ -140,7 +130,7 @@ with tab_single:
             score = data["final_score"]
 
             st.markdown("---")
-            stars_html = render_stars(star_rating)
+            stars_html = Feature.get_stars(star_rating)
             
             col_rating, col_healthy = st.columns([1, 2])
 
@@ -178,3 +168,79 @@ with tab_single:
         except requests.exceptions.HTTPError as exc:
             detail = exc.response.json().get("detail", str(exc))
             st.error(f"API error: {detail}")
+
+# ── Bulk CSV ───────────────────────────────────────────────────────────────────
+with tab_bulk: 
+    st.subheader("Calculate scores for multiple products")
+
+    st.download_button(
+        label= "Download template", 
+        data=Feature.create_template(), 
+        file_name="hsr_template.csv", 
+        mime="text/csv", 
+        use_container_width=True,
+    )
+
+    st.info(
+        "Upload a csv with the following columns:\n"
+        "`energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fvnl_percent`, " \
+        "`is_concentrated`, `is_water`, `is_unsweeten`"
+    )
+
+    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
+
+    if uploaded_file is not None: 
+        try: 
+            preview_df = pd.read_csv(uploaded_file)
+            st.write(f"**{len(preview_df)} products loaded** - preview: ")
+            st.dataframe(preview_df.head(5), use_container_width=True)
+            uploaded_file.seek(0)
+        except Exception as e: 
+            st.error(f"Could not read file: {e}")
+            st.stop()
+    
+        if st.button("Calculate health star ratings", use_container_width=True): 
+            with st.spinner("Sending to API..."): 
+                try: 
+                    response= requests.post(
+                        f"{API_BASE_URL}/hsr_bulk", 
+                        files={"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")}, 
+                        timeout=30, 
+                    )
+                    response.raise_for_status()
+                    data=response.json()
+
+                    results = data["results"]
+                    total = data["total"]
+
+                    results_df = pd.DataFrame(results)
+                    combined_df = pd.concat(
+                        [preview_df.reset_index(drop=True), results_df.reset_index(drop=True)], 
+                        axis=1
+                    )
+
+                    combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: Feature.get_stars(r, html=False))
+                    combined_df["healthy/less healthy"] = np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
+
+                    st.success(f"Scored **{total}** products.")
+                    st.dataframe(
+                        combined_df.head(5), 
+                        use_container_width=True,
+                    )
+
+                    csv_bytes = combined_df.to_csv(index=False).encode()
+                    st.download_button(
+                        "Download results as CSV", 
+                        data=csv_bytes, 
+                        file_name="hsr_results.csv", 
+                        mime="text/csv", 
+                        use_container_width=True,
+                    )
+                
+                except requests.exceptions.ConnectionError: 
+                    st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
+                except requests.exceptions.HTTPError as e: 
+                    detail = e.response.json().get("detail", str(e))
+                    st.error(f"API error: {detail}")
+
+    

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import StrEnum
+import io
 
 
 class ProductCategory(StrEnum):
@@ -171,3 +172,41 @@ class Thresholds:
     NONCONC_FVNL: list[float] = [40, 60, 67, 75, 80, 90, 95]
     CONC_FVNL: list[float] = [25, 43, 52, 63, 67, 80, 90]  # threshold rule: lower <= x < upper
     FVNL_BEV: list[float] = [25, 33, 41, 49, 57, 65, 73, 81, 89, 96]  # threshold rule: lower <= x < upper
+
+
+class Feature: 
+    @staticmethod
+    def create_template() -> bytes: 
+        headers = [
+            "product_name", "category", "energy_kj", "sodium_mg", "satfat_g", "sugar_g", "protein_g", "fibre_g", 
+            "fvnl_percent", "is_concentrated", "is_water", "is_unsweeten"]
+        example_row = ["product1", "1-beverage", 250, 5.0, 1.2, 0.3, 10.0, 2.1, 50.0, False, False, False]
+        
+        csv_str = "\n".join([
+            ",".join(headers), 
+            ",".join(str(v) for v in example_row)
+        ])
+        return csv_str.encode()
+    
+    @staticmethod
+    def get_stars(rating: float, html: bool = True) -> str: 
+        full_stars = int(rating)
+        half_star = 1 if (rating % 1) == 0.5 else 0
+        empty_stars = 5 - full_stars - half_star
+        
+        if html: 
+            return(
+                '<span style = "color: #1b75ba; font-size:2rem;">'
+                + "★" * full_stars
+                + ("⯪" if half_star else "")
+                + '<span style="color: #1b75ba;">☆</span>' * empty_stars
+                + "</span>"
+            )
+        
+        else: 
+            return(
+                "★" * full_stars
+                + ("⯪" if half_star else "")
+                + "☆" * empty_stars
+                + f" ({rating} / 5.0 stars)"
+            )
