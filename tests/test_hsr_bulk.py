@@ -58,16 +58,17 @@ def test_bulk_rating():
         {"expected_score": 0, "expected_star_rating": 4.0},
     ]
 
-    with CSV_FILE.open("rb") as f: 
+    with CSV_FILE.open("rb") as f:
         response = client.post("/hsr_bulk", files={"file": ("sample_hsr_case.cvs", f, "text/csv")})
     response = HsrBulkResponse.model_validate(response.json())
-    for exp, resp in zip (expected, response.results, strict=True): 
+    for exp, resp in zip(expected, response.results, strict=True):
         assert exp["expected_score"] == resp.final_score
         assert exp["expected_star_rating"] == resp.star_rating
 
-def test_rejects_non_csv(): 
+
+def test_rejects_non_csv():
     response = client.post(
-        "/hsr_bulk", 
-        files={"file": ("data.json", b'{"key": "value"}', "application/json")}, 
+        "/hsr_bulk",
+        files={"file": ("data.json", b'{"key": "value"}', "application/json")},
     )
     assert response.status_code == 400
