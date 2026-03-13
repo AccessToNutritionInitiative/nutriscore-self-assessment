@@ -2,6 +2,7 @@ import requests
 import streamlit as st
 
 API_BASE_URL = "http://localhost:8000"
+HSR_PAGE_URL = "https://www.healthstarrating.gov.au/sites/default/files/2025-07/HSR%20System%20Calculator%20and%20Style%20Guide%20v8.1.pdf"
 CATEGORIES = ["1-beverage", "1D-dairy-beverage", "2-food", "2D-dairy-food", "3-fat", "3D-cheese"]
 UNSUPPORTED_CATEGORIES = {}
 HEALTHY_THRESHOLD = 3.5
@@ -18,21 +19,28 @@ EXPLAINER_CATEGORISE = """
             **Category 1-beverage** includes beverages other dairy beverages, including jellies and water based ice confections.
                     
             **Category 1D-beverage** includes: 
-            - milk and dairy beverages with >= 80 mg calcium/serve (sufficient calcium to meet the requirements for a source of calcium)
-            - milk and dairy beverage alternatives derived from legumes that contain no less than 33% m/m protein derived from legumes and have >= 100 mg calcium per 100 ml
-            - milk and dairy beverage alternatives derived from cereals, nuts, seeds, or a combination of those ingredients that contain no less than 0.3% m/m protein derived from cereals, nuts, seeds, \ 
-            or combination of those ingredients, and have >= 100 mg calcium per 100 ml. 
+            - milk and dairy beverages with >= 80 mg calcium/serve (sufficient calcium to meet the requirements for a source of calcium),
+            - milk and dairy beverage alternatives derived from legumes that contain no less than 33% m/m protein derived from legumes and have >= 100 mg calcium per 100 ml,
+            - milk and dairy beverage alternatives derived from cereals, nuts, seeds, or a combination of those ingredients that contain no less than 0.3% m/m protein derived from cereals, nuts, seeds, 
+            or combination of those ingredients, and have >= 100 mg calcium per 100 ml, 
             - milk, dairy beverages, and milk and dairy beverage alternatives, must contain >=75% dairy or permitted dairy-alternative ingredients. 
                     
             **Category 2-food** includes all food other than those included in category 1-beverage, 1D-dairy-beverage, 2D-dairy-food, 3-fat or 3D-cheese
                     
             **Category 2D-dairy-food** includes:  
-            - Yoghurts, 
-            - Cheeses with calcium content <= 320 mg/100g, 
-            - Spoonable dairy foods with <= 25% other non dairy ingredients
-            - Dairy foods other than those included in category 1D-dairy-food or 3D-cheese. 
+            - yoghurt, fermented milk products, cream, dairy desserts and other chilled (but not frozen) dairy products,
+            - cheeses with calcium content <= 320 mg/100g (e.g. ricotta, cottage cheese, cream cheese), 
+            - cheese alternatives derived from legumes that contain > 15% m/m protein derived from legumes and have a calcium level of <= 320 mg/100 g,
+            - yoghurt dairy dessert alternatives derived from legumes that contain > 3.1% m/m protein derived from legumes, 
+            - spoonable dairy foods with <= 25% other non dairy ingredients, 
+            - dairy foods other than those included in category 1D-dairy-food or 3D-cheese. 
+            This category **DOES NOT** include ice cream or alternatives derived from cereals, nuts or seed. These products fall in category 2-food. 
 
             **Category 3-fat** includes oils and spreads. 
+
+            **Category 3D-cheese** includes: 
+            - cheese (including surface ripened cheeses) and processed cheese with a calcium content > 320 mg/100g. Must consist of >= 75% dairy ingredients,
+            - cheese alternative derived from legumes that contain no less than 15% m/m protein derived from legumes and have a calcium content > 320 mg/100 g and contain >= 75% permitted dairy-alternative ingredients. 
         """
 
 def render_stars(rating: float) -> str: 
@@ -57,7 +65,6 @@ tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 # ── Single product ─────────────────────────────────────────────────────────────
 with tab_single:
     st.subheader("Calculate score for one product")
-    st.caption("The values have to be per 100 g")
 
     is_water = False
     is_unsweeten = False
@@ -66,11 +73,14 @@ with tab_single:
     category = st.selectbox(
             "Category",
             CATEGORIES,
+            index=None,
+            placeholder="Select the HSR category for your product", 
             format_func=lambda c: f"{c} — not fully supported yet" if c in UNSUPPORTED_CATEGORIES else c,
         )
     
-    with st.expander("How to categorise the products"): 
+    with st.expander("How to categorise the product"): 
         st.markdown(EXPLAINER_CATEGORISE)
+        st.link_button("For more information", HSR_PAGE_URL)
     
     if category in UNSUPPORTED_CATEGORIES:
         st.warning("This category is not supported yet. Please select other categories.")
@@ -86,9 +96,10 @@ with tab_single:
         is_unsweeten = water_type == "Unsweetened but flavored water"
         disable_inputs = is_water or is_unsweeten
         
-    with st.form("single_product_form"):       
+    with st.form("single_product_form"):   
+        st.caption("The values have to be per 100 g")    
         col1, col2 = st.columns(2)
-        
+               
         with col1:
             energy_kj = st.number_input("Energy (kJ)", min_value=0.0, value=0.0, step=1.0, disabled=disable_inputs)
             sugar_g = st.number_input("Sugars (g)", min_value=0.0, value=0.0, step=0.1, disabled=disable_inputs)
