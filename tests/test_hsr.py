@@ -27,7 +27,7 @@ def test_hsr(hsr_request: ProductRequest, expected_score: int, expected_rating: 
     product = hsr_request.to_product()
 
     service = HsrCalculator()
-    score, star = service.get_results(product)
+    score, star = service.get_result(product)
 
     assert score == expected_score
     assert star == expected_rating

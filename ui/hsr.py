@@ -57,7 +57,7 @@ def render_stars(rating: float) -> str:
     )
 
 st.set_page_config(page_title="Health Star Rating Calculator", page_icon="💫", layout="centered")
-st.title("💫 HSR Calculator")
+st.title("💫 Health Star Rating Calculator")
 st.caption("Powered by the ATNi API")
 
 tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])

@@ -9,9 +9,9 @@ class ProductRequest(BaseModel):
     sodium_mg: float = Field(default=0, ge=0, le=5000)
     satfat_g: float = Field(default=0, ge=0, le=100)
     sugar_g: float = Field(ge=0, le=100)
-    protein_g: float = Field(default=0, ge=0, le=100)
-    fibre_g: float = Field(default=0, ge=0, le=100)
-    fvnl_percent: float = Field(default=0, ge=0, le=100)
+    protein_g: float | None = Field(default=0, ge=0, le=100)
+    fibre_g: float | None = Field(default=0, ge=0, le=100)
+    fvnl_percent: float | None = Field(default=0, ge=0, le=100)
     is_conc: bool = False
     is_water: bool = False
     is_unsweeten: bool = False
@@ -35,3 +35,8 @@ class ProductRequest(BaseModel):
 class HsrResponse(BaseModel):
     final_score: int
     star_rating: float
+
+
+class HsrBulkResponse(BaseModel):
+    results: list[HsrResponse]
+    total: int
