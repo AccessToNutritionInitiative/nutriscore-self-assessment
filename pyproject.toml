@@ -12,6 +12,8 @@ dependencies = [
     "pydantic>=2.12.5",
     "pydantic-settings>=2.13.0",
     "python-multipart>=0.0.22",
+    "redis>=7.3.0",
+    "rq>=2.7.0",
 ]
 
 [project.scripts]

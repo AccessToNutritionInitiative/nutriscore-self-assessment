@@ -11,9 +11,12 @@ services:
 
   api:
     build:
-        context: .
-  
+      context: .
+
+  worker:
+    build:
+      context: .
+
   ui:
     build:
       context: ui/
-    

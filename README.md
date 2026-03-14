@@ -26,7 +26,7 @@ energy_kj, sugar_g, sat_fat_g, salt_g, fruit_veg_pct, fibre_g, protein_g, has_sw
 
 See [`tests/data/beverages.csv`](tests/data/beverages.csv) for an example.
 
-## Other commands (test main)
+## Other commands (w)
 
 ```bash
 just test        # run tests

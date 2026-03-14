@@ -7,9 +7,10 @@ from pydantic import ValidationError
 from nutri.application.nutriscore import NutriscoreService
 from nutri.interface.schemas.nutriscore import (
     NutriscoreBulkResponse,
-    ProductRequest,
     NutriscoreResponse,
+    ProductRequest,
 )
+
 
 router = APIRouter(prefix="/nutriscore", tags=["Nutriscore"])
 
@@ -43,7 +44,7 @@ def calculate_nutriscore_batch(file: UploadFile) -> NutriscoreBulkResponse:
             detail={"message": "Some rows contain invalid data.", "errors": errors},
         )
 
-    results = NutriscoreService.bulk_calculation(products=products)
+    results = NutriscoreService.calculate_nutriscores(products=products)
     nutriscore_responses = [NutriscoreResponse(score=score, grade=grade) for score, grade in results]
     return NutriscoreBulkResponse(
         results=nutriscore_responses,

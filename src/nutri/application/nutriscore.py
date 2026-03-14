@@ -1,4 +1,5 @@
 from nutri.domain.nutriscore import NutriscoreGrade, Product, ProductCategory
+from nutri.application.workers.queues import queue
 
 
 class NutriscoreService:
@@ -77,5 +78,10 @@ class NutriscoreService:
             return NutriscoreGrade.E
 
     @classmethod
-    def bulk_calculation(cls, products: list[Product]) -> list[tuple[int, NutriscoreGrade]]:
+    def calculate_nutriscores(cls, products: list[Product]) -> list[tuple[int, NutriscoreGrade]]:
+        job = queue.enqueue(cls._calculate_nutriscores, products, job_timeout="30m")
+        return job.result
+
+    @classmethod
+    def _calculate_nutriscores(cls, products: list[Product]):
         return [cls.calculate_nutriscore(product) for product in products]

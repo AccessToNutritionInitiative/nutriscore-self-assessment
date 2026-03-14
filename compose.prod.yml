@@ -9,10 +9,17 @@ services:
   api:
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
     labels:
-      - traefik.http.routers.api.middlewares=ratelimit
+      - traefik.http.routers.api.middlewares=ratelimit,bodylimit
+      - traefik.http.middlewares.bodylimit.buffering.maxRequestBodyBytes=1073741824 # 1GB = 1 × 1024³
       - traefik.http.middlewares.ratelimit.ratelimit.average=100
       - traefik.http.middlewares.ratelimit.ratelimit.burst=50
       - com.centurylinklabs.watchtower.enable=true
+
+  worker:
+    image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
   ui:
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/ui:latest
     labels:

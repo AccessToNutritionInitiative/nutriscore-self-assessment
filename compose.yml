@@ -7,14 +7,33 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
   api:
     restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - DATA_DIR=/data
+    volumes:
+      - jobs_data:/data
     labels:
       - traefik.enable=true
       - traefik.http.services.api.loadbalancer.server.port=8000
       - traefik.http.routers.api.rule=Host(`api.${DOMAIN}`)
       - traefik.http.routers.api.entrypoints=web
 
+  worker:
+    restart: unless-stopped
+    command: ["sh", "-c", "uv run rq worker --url $REDIS_URL"]
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - DATA_DIR=/data
+    volumes:
+      - jobs_data:/data
+    depends_on:
+      - redis
 
   ui:
     restart: unless-stopped
@@ -25,3 +44,6 @@ services:
       - traefik.http.services.ui.loadbalancer.server.port=8501
       - traefik.http.routers.ui.rule=Host(`app.${DOMAIN}`)
       - traefik.http.routers.ui.entrypoints=web
+
+volumes:
+  jobs_data:
