@@ -14,8 +14,15 @@ services:
       - traefik.http.middlewares.ratelimit.ratelimit.average=100
       - traefik.http.middlewares.ratelimit.ratelimit.burst=50
       - com.centurylinklabs.watchtower.enable=true
+    deploy:
+      mode: replicated
+      replicas: 2
+    env_file:
+      - .env.prod
 
   worker:
+    env_file:
+      - .env.prod
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
     labels:
       - com.centurylinklabs.watchtower.enable=true

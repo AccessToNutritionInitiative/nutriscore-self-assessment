@@ -10,10 +10,14 @@ services:
       - "8080:8080"
 
   api:
+    env_file:
+      - .env
     build:
       context: .
 
   worker:
+    env_file:
+      - .env
     build:
       context: .
 

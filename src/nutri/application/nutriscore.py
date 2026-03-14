@@ -80,7 +80,10 @@ class NutriscoreService:
     @classmethod
     def calculate_nutriscores(cls, products: list[Product]) -> list[tuple[int, NutriscoreGrade]]:
         job = queue.enqueue(cls._calculate_nutriscores, products, job_timeout="30m")
-        return job.result
+        result = job.latest_result(timeout=1800)
+        if not result:
+            raise ValueError("Job failed.")
+        return result.return_value  # type: ignore
 
     @classmethod
     def _calculate_nutriscores(cls, products: list[Product]):
