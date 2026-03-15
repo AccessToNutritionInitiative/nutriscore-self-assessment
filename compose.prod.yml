@@ -14,10 +14,17 @@ services:
       - traefik.http.middlewares.ratelimit.ratelimit.burst=50
       - traefik.http.middlewares.sizelimit.buffering.maxRequestBodyBytes=5242880 # Max 5MB
       - com.centurylinklabs.watchtower.enable=true
+    deploy:
+      mode: replicated
+      replicas: 3
+
   ui:
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/ui:latest
     labels:
       - com.centurylinklabs.watchtower.enable=true
+    deploy:
+      mode: replicated
+      replicas: 2
 
   watchtower:
     image: containrrr/watchtower
