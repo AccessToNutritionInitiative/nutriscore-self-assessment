@@ -1,5 +1,5 @@
 import csv
-import io
+import codecs
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from pydantic import ValidationError
@@ -25,8 +25,9 @@ async def calculate_nutriscore(payload: ProductRequest) -> NutriscoreResponse:
 def calculate_nutriscore_batch(file: UploadFile) -> NutriscoreBulkResponse:
     if file.content_type not in ("text/csv", "application/csv", "application/octet-stream"):
         raise HTTPException(status_code=400, detail="File must be a CSV")
-    content = file.file.read().decode("utf-8")
-    reader = csv.DictReader(io.StringIO(content))
+
+    # Stream reading - less memory usage
+    reader = csv.DictReader(codecs.iterdecode(file.file, "utf-8"))
 
     errors = []
     products = []
@@ -43,9 +44,8 @@ def calculate_nutriscore_batch(file: UploadFile) -> NutriscoreBulkResponse:
             detail={"message": "Some rows contain invalid data.", "errors": errors},
         )
 
-    results = NutriscoreService.bulk_calculation(products=products)
-    nutriscore_responses = [NutriscoreResponse(score=score, grade=grade) for score, grade in results]
+    results = NutriscoreService.calculate_nutriscores(products=products)
     return NutriscoreBulkResponse(
-        results=nutriscore_responses,
-        total=len(nutriscore_responses),
+        results=[NutriscoreResponse(score=score, grade=grade) for score, grade in results],
+        total=len(products),
     )
