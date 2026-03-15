@@ -112,7 +112,7 @@ with tab_bulk:
         "`fibre_g`, `protein_g`, `has_sweeteners`, `is_water`, `category`"
     )
 
-    uploaded_file = st.file_uploader("Choose a CSV file (max 5 MB)", type=["csv"])
+    uploaded_file = st.file_uploader("Choose a CSV file (max 5 MB)", type=["csv"], max_upload_size=5)
 
     if uploaded_file is not None:
         # Preview the uploaded data
