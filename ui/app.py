@@ -1,3 +1,4 @@
+import json
 import os
 
 import pandas as pd
@@ -111,14 +112,13 @@ with tab_bulk:
         "`fibre_g`, `protein_g`, `has_sweeteners`, `is_water`, `category`"
     )
 
-    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
+    uploaded_file = st.file_uploader("Choose a CSV file (max 5 MB)", type=["csv"])
 
     if uploaded_file is not None:
         # Preview the uploaded data
         try:
             preview_df = pd.read_csv(uploaded_file)
-            st.write(f"**{len(preview_df)} products loaded** — preview:")
-            st.dataframe(preview_df, use_container_width=True)
+            st.write(f"**{len(preview_df)} products loaded.**")
             uploaded_file.seek(0)
         except Exception as exc:
             st.error(f"Could not read file: {exc}")
@@ -131,36 +131,40 @@ with tab_bulk:
                         f"{API_BASE_URL}/nutriscores",
                         files={"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")},
                         timeout=30,
+                        stream=True,
                     )
                     response.raise_for_status()
-                    data = response.json()
 
-                    results = data["results"]
-                    total = data["total"]
+                    results = []
+                    row_errors = []
+                    for line in response.iter_lines():
+                        if not line:
+                            continue
+                        item = json.loads(line)
+                        if item.get("error"):
+                            row_errors.append(item)
+                        else:
+                            results.append(item)
 
-                    results_df = pd.DataFrame(results)
-                    combined_df = pd.concat(
-                        [preview_df.reset_index(drop=True), results_df.reset_index(drop=True)],
-                        axis=1,
-                    )
+                    if row_errors:
+                        st.error(f"**{len(row_errors)} validation error(s)** found in the CSV.")
 
-                    st.success(f"Processed **{total}** products.")
-                    st.dataframe(
-                        combined_df.style.map(
-                            lambda g: f"background-color:{GRADE_COLORS.get(g, '')}; color:white; font-weight:bold",
-                            subset=["grade"],
-                        ),
-                        use_container_width=True,
-                    )
+                    if results:
+                        results_df = pd.DataFrame(results)
+                        combined_df = pd.concat(
+                            [preview_df.reset_index(drop=True), results_df.reset_index(drop=True)],
+                            axis=1,
+                        )
 
-                    csv_bytes = combined_df.to_csv(index=False).encode()
-                    st.download_button(
-                        "Download results as CSV",
-                        data=csv_bytes,
-                        file_name="nutriscore_results.csv",
-                        mime="text/csv",
-                        use_container_width=True,
-                    )
+                        st.success(f"Processed **{len(results)}** products.")
+                        csv_bytes = combined_df.to_csv(index=False).encode()
+                        st.download_button(
+                            "Download results as CSV",
+                            data=csv_bytes,
+                            file_name="nutriscore_results.csv",
+                            mime="text/csv",
+                            use_container_width=True,
+                        )
                 except requests.exceptions.ConnectionError:
                     st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
                 except requests.exceptions.HTTPError as exc:
