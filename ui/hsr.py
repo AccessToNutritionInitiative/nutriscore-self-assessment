@@ -148,7 +148,7 @@ with tab_single:
 
         submitted = st.form_submit_button(
             "Calculate health star rating",
-            use_container_width=True,
+            width="stretch",
             disabled=category is None or category in UNSUPPORTED_CATEGORIES,
         )
 
@@ -221,7 +221,7 @@ with tab_bulk:
         data=TEMPLATE_CSV,
         file_name="hsr_template.csv",
         mime="text/csv",
-        use_container_width=True,
+        width="stretch",
     )
 
     st.info(
@@ -236,12 +236,13 @@ with tab_bulk:
         try:
             preview_df = pd.read_csv(uploaded_file)
             st.write(f"**{len(preview_df)} products loaded** - preview: ")
+            st.dataframe(preview_df.head(5), width="stretch")
             uploaded_file.seek(0)
         except Exception as e:
             st.error(f"Could not read file: {e}")
             st.stop()
 
-        if st.button("Calculate health star ratings", use_container_width=True):
+        if st.button("Calculate health star ratings", width="stretch"):
             with st.spinner("Sending to API..."):
                 try:
                     response = requests.post(
@@ -271,6 +272,7 @@ with tab_bulk:
                         combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: get_stars(r, html=False) if r is not None else "N/A")
 
                         st.success(f"Processed **{len(results)}** products.")
+                        st.dataframe(combined_df.head(5), width="stretch")
 
                         csv_bytes = to_write_df.to_csv(index=False).encode()
                         st.download_button(
@@ -278,7 +280,7 @@ with tab_bulk:
                             data=csv_bytes,
                             file_name="hsr_results.csv",
                             mime="text/csv",
-                            use_container_width=True,
+                            width="stretch",
                         )
 
                 except requests.exceptions.ConnectionError:
