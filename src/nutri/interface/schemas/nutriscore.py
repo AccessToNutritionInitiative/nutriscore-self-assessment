@@ -33,8 +33,3 @@ class ProductRequest(BaseModel):
 class NutriscoreResponse(BaseModel):
     score: int
     grade: NutriscoreGrade | None
-
-
-class NutriscoreBulkResponse(BaseModel):
-    results: list[NutriscoreResponse]
-    total: int
