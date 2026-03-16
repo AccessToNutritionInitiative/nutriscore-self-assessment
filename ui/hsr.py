@@ -63,7 +63,7 @@ EXPLAINER_CONCENC = (
 EXPLAINER_CATEGORISE = """
             **Category 1-beverage** includes beverages other dairy beverages, including jellies and water based ice confections.
                     
-            **Category 1D-beverage** includes: 
+            **Category 1D-dairy-beverage** includes: 
             - milk and dairy beverages with >= 80 mg calcium/serve (sufficient calcium to meet the requirements for a source of calcium),
             - milk and dairy beverage alternatives derived from legumes that contain no less than 33% m/m protein derived from legumes and have >= 100 mg calcium per 100 ml,
             - milk and dairy beverage alternatives derived from cereals, nuts, seeds, or a combination of those ingredients that contain no less than 0.3% m/m protein derived from cereals, nuts, seeds, 
