@@ -144,7 +144,7 @@ with tab_single:
             fvnl_percent = st.number_input(
                 "Fruits, vegetables, nuts and legumes (%)", min_value=0.0, max_value=100.0, value=0.0, step=1.0, disabled=disable_inputs
             )
-            is_concentrated = st.checkbox("Is the fruit and vegetables content concentrated?", disabled=disable_inputs, help=EXPLAINER_CONCENC)
+            is_concentrated = st.checkbox("Is the fruit and vegetables content concentrated?", disabled=(disable_inputs or category=="1-beverage"), help=EXPLAINER_CONCENC)
 
         submitted = st.form_submit_button(
             "Calculate health star rating",
