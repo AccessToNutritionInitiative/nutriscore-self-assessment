@@ -18,4 +18,4 @@ RUN uv sync --frozen --no-dev
 
 EXPOSE ${PORT}
 
-CMD ["sh", "-c", "uv run uvicorn nutri.interface.api.main:app --host 0.0.0.0 --port ${PORT}"]
+CMD ["sh", "-c", "uv run uvicorn nutri.interface.api.main:app --host 0.0.0.0 --port ${PORT} --workers 2"]

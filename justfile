@@ -29,4 +29,4 @@ type-check:
     uvx ty check
 
 # Run before commiting
-pre-commit: format type-check
+pre-commit: format type-check test

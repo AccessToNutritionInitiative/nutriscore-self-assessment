@@ -1,8 +1,11 @@
+import json
+import os
+
 import pandas as pd
 import requests
 import streamlit as st
 
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 CATEGORIES = ["beverage", "general", "fats"]
 UNSUPPORTED_CATEGORIES = {"general", "fats"}
 GRADE_COLORS = {
@@ -14,8 +17,8 @@ GRADE_COLORS = {
 }
 
 st.set_page_config(page_title="Nutri-Score Calculator", page_icon="🥗", layout="centered")
-st.title("🥗 Nutri-Score Calculator")
-st.caption("Powered by the ATNi Nutri-Score API")
+st.title("🥗 Nutriscore Calculator")
+st.caption("Powered by the ATNi Nutriscore API")
 
 tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
@@ -109,14 +112,13 @@ with tab_bulk:
         "`fibre_g`, `protein_g`, `has_sweeteners`, `is_water`, `category`"
     )
 
-    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
+    uploaded_file = st.file_uploader("Choose a CSV file (max 5 MB)", type=["csv"], max_upload_size=5)
 
     if uploaded_file is not None:
         # Preview the uploaded data
         try:
             preview_df = pd.read_csv(uploaded_file)
-            st.write(f"**{len(preview_df)} products loaded** — preview:")
-            st.dataframe(preview_df, use_container_width=True)
+            st.write(f"**{len(preview_df)} products loaded.**")
             uploaded_file.seek(0)
         except Exception as exc:
             st.error(f"Could not read file: {exc}")
@@ -129,36 +131,36 @@ with tab_bulk:
                         f"{API_BASE_URL}/nutriscores",
                         files={"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")},
                         timeout=30,
+                        stream=True,
                     )
                     response.raise_for_status()
-                    data = response.json()
 
-                    results = data["results"]
-                    total = data["total"]
+                    results = []
+                    for line in response.iter_lines():
+                        if not line:
+                            continue
+                        results.append(json.loads(line))
 
-                    results_df = pd.DataFrame(results)
-                    combined_df = pd.concat(
-                        [preview_df.reset_index(drop=True), results_df.reset_index(drop=True)],
-                        axis=1,
-                    )
+                    n_errors = sum(1 for r in results if r.get("grade") is None)
+                    if n_errors:
+                        st.warning(f"**{n_errors} row(s)** could not be scored (invalid data) — they appear with `score=-100` and no grade.")
 
-                    st.success(f"Processed **{total}** products.")
-                    st.dataframe(
-                        combined_df.style.map(
-                            lambda g: f"background-color:{GRADE_COLORS.get(g, '')}; color:white; font-weight:bold",
-                            subset=["grade"],
-                        ),
-                        use_container_width=True,
-                    )
+                    if results:
+                        results_df = pd.DataFrame(results)
+                        combined_df = pd.concat(
+                            [preview_df.reset_index(drop=True), results_df.reset_index(drop=True)],
+                            axis=1,
+                        )
 
-                    csv_bytes = combined_df.to_csv(index=False).encode()
-                    st.download_button(
-                        "Download results as CSV",
-                        data=csv_bytes,
-                        file_name="nutriscore_results.csv",
-                        mime="text/csv",
-                        use_container_width=True,
-                    )
+                        st.success(f"Processed **{len(results)}** products.")
+                        csv_bytes = combined_df.to_csv(index=False).encode()
+                        st.download_button(
+                            "Download results as CSV",
+                            data=csv_bytes,
+                            file_name="nutriscore_results.csv",
+                            mime="text/csv",
+                            use_container_width=True,
+                        )
                 except requests.exceptions.ConnectionError:
                     st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
                 except requests.exceptions.HTTPError as exc:
