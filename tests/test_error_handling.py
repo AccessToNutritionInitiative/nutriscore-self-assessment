@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -22,6 +21,6 @@ def test_bulk_invalid_csv_returns_row_errors():
     with WRONG_CSV.open("rb") as f:
         response = client.post("/nutriscores", files={"file": ("wrong_beverages.csv", f, "text/csv")})
     assert response.status_code == 200
-    items = [json.loads(line) for line in response.text.splitlines() if line.strip()]
-    errors = [item for item in items if item.get("error")]
-    assert {e["row"] for e in errors} == {1, 2}
+    items = response.json()
+    errors = [item for item in items if item.get("grade") is None]
+    assert len(errors) == 2

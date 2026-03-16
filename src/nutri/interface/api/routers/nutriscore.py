@@ -1,10 +1,8 @@
 import csv
 import codecs
-import json
-from collections.abc import Generator
+from typing import Iterable
 
 from fastapi import APIRouter, HTTPException, UploadFile
-from fastapi.responses import StreamingResponse
 from pydantic import ValidationError
 
 from nutri.application.nutriscore import NutriscoreService
@@ -24,21 +22,16 @@ async def calculate_nutriscore(payload: ProductRequest) -> NutriscoreResponse:
 
 
 @router.post("s")
-def calculate_nutriscore_batch(file: UploadFile) -> StreamingResponse:
+def calculate_nutriscore_batch(file: UploadFile) -> Iterable[NutriscoreResponse]:
     """Stream data to avoid OOM. Stream response as NDJSON (json-line)"""
     if file.content_type not in ("text/csv", "application/csv", "application/octet-stream"):
         raise HTTPException(status_code=400, detail="File must be a CSV")
 
-    def generate() -> Generator[str, None, None]:
-        reader = csv.DictReader(codecs.iterdecode(file.file, "utf-8"))
-        service = NutriscoreService()
-        for i, row in enumerate(reader, start=1):
-            try:
-                product = ProductRequest.model_validate(row).to_product()
-                score, grade = service.calculate_nutriscore(product=product)
-                yield json.dumps({"score": score, "grade": str(grade)}) + "\n"
-            except ValidationError as e:
-                for error in e.errors():
-                    yield json.dumps({"error": True, "row": i, "field": error["loc"][-1], "message": error["msg"]}) + "\n"
-
-    return StreamingResponse(generate(), media_type="application/x-ndjson")
+    reader = csv.DictReader(codecs.iterdecode(file.file, "utf-8"))
+    for row in reader:
+        try:
+            product = ProductRequest.model_validate(row).to_product()
+            score, grade = NutriscoreService.calculate_nutriscore(product=product)
+            yield NutriscoreResponse(score=score, grade=grade)
+        except ValidationError:
+            yield NutriscoreResponse(score=-100, grade=None)

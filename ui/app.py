@@ -136,18 +136,14 @@ with tab_bulk:
                     response.raise_for_status()
 
                     results = []
-                    row_errors = []
                     for line in response.iter_lines():
                         if not line:
                             continue
-                        item = json.loads(line)
-                        if item.get("error"):
-                            row_errors.append(item)
-                        else:
-                            results.append(item)
+                        results.append(json.loads(line))
 
-                    if row_errors:
-                        st.error(f"**{len(row_errors)} validation error(s)** found in the CSV.")
+                    n_errors = sum(1 for r in results if r.get("grade") is None)
+                    if n_errors:
+                        st.warning(f"**{n_errors} row(s)** could not be scored (invalid data) — they appear with `score=-100` and no grade.")
 
                     if results:
                         results_df = pd.DataFrame(results)

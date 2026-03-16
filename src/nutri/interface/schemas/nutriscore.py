@@ -32,7 +32,7 @@ class ProductRequest(BaseModel):
 
 class NutriscoreResponse(BaseModel):
     score: int
-    grade: NutriscoreGrade
+    grade: NutriscoreGrade | None
 
 
 class NutriscoreBulkResponse(BaseModel):

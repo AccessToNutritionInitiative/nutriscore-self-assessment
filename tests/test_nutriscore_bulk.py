@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -10,15 +9,15 @@ CSV_FILE = Path(__file__).parent / "data" / "beverages.csv"
 client = TestClient(app)
 
 
-def parse_ndjson(response) -> list[dict]:
-    return [json.loads(line) for line in response.text.splitlines() if line.strip()]
+def parse_response(response) -> list[dict]:
+    return response.json()
 
 
 def test_bulk_returns_200():
     with CSV_FILE.open("rb") as f:
         response = client.post("/nutriscores", files={"file": ("beverages.csv", f, "text/csv")})
     assert response.status_code == 200
-    items = parse_ndjson(response)
+    items = parse_response(response)
     assert len(items) == 6
 
 
@@ -33,7 +32,7 @@ def test_bulk_scores_and_grades():
     ]
     with CSV_FILE.open("rb") as f:
         response = client.post("/nutriscores", files={"file": ("beverages.csv", f, "text/csv")})
-    items = parse_ndjson(response)
+    items = parse_response(response)
     for exp, item in zip(expected, items, strict=True):
         assert exp["score"] == item["score"]
         assert exp["grade"] == item["grade"]
