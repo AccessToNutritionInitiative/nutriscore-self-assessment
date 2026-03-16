@@ -22,9 +22,6 @@ services:
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/ui:latest
     labels:
       - com.centurylinklabs.watchtower.enable=true
-    deploy:
-      mode: replicated
-      replicas: 2
 
   watchtower:
     image: containrrr/watchtower
