@@ -61,21 +61,20 @@ class HsrScoring:
 
     @classmethod
     def _score_protein(cls, product: Product) -> int:
-        match product.category:
-            case ProductCategory.BEVERAGE_1:
-                return 0
-        return cls._protein_threshold(product.protein_g or 0, Thresholds.PROTEIN)
+        if product.category == ProductCategory.BEVERAGE_1:
+            return 0
+        return cls._protein_threshold(product.protein_g, Thresholds.PROTEIN)
 
     @classmethod
     def _score_fibre(cls, product: Product) -> int:
         match product.category:
             case ProductCategory.BEVERAGE_1 | ProductCategory.DAIRY_BEVERAGE_1D:
                 return 0
-        return cls._apply_threshold(product.fibre_g or 0, Thresholds.FIBRE)
+        return cls._apply_threshold(product.fibre_g, Thresholds.FIBRE)
 
     @classmethod
     def _score_fvnl(cls, product: Product) -> int:
-        fvnl = product.fvnl_percent or 0
+        fvnl = product.fvnl_percent
         if product.category == ProductCategory.BEVERAGE_1:
             return cls._apply_threshold(fvnl, Thresholds.FVNL_BEV, right=False)
         if fvnl == 100:
