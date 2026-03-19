@@ -12,7 +12,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.api.loadbalancer.server.port=8000
-      - traefik.http.routers.api.rule=Host(`api.${DOMAIN}`)
+      - traefik.http.routers.api.rule=Host(`nutriapi.${DOMAIN}`)
       - traefik.http.routers.api.entrypoints=web
 
 
@@ -23,5 +23,5 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.ui.loadbalancer.server.port=8501
-      - traefik.http.routers.ui.rule=Host(`app.${DOMAIN}`)
+      - traefik.http.routers.ui.rule=Host(`nutricheck.${DOMAIN}`)
       - traefik.http.routers.ui.entrypoints=web
