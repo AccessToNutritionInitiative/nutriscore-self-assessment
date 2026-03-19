@@ -9,7 +9,7 @@ from nutri.application.hsr import HsrCalculator
 from nutri.interface.schemas.hsr import ProductRequest, HsrResponse
 
 router = APIRouter(prefix="/hsr", tags=["HSR"])
-DEFAULT_ZERO = { "satfat_g", "sodium_mg", "protein_g", "fibre_g"}
+DEFAULT_ZERO = {"satfat_g", "sodium_mg", "protein_g", "fibre_g"}
 
 
 @router.post("")
