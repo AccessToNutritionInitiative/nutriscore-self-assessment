@@ -52,5 +52,5 @@ services:
       - REPO_PASS=${GH_PASSWORD}
       - DOCKER_API_VERSION=1.53 #Bug with watchtower (https://github.com/containrrr/watchtower/issues/2126)
 
-  volumes:
-    letsencrypt:
+volumes:
+  letsencrypt:
