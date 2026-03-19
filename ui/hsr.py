@@ -269,9 +269,12 @@ with tab_bulk:
                             axis=1,
                         )
 
-                        combined_df["healthy/less healthy"] = np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
+                        combined_df["healthy/less healthy"] = np.where(
+                            combined_df["star_rating"].isna(), "N/A",
+                            np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
+                        )
                         to_write_df = combined_df.copy()
-                        combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: get_stars(r, html=False) if r is not None else "N/A")
+                        combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: get_stars(r, html=False) if pd.notna(r) else "N/A")
 
                         st.success(f"Processed **{len(results)}** products.")
                         st.dataframe(combined_df.head(5), width="stretch")
