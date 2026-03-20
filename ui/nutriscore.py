@@ -99,8 +99,13 @@ with tab_single:
         except requests.exceptions.ConnectionError:
             st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
         except requests.exceptions.HTTPError as exc:
-            detail = exc.response.json().get("detail", str(exc))
-            st.error(f"API error: {detail}")
+            body = exc.response.json()
+            if "errors" in body:
+                msgs = [f"**{e['field']}**: {e['message']}" for e in body["errors"]]
+                st.error("Invalid product data:\n\n" + "\n\n".join(msgs))
+            else:
+                detail = body.get("detail", str(exc))
+                st.error(f"API error: {detail}")
 
 # ── Bulk CSV ───────────────────────────────────────────────────────────────────
 with tab_bulk:
