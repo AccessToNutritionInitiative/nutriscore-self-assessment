@@ -186,7 +186,7 @@ with tab_single:
                     <div style="
                         text-align:center;
                         border-radius:18px;
-                        padding:0.4rem 1rem;
+                        padding:1.1rem 1rem;
                         background-color:#f9f9f9; 
                         border: 1px solid #ddd;
                     ">{stars_html}
@@ -203,11 +203,12 @@ with tab_single:
 
             with col_healthy:
                 if star_rating >= HEALTHY_THRESHOLD:
-                    healthy_stat = "Consider healthy"
+                    healthy_stat = "Considered healthy"
                 else:
-                    healthy_stat = "Consider less healthy"
+                    healthy_stat = "Considered less healthy"
                 st.metric("Healthiness assessment", healthy_stat)
-
+                st.caption("Healthier threshold >= 3.5 stars")
+                
         except requests.exceptions.ConnectionError:
             st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
         except requests.exceptions.HTTPError as exc:
