@@ -32,7 +32,7 @@ def calculate_hsr_bulk(file: UploadFile) -> Iterable[HsrResponse]:
             if row.get("category") == "1-beverage":
                 row = {k: (0.0 if k in DEFAULT_ZERO and v in (None, "", "NaN", "nan") else v) for k, v in row.items()}
 
-            row = {key: (False if key in DEFAULT_FALSE and val in (None, "", "NaN", "nan") else val) for key, val in row.items*()}
+            row = {key: (False if key in DEFAULT_FALSE and val in (None, "", "NaN", "nan") else val) for key, val in row.items()}
 
             product = ProductRequest.model_validate(row).to_product()
             score, hsr_stars = HsrCalculator.get_result(product=product)
