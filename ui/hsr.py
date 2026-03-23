@@ -4,17 +4,40 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+st.markdown("""
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <style>
+        .star-filled {
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            color: #1b75ba;
+        }
+        .star-half {
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            color: #1b75ba;
+        }
+        .star-empty {
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            color: #ccc;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 def get_stars(rating: float, html: bool = True) -> str:
     full_stars = int(rating)
     half_star = 1 if (rating % 1) == 0.5 else 0
     empty_stars = 5 - full_stars - half_star
     if html:
+        full_html = '<span class="material-symbols-outlined" style="color: #1b75ba; font-variation-settings: \'FILL\' 1;">star</span>'
+        half_html = '<span class="material-symbols-outlined" style="color: #1b75ba;">star_half</span>'
+        empty_html = '<span class="material-symbols-outlined" style="color: #1b75ba;">star</span>'
         return (
-            '<span style = "color: #1b75ba; font-size:2rem;">'
-            + "★" * full_stars
-            + ("⯪" if half_star else "")
-            + '<span style="color: #1b75ba;">☆</span>' * empty_stars
+            '<span style = "font-size:2rem;">'
+            + full_html * full_stars
+            + (half_html if half_star else "")
+            + empty_html * empty_stars
             + "</span>"
         )
     return "★" * full_stars + ("⯪" if half_star else "") + "☆" * empty_stars + f" ({rating} / 5.0 stars)"
