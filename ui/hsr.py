@@ -91,7 +91,7 @@ EXPLAINER_CATEGORISE = """
             - milk and dairy beverage alternatives derived from legumes that contain no less than 33% m/m protein derived from legumes and have >= 100 mg calcium per 100 ml,
             - milk and dairy beverage alternatives derived from cereals, nuts, seeds, or a combination of those ingredients that contain no less than 0.3% m/m protein derived from cereals, nuts, seeds, 
             or combination of those ingredients, and have >= 100 mg calcium per 100 ml, 
-            - milk, dairy beverages, and milk and dairy beverage alternatives, must contain >=75% dairy or permitted dairy-alternative ingredients. 
+            - milk, dairy beverages, and milk and dairy beverage alternatives, must contain >= 75% dairy or permitted dairy-alternative ingredients. 
                     
             **Category 2-food** includes all food other than those included in category 1-beverage, 1D-dairy-beverage, 2D-dairy-food, 3-fat or 3D-cheese
                     
