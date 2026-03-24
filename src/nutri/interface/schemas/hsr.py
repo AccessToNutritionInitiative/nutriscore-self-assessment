@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from nutri.domain.hsr import Product, ProductCategory
+
+_EMPTY = {None, "", "NaN", "nan"}
 
 
 class ProductRequest(BaseModel):
@@ -15,6 +17,16 @@ class ProductRequest(BaseModel):
     is_conc: bool = False
     is_water: bool = False
     is_unsweeten: bool = False
+
+    @field_validator("sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent", mode="before")
+    @classmethod
+    def empty_numeric_to_default(cls, v):
+        return 0 if v in _EMPTY else v
+
+    @field_validator("is_conc", "is_water", "is_unsweeten", mode="before")
+    @classmethod
+    def empty_bool_to_false(cls, v):
+        return False if v in _EMPTY else v
 
     def to_product(self) -> Product:
         return Product(

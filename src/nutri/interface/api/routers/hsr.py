@@ -9,8 +9,6 @@ from nutri.application.hsr import HsrCalculator
 from nutri.interface.schemas.hsr import ProductRequest, HsrResponse
 
 router = APIRouter(prefix="/hsr", tags=["HSR"])
-DEFAULT_ZERO = {"satfat_g", "sodium_mg", "protein_g", "fibre_g"}
-DEFAULT_FALSE = {"is_concentrated", "is_water", "is_unsweeten"}
 
 
 @router.post("")
@@ -29,11 +27,6 @@ def calculate_hsr_bulk(file: UploadFile) -> Iterable[HsrResponse]:
     reader = csv.DictReader(codecs.iterdecode(file.file, "utf-8"))
     for row in reader:
         try:
-            if row.get("category") == "1-beverage":
-                row = {k: (0.0 if k in DEFAULT_ZERO and v in (None, "", "NaN", "nan") else v) for k, v in row.items()}
-
-            row = {key: (False if key in DEFAULT_FALSE and val in (None, "", "NaN", "nan") else val) for key, val in row.items()}
-
             product = ProductRequest.model_validate(row).to_product()
             score, hsr_stars = HsrCalculator.get_result(product=product)
             yield HsrResponse(final_score=score, star_rating=hsr_stars)
