@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from nutri.domain.hsr import Product, ProductCategory
 
 _EMPTY = {None, "", "NaN", "nan"}
+_DEFAUL_ZERO = ["sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent"]
 
 
 class ProductRequest(BaseModel):
@@ -25,8 +26,7 @@ class ProductRequest(BaseModel):
         if v.get("category") != ProductCategory.BEVERAGE_1:
             return v
 
-        default_fields = ["sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent"]
-        v.update({f: 0 for f in default_fields if v.get(f) in _EMPTY})
+        v.update({f: 0 for f in _DEFAUL_ZERO if v.get(f) in _EMPTY})
         return v
 
     @field_validator("is_conc", "is_water", "is_unsweeten", mode="before")
