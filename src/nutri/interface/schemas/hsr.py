@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from nutri.domain.hsr import Product, ProductCategory
 
@@ -18,10 +18,16 @@ class ProductRequest(BaseModel):
     is_water: bool = False
     is_unsweeten: bool = False
 
-    @field_validator("sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent", mode="before")
+    @model_validator(mode="before")
     @classmethod
     def empty_numeric_to_default(cls, v):
-        return 0 if v in _EMPTY else v
+
+        if v.get("category") != ProductCategory.BEVERAGE_1:
+            return v
+
+        default_fields = ["sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent"]
+        v.update({f: 0 for f in default_fields if v.get(f) in _EMPTY})
+        return v
 
     @field_validator("is_conc", "is_water", "is_unsweeten", mode="before")
     @classmethod
