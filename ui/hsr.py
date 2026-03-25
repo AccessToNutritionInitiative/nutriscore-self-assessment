@@ -150,7 +150,7 @@ with tab_single:
         disable_inputs = is_water or is_unsweeten
 
     with st.form("single_product_form"):
-        st.caption("The values have to be per 100 g")
+        st.caption("The values have to be per 100 g. The default values are zero.")
         col1, col2 = st.columns(2)
 
         with col1:
@@ -239,6 +239,12 @@ with tab_single:
 # ── Bulk CSV ───────────────────────────────────────────────────────────────────
 with tab_bulk:
     st.subheader("Calculate rating for multiple products")
+    st.markdown("""
+        Error will occur if the uploaded file do not have the matching column name as the template. 
+        Please download the template, fill the values in, and reupload the file to get the result. 
+        - If values are not filled in the columns `is_concentrated`, `is_water` and `is_unsweeten`, it will return `False` by default. 
+        - If values are empty in the columns `satfat_g`, `sodium_g`, `protein_g`, `fibre_g`, and `fvnl_percent` for category `1-beverage`, it will return `0` by default.
+    """)
 
     st.download_button(
         label="Download template",
@@ -250,7 +256,7 @@ with tab_bulk:
 
     st.info(
         "Upload a csv with the following columns: \n\n"
-        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
+        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fibre_g`,`fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
         "Category has to be in the exact wording of `1-beverage`, `1D-dairy-beverage`, `2-food`, `2D-dairy-food`, `3-fat`, `3D-cheese`."
     )
 
