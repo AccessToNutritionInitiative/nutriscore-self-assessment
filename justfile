@@ -35,7 +35,7 @@ prod-up:
   docker compose -f compose.yml -f compose.prod.yml --env-file .env.prod up -d
 
 prod-logs:
-  docker compose -f compose.yml -f compose.prod.yml --env-file .env.prod logs api
+  docker compose -f compose.yml -f compose.prod.yml --env-file .env.prod logs api -f
 
 prod-stop:
   docker compose -f compose.yml -f compose.prod.yml --env-file .env.prod down
