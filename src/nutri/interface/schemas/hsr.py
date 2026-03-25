@@ -1,11 +1,11 @@
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from nutri.domain.hsr import Product, ProductCategory
 
 _EMPTY = {None, "", "NaN", "nan"}
-_DEFAUL_ZERO = ["sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent"]
 
 
+# https://docs.pydantic.dev/latest/concepts/validators/
 class ProductRequest(BaseModel):
     category: ProductCategory
     energy_kj: float = Field(ge=0, le=3700)
@@ -15,21 +15,16 @@ class ProductRequest(BaseModel):
     protein_g: float = Field(default=0, ge=0, le=100)
     fibre_g: float = Field(default=0, ge=0, le=100)
     fvnl_percent: float = Field(default=0, ge=0, le=100)
-    is_conc: bool = False
+    is_concentrated: bool = False
     is_water: bool = False
     is_unsweeten: bool = False
 
-    @model_validator(mode="before")
+    @field_validator("sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent", mode="before")
     @classmethod
     def empty_numeric_to_default(cls, v):
+        return 0 if v in _EMPTY else v
 
-        if v.get("category") != ProductCategory.BEVERAGE_1:
-            return v
-
-        v.update({f: 0 for f in _DEFAUL_ZERO if v.get(f) in _EMPTY})
-        return v
-
-    @field_validator("is_conc", "is_water", "is_unsweeten", mode="before")
+    @field_validator("is_concentrated", "is_water", "is_unsweeten", mode="before")
     @classmethod
     def empty_bool_to_false(cls, v):
         return False if v in _EMPTY else v
@@ -44,7 +39,7 @@ class ProductRequest(BaseModel):
             protein_g=self.protein_g,
             fibre_g=self.fibre_g,
             fvnl_percent=self.fvnl_percent,
-            is_concentrated=self.is_conc,
+            is_concentrated=self.is_concentrated,
             is_water=self.is_water,
             is_unsweeten=self.is_unsweeten,
         )

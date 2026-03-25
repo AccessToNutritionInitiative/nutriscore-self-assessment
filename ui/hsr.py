@@ -4,7 +4,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.markdown("""
+st.markdown(
+    """
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <style>
         .star-filled {
@@ -23,7 +24,10 @@ st.markdown("""
             color: #ccc;
         }
     </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
+
 
 def get_stars(rating: float, html: bool = True) -> str:
     full_stars = int(rating)
@@ -33,13 +37,7 @@ def get_stars(rating: float, html: bool = True) -> str:
         full_html = '<span class="material-symbols-outlined" style="color: #1b75ba; font-variation-settings: \'FILL\' 1;">star</span>'
         half_html = '<span class="material-symbols-outlined" style="color: #1b75ba;">star_half</span>'
         empty_html = '<span class="material-symbols-outlined" style="color: #1b75ba;">star</span>'
-        return (
-            '<span style = "font-size:2rem;">'
-            + full_html * full_stars
-            + (half_html if half_star else "")
-            + empty_html * empty_stars
-            + "</span>"
-        )
+        return '<span style = "font-size:2rem;">' + full_html * full_stars + (half_html if half_star else "") + empty_html * empty_stars + "</span>"
     return "★" * full_stars + ("⯪" if half_star else "") + "☆" * empty_stars + f" ({rating} / 5.0 stars)"
 
 
@@ -168,7 +166,7 @@ with tab_single:
                 "Fruits, vegetables, nuts and legumes (%)", min_value=0.0, max_value=100.0, value=0.0, step=1.0, disabled=disable_inputs
             )
             is_concentrated = st.checkbox(
-                "Is the fruit and vegetables content concentrated?", disabled=(disable_inputs or category=="1-beverage"), help=EXPLAINER_CONCENC
+                "Is the fruit and vegetables content concentrated?", disabled=(disable_inputs or category == "1-beverage"), help=EXPLAINER_CONCENC
             )
 
         submitted = st.form_submit_button(
@@ -231,7 +229,7 @@ with tab_single:
                     healthy_stat = "Considered less healthy"
                 st.metric("Healthiness assessment", healthy_stat)
                 st.caption("Healthier threshold >= 3.5 stars")
-                
+
         except requests.exceptions.ConnectionError:
             st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
         except requests.exceptions.HTTPError as exc:
@@ -294,8 +292,7 @@ with tab_bulk:
                         )
 
                         combined_df["healthy/less healthy"] = np.where(
-                            combined_df["star_rating"].isna(), "N/A",
-                            np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
+                            combined_df["star_rating"].isna(), "N/A", np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
                         )
                         to_write_df = combined_df.copy()
                         combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: get_stars(r, html=False) if pd.notna(r) else "N/A")
