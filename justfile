@@ -30,3 +30,12 @@ type-check:
 
 # Run before commiting
 pre-commit: format type-check test
+
+prod-up:
+  docker compose -f compose.yml -f compose.prod.yml --env-file .env.prod up -d
+
+prod-logs:
+  docker compose -f compose.yml -f compose.prod.yml --env-file .env.prod logs
+
+prod-stop:
+  docker compose -f compose.yml -f compose.prod.yml --env-file .env.prod down
