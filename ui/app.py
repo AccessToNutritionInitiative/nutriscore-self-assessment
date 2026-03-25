@@ -4,7 +4,6 @@ import streamlit as st
 
 API_BASE_URL = "http://localhost:8000"
 CATEGORIES = ["beverage", "general", "fats"]
-UNSUPPORTED_CATEGORIES = {"general", "fats"}
 GRADE_COLORS = {
     "A": "#038141",
     "B": "#85BB2F",
@@ -39,21 +38,16 @@ with tab_single:
             category = st.selectbox(
                 "Category",
                 CATEGORIES,
-                format_func=lambda c: f"{c} — not supported yet" if c in UNSUPPORTED_CATEGORIES else c,
             )
-            has_sweeteners = st.checkbox("Contains sweeteners")
-            is_water = st.checkbox("Is water")
-
-        if category in UNSUPPORTED_CATEGORIES:
-            st.warning("This category is not supported yet. Please select **beverage**.")
+            has_sweeteners = st.checkbox("Contains sweeteners", disabled=category != "beverage")
+            is_water = st.checkbox("Is water", disabled=category != "beverage")
 
         submitted = st.form_submit_button(
             "Calculate Nutri-Score",
             use_container_width=True,
-            disabled=category in UNSUPPORTED_CATEGORIES,
         )
 
-    if submitted and category not in UNSUPPORTED_CATEGORIES:
+    if submitted:
         payload = {
             "energy_kj": energy_kj,
             "sugar_g": sugar_g,
@@ -62,8 +56,8 @@ with tab_single:
             "fruit_veg_pct": fruit_veg_pct,
             "fibre_g": fibre_g,
             "protein_g": protein_g,
-            "has_sweeteners": has_sweeteners,
-            "is_water": is_water,
+            "has_sweeteners": has_sweeteners if category == "beverage" else False,
+            "is_water": is_water if category == "beverage" else False,
             "category": category,
         }
         try:
