@@ -38,6 +38,8 @@ just type-check  # type-check with ty
 
 The application runs on a VPS, hosted on Hostinger, behind [Traefik](https://traefik.io/) with automatic HTTPS via Let's Encrypt. [Watchtower](https://containrrr.dev/watchtower/) watches for new container images in this Github repository (ghcr.io) and updates the production (ui & api) automatically.
 
+To learn more about how the services were deployed, check this detailed [article](https://theembedding1.substack.com/p/deploy-production-applications-on).
+
 ### Accessing the VPS
 
 ```bash
