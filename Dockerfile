@@ -39,6 +39,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 ENTRYPOINT []
 
 # Use the non-root user to run our application
+RUN chown -R nonroot:nonroot /app
 USER nonroot
 
 CMD ["uv", "run", "fastapi", "run", "--host", "0.0.0.0", "--port", "8000", "src/nutri/interface/api/main.py"]
