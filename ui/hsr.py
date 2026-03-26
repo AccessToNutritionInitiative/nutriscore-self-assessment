@@ -4,19 +4,40 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+st.markdown(
+    """
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <style>
+        .star-filled {
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            color: #1b75ba;
+        }
+        .star-half {
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            color: #1b75ba;
+        }
+        .star-empty {
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            color: #ccc;
+        }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
 
 def get_stars(rating: float, html: bool = True) -> str:
     full_stars = int(rating)
     half_star = 1 if (rating % 1) == 0.5 else 0
     empty_stars = 5 - full_stars - half_star
     if html:
-        return (
-            '<span style = "color: #1b75ba; font-size:2rem;">'
-            + "★" * full_stars
-            + ("⯪" if half_star else "")
-            + '<span style="color: #1b75ba;">☆</span>' * empty_stars
-            + "</span>"
-        )
+        full_html = '<span class="material-symbols-outlined" style="color: #1b75ba; font-variation-settings: \'FILL\' 1;">star</span>'
+        half_html = '<span class="material-symbols-outlined" style="color: #1b75ba;">star_half</span>'
+        empty_html = '<span class="material-symbols-outlined" style="color: #1b75ba;">star</span>'
+        return '<span style = "font-size:2rem;">' + full_html * full_stars + (half_html if half_star else "") + empty_html * empty_stars + "</span>"
     return "★" * full_stars + ("⯪" if half_star else "") + "☆" * empty_stars + f" ({rating} / 5.0 stars)"
 
 
@@ -68,7 +89,7 @@ EXPLAINER_CATEGORISE = """
             - milk and dairy beverage alternatives derived from legumes that contain no less than 33% m/m protein derived from legumes and have >= 100 mg calcium per 100 ml,
             - milk and dairy beverage alternatives derived from cereals, nuts, seeds, or a combination of those ingredients that contain no less than 0.3% m/m protein derived from cereals, nuts, seeds, 
             or combination of those ingredients, and have >= 100 mg calcium per 100 ml, 
-            - milk, dairy beverages, and milk and dairy beverage alternatives, must contain >=75% dairy or permitted dairy-alternative ingredients. 
+            - milk, dairy beverages, and milk and dairy beverage alternatives, must contain >= 75% dairy or permitted dairy-alternative ingredients. 
                     
             **Category 2-food** includes all food other than those included in category 1-beverage, 1D-dairy-beverage, 2D-dairy-food, 3-fat or 3D-cheese
                     
@@ -129,7 +150,7 @@ with tab_single:
         disable_inputs = is_water or is_unsweeten
 
     with st.form("single_product_form"):
-        st.caption("The values have to be per 100 g")
+        st.caption("The values have to be per 100 g. The default values are zero.")
         col1, col2 = st.columns(2)
 
         with col1:
@@ -144,11 +165,13 @@ with tab_single:
             fvnl_percent = st.number_input(
                 "Fruits, vegetables, nuts and legumes (%)", min_value=0.0, max_value=100.0, value=0.0, step=1.0, disabled=disable_inputs
             )
-            is_concentrated = st.checkbox("Is the fruit and vegetables content concentrated?", disabled=disable_inputs, help=EXPLAINER_CONCENC)
+            is_concentrated = st.checkbox(
+                "Is the fruit and vegetables content concentrated?", disabled=(disable_inputs or category == "1-beverage"), help=EXPLAINER_CONCENC
+            )
 
         submitted = st.form_submit_button(
             "Calculate health star rating",
-            use_container_width=True,
+            width="stretch",
             disabled=category is None or category in UNSUPPORTED_CATEGORIES,
         )
 
@@ -184,7 +207,7 @@ with tab_single:
                     <div style="
                         text-align:center;
                         border-radius:18px;
-                        padding:0.4rem 1rem;
+                        padding:1.1rem 1rem;
                         background-color:#f9f9f9; 
                         border: 1px solid #ddd;
                     ">{stars_html}
@@ -201,10 +224,11 @@ with tab_single:
 
             with col_healthy:
                 if star_rating >= HEALTHY_THRESHOLD:
-                    healthy_stat = "Consider healthy"
+                    healthy_stat = "Considered healthy"
                 else:
-                    healthy_stat = "Consider less healthy"
+                    healthy_stat = "Considered less healthy"
                 st.metric("Healthiness assessment", healthy_stat)
+                st.caption("Healthier threshold >= 3.5 stars")
 
         except requests.exceptions.ConnectionError:
             st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
@@ -226,12 +250,12 @@ with tab_bulk:
         data=TEMPLATE_CSV,
         file_name="hsr_template.csv",
         mime="text/csv",
-        use_container_width=True,
+        width="stretch",
     )
 
     st.info(
         "Upload a csv with the following columns: \n\n"
-        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
+        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fibre_g`,`fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
         "Category has to be in the exact wording of `1-beverage`, `1D-dairy-beverage`, `2-food`, `2D-dairy-food`, `3-fat`, `3D-cheese`."
     )
 
@@ -241,12 +265,13 @@ with tab_bulk:
         try:
             preview_df = pd.read_csv(uploaded_file)
             st.write(f"**{len(preview_df)} products loaded** - preview: ")
+            st.dataframe(preview_df.head(5), width="stretch")
             uploaded_file.seek(0)
         except Exception as e:
             st.error(f"Could not read file: {e}")
             st.stop()
 
-        if st.button("Calculate health star ratings", use_container_width=True):
+        if st.button("Calculate health star ratings", width="stretch"):
             with st.spinner("Sending to API..."):
                 try:
                     response = requests.post(
@@ -271,11 +296,14 @@ with tab_bulk:
                             axis=1,
                         )
 
-                        combined_df["healthy/less healthy"] = np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
+                        combined_df["healthy/less healthy"] = np.where(
+                            combined_df["star_rating"].isna(), "N/A", np.where(combined_df["star_rating"] >= 3.5, "Healthy", "Less healthy")
+                        )
                         to_write_df = combined_df.copy()
-                        combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: get_stars(r, html=False) if r is not None else "N/A")
+                        combined_df["star_rating"] = combined_df["star_rating"].apply(lambda r: get_stars(r, html=False) if pd.notna(r) else "N/A")
 
                         st.success(f"Processed **{len(results)}** products.")
+                        st.dataframe(combined_df.head(5), width="stretch")
 
                         csv_bytes = to_write_df.to_csv(index=False).encode()
                         st.download_button(
@@ -283,7 +311,7 @@ with tab_bulk:
                             data=csv_bytes,
                             file_name="hsr_results.csv",
                             mime="text/csv",
-                            use_container_width=True,
+                            width="stretch",
                         )
 
                 except requests.exceptions.ConnectionError:
