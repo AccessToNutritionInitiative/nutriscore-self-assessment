@@ -17,7 +17,7 @@ test:
 
 # Start UI
 ui:
-    uv run streamlit run ui/app.py
+    uv run streamlit run ui/app.py --server.runOnSave true
 
 # Format the codebase
 format:
