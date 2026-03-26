@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 import pandas as pd
 import requests
@@ -15,9 +16,31 @@ GRADE_COLORS = {
     "E": "#E63E11",
 }
 
+NUTRISCORE_URL = "https://www.santepubliquefrance.fr/en/nutri-score"
+EXPLAINER_NUTRISCORE = """
+The **Nutri-Score** is a front-of-pack nutrition label that rates food products from **A** (best) to **E** (worst).
+
+It is computed from **negative points** (energy, sugars, saturated fat, salt) minus **positive points** (fruits & vegetables %, fibre, protein).
+The final score is then mapped to a grade depending on the product category.
+"""
+EXPLAINER_CATEGORIES = """
+**Beverage** — drinks including water, juices, sodas, etc. Has specific thresholds and a sweetener penalty.
+
+**General** — all solid foods not classified as fats or beverages.
+
+**Fats** — added fats and oils (butter, olive oil, margarine, etc.). Uses a saturated-fat-to-lipid ratio instead of energy.
+"""
+
 st.set_page_config(page_title="Nutri-Score Calculator", page_icon="🥗", layout="centered")
 st.title("🥗 Nutriscore Calculator")
 st.caption("Powered by the ATNi Nutriscore API")
+
+with st.expander("What is the Nutri-Score?"):
+    st.markdown(EXPLAINER_NUTRISCORE)
+    st.link_button("Official Nutri-Score page", NUTRISCORE_URL)
+
+with st.expander("How to categorise the product"):
+    st.markdown(EXPLAINER_CATEGORIES)
 
 tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
@@ -101,15 +124,35 @@ with tab_single:
                 detail = body.get("detail", str(exc))
                 st.error(f"API error: {detail}")
 
+TEMPLATE_CSV = (Path(__file__).parent / "nutriscore_template.csv").read_bytes()
+
 # ── Bulk CSV ───────────────────────────────────────────────────────────────────
 with tab_bulk:
-    st.subheader("Calculate scores for multiple products")
+    st.subheader("Calculate Nutriscores for multiple products")
 
-    st.info(
-        "Upload a CSV with the following columns:\n"
-        "`energy_kj`, `sugar_g`, `sat_fat_g`, `salt_g`, `fruit_veg_pct`, "
-        "`fibre_g`, `protein_g`, `has_sweeteners`, `is_water`, `category`"
+    st.download_button(
+        label="Download template",
+        data=TEMPLATE_CSV,
+        file_name="nutriscore_template.csv",
+        mime="text/csv",
+        use_container_width=True,
     )
+
+    with st.expander("Expected input for each column"):
+        st.markdown(
+            "| Column | Type | Range | Default |\n"
+            "|--------|------|-------|---------|\n"
+            "| `energy_kj` | float | 0 – 3700 | *required* |\n"
+            "| `sugar_g` | float | 0 – 100 | *required* |\n"
+            "| `sat_fat_g` | float | 0 – 100 | 0 |\n"
+            "| `salt_g` | float | 0 – 100 | 0 |\n"
+            "| `fruit_veg_pct` | float | 0 – 100 | 0 |\n"
+            "| `fibre_g` | float | 0 – 100 | 0 |\n"
+            "| `protein_g` | float | 0 – 100 | 0 |\n"
+            "| `has_sweeteners` | bool | true / false | false |\n"
+            "| `is_water` | bool | true / false | false |\n"
+            "| `category` | string | beverage, general, fats | *required* |"
+        )
 
     uploaded_file = st.file_uploader("Choose a CSV file (max 5 MB)", type=["csv"], max_upload_size=5)
 
@@ -130,16 +173,9 @@ with tab_bulk:
                         f"{API_BASE_URL}/nutriscores",
                         files={"file": (uploaded_file.name, uploaded_file.getvalue(), "text/csv")},
                         timeout=30,
-                        stream=True,
                     )
                     response.raise_for_status()
-
-                    results = []
-                    for line in response.iter_lines():
-                        if not line:
-                            continue
-                        results.append(json.loads(line))
-
+                    results = response.json()
                     n_errors = sum(1 for r in results if r.get("grade") is None)
                     if n_errors:
                         st.warning(f"**{n_errors} row(s)** could not be scored (invalid data) — they appear with `score=-100` and no grade.")
