@@ -108,10 +108,18 @@ EXPLAINER_CATEGORISE = """
             - cheese (including surface ripened cheeses) and processed cheese with a calcium content > 320 mg/100g. Must consist of >= 75% dairy ingredients,
             - cheese alternative derived from legumes that contain no less than 15% m/m protein derived from legumes and have a calcium content > 320 mg/100 g and contain >= 75% permitted dairy-alternative ingredients. 
         """
+EXPLAINER_HSR = (
+    "The Health Star Rating System is a front-of-pack labelling system that rates overall nutritional profile of packaged foods on a scale of ½ to 5 stars. "
+    "**The more stars, the healthier the choice.** "
+    "It takes into account the *negative points* (energy, saturated fat, sugar, sodium) and *positive points* (protein, fibre, % content of fruits, vegetables, nuts and legumes). "
+)
 
 st.set_page_config(page_title="Health Star Rating Calculator", page_icon="💫", layout="centered")
 st.title("💫 Health Star Rating Calculator")
-st.caption("Powered by the ATNi API")
+st.caption("Powered by the ATNi Nutri API")
+
+st.markdown(EXPLAINER_HSR)
+st.link_button("Official HSR page", "https://www.healthstarrating.gov.au")
 
 tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
@@ -252,10 +260,27 @@ with tab_bulk:
         mime="text/csv",
         width="stretch",
     )
+    
+    with st.expander("Expected input for each column"):
+        st.markdown(
+            "| Column | Type | Range | Default |\n"
+            "|--------|------|-------|---------|\n"            
+            "| `category` | string | `1-beverage`, `1D-dairy-beverage`, `2-food`, `2D-dairy-food`, `3-fat`, `3D-cheese` | *required* |\n"
+            "| `energy_kj` | float | 0 – 3700 | *required* |\n"
+            "| `sugar_g` | float | 0 – 100 | *required* |\n"
+            "| `satfat_g` | float | 0 – 100 | *required except for `1-beverage`* |\n"
+            "| `sodium_mg` | float | 0 – 5000 | *required except for `1-beverage`*  |\n"
+            "| `protein_g` | float | 0 – 100 | 0 |\n"
+            "| `fibre_g` | float | 0 – 100 | 0 |\n"
+            "| `fvnl_percent` | float | 0 – 100 | 0 |\n"          
+            "| `is_concentrated` | bool | true / false | false |\n"
+            "| `is_water` | bool | true / false | false |\n"
+            "| `is_unsweeten` | bool | true / false | false |\n"
+        )
 
     st.info(
         "Upload a csv with the following columns: \n\n"
-        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fibre_g`,`fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
+        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fibre_g`, `fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
         "Category has to be in the exact wording of `1-beverage`, `1D-dairy-beverage`, `2-food`, `2D-dairy-food`, `3-fat`, `3D-cheese`."
     )
 
