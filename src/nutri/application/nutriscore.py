@@ -156,7 +156,3 @@ class NutriscoreService:
             return NutriscoreGrade.D
         else:
             return NutriscoreGrade.E
-
-    @classmethod
-    def bulk_calculation(cls, products: list[Product]) -> list[tuple[int, NutriscoreGrade]]:
-        return [cls.calculate_nutriscore(product) for product in products]
