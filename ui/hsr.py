@@ -111,7 +111,6 @@ EXPLAINER_CATEGORISE = """
 EXPLAINER_HSR = (
     "The Health Star Rating System is a front-of-pack labelling system that rates overall nutritional profile of packaged foods on a scale of ½ to 5 stars. "
     "**The more stars, the healthier the choice.** "
-    "It takes into account the *negative points* (energy, saturated fat, sugar, sodium) and *positive points* (protein, fibre, % content of fruits, vegetables, nuts and legumes). "
 )
 
 st.set_page_config(page_title="Health Star Rating Calculator", page_icon="💫", layout="centered")
