@@ -3,19 +3,22 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from nutri.interface.api.main import app
-from nutri.interface.schemas.nutriscore import NutriscoreBulkResponse
 
 CSV_FILE = Path(__file__).parent / "data" / "beverages.csv"
 
 client = TestClient(app)
 
 
+def parse_response(response) -> list[dict]:
+    return response.json()
+
+
 def test_bulk_returns_200():
     with CSV_FILE.open("rb") as f:
         response = client.post("/nutriscores", files={"file": ("beverages.csv", f, "text/csv")})
     assert response.status_code == 200
-    response = NutriscoreBulkResponse.model_validate(response.json())
-    assert response.total == 6
+    items = parse_response(response)
+    assert len(items) == 6
 
 
 def test_bulk_scores_and_grades():
@@ -29,10 +32,10 @@ def test_bulk_scores_and_grades():
     ]
     with CSV_FILE.open("rb") as f:
         response = client.post("/nutriscores", files={"file": ("beverages.csv", f, "text/csv")})
-    response = NutriscoreBulkResponse.model_validate(response.json())
-    for exp, resp in zip(expected, response.results, strict=True):
-        assert exp["score"] == resp.score
-        assert exp["grade"] == resp.grade
+    items = parse_response(response)
+    for exp, item in zip(expected, items, strict=True):
+        assert exp["score"] == item["score"]
+        assert exp["grade"] == item["grade"]
 
 
 def test_bulk_rejects_non_csv():

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 from nutri.domain.nutriscore import NutriscoreGrade, Product, ProductCategory
 
@@ -14,15 +14,6 @@ class ProductRequest(BaseModel):
     has_sweeteners: bool = False
     is_water: bool = False
     category: ProductCategory
-
-    @model_validator(mode="after")
-    def validate_beverage_only_flags(self):
-        if self.category != ProductCategory.BEVERAGE:
-            if self.is_water:
-                raise ValueError("is_water can only be True for beverage products")
-            if self.has_sweeteners:
-                raise ValueError("has_sweeteners can only be True for beverage products")
-        return self
 
     def to_product(self) -> Product:
         return Product(
@@ -41,9 +32,4 @@ class ProductRequest(BaseModel):
 
 class NutriscoreResponse(BaseModel):
     score: int
-    grade: NutriscoreGrade
-
-
-class NutriscoreBulkResponse(BaseModel):
-    results: list[NutriscoreResponse]
-    total: int
+    grade: NutriscoreGrade | None

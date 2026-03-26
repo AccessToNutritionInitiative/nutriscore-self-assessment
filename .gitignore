@@ -11,4 +11,5 @@ wheels/
 
 .vscode
 scripts/
-.env
+.env*
+!.env.template

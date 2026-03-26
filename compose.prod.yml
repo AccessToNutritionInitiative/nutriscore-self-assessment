@@ -1,0 +1,56 @@
+services:
+  traefik:
+    ports:
+      - "443:443"
+    volumes:
+      - letsencrypt:/letsencrypt
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.letsencrypt.acme.email=atni@accesstonutrition.org
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+
+  api:
+    image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
+    labels:
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.tls.certresolver=letsencrypt
+      - traefik.http.routers.api.middlewares=ratelimit,sizelimit
+      - traefik.http.middlewares.ratelimit.ratelimit.average=100
+      - traefik.http.middlewares.ratelimit.ratelimit.burst=50
+      - traefik.http.middlewares.sizelimit.buffering.maxRequestBodyBytes=5242880 # Max 5MB
+      - com.centurylinklabs.watchtower.enable=true
+    deploy:
+      mode: replicated
+      replicas: 3
+
+  ui:
+    image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/ui:latest
+    labels:
+      - traefik.http.routers.ui.entrypoints=websecure
+      - traefik.http.routers.ui.tls.certresolver=letsencrypt
+      - com.centurylinklabs.watchtower.enable=true
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - --label-enable
+      - --rolling-restart
+      - --interval
+      - "120"
+    environment:
+      - REPO_USER=${GH_USER}
+      - REPO_PASS=${GH_PASSWORD}
+      - DOCKER_API_VERSION=1.53 #Bug with watchtower (https://github.com/containrrr/watchtower/issues/2126)
+
+volumes:
+  letsencrypt:

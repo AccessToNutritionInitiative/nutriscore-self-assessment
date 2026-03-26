@@ -1,6 +1,6 @@
 # Nutri-Score Self-Assessment
 
-A self-assessment tool for computing the [Nutri-Score](https://www.santepubliquefrance.fr/determinants-de-sante/nutrition-et-activite-physique/articles/nutri-score) of food and beverage products.
+A self-assessment tool for computing the [Nutri-Score](https://www.santepubliquefrance.fr/determinants-de-sante/nutrition-et-activite-physique/articles/nutri-score) and [Health Star Rating](https://www.healthstarrating.gov.au/) of food and beverage products.
 
 It exposes a **FastAPI** backend for score calculation and a **Streamlit** UI for manual entry or bulk CSV processing.
 
@@ -32,4 +32,29 @@ See [`tests/data/beverages.csv`](tests/data/beverages.csv) for an example.
 just test        # run tests
 just format      # format & lint with ruff
 just type-check  # type-check with ty
+```
+
+## Production
+
+The application runs on a VPS, hosted on Hostinger, behind [Traefik](https://traefik.io/) with automatic HTTPS via Let's Encrypt. [Watchtower](https://containrrr.dev/watchtower/) watches for new container images in this Github repository (ghcr.io) and updates the production (ui & api) automatically.
+
+To learn more about how the services were deployed, check this detailed [article](https://theembedding1.substack.com/p/deploy-production-applications-on).
+
+### Accessing the VPS
+
+```bash
+ssh atni@<host>
+cd projects/nutriscore-self-assessment
+```
+
+### Managing production
+
+A `.env.prod` must exist in the project repository in the VPS. Copy the .env.template and fill it with your own credentials.
+
+The following `just` commands are available **on the VPS** only:
+
+```bash
+just prod-up     # start (or recreate) all production containers in detached mode
+just prod-logs   # tail the production logs
+just prod-stop   # stop and remove all production containers
 ```

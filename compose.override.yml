@@ -1,0 +1,19 @@
+services:
+  traefik:
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --api.dashboard=true
+      - --api.insecure=true
+    ports:
+      - "8080:8080"
+
+  api:
+    build:
+        context: .
+  
+  ui:
+    build:
+      context: ui/
+    
