@@ -100,10 +100,12 @@ class HsrScoring:
         return bisect.bisect_right(threshold, value)  # for lower <= x < upper
 
     @staticmethod
-    def _protein_threshold(
-        value: float,
-        threshold: list[float],
-    ) -> int:
+    def _protein_threshold(value: float, threshold: list[float]) -> int:
+        """
+        x < list[1] -> 1
+        
+        x <= list[i] -> i
+        """
         for i, upper in enumerate(threshold):
             if i == 1:
                 if value < upper:

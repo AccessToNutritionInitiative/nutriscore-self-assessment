@@ -21,12 +21,17 @@ class ProductRequest(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def empty_numeric_to_default(cls, values):
+    def empty_numeric_specific_cat(cls, values):
         if values.get("category") == ProductCategory.BEVERAGE_1:
-            for field in ("sodium_mg", "satfat_g", "protein_g", "fibre_g", "fvnl_percent"):
+            for field in ("sodium_mg", "satfat_g"):
                 if values.get(field) in _EMPTY:
                     values[field] = 0
         return values
+    
+    @field_validator("protein_g", "fibre_g", "fvnl_percent", mode="before")
+    @classmethod
+    def empty_numeric_to_default(cls, v):
+        return 0 if v in _EMPTY else v
 
     @field_validator("is_concentrated", "is_water", "is_unsweeten", mode="before")
     @classmethod
