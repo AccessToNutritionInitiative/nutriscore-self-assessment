@@ -27,7 +27,7 @@ class ProductRequest(BaseModel):
                 if values.get(field) in _EMPTY:
                     values[field] = 0
         return values
-    
+
     @field_validator("protein_g", "fibre_g", "fvnl_percent", mode="before")
     @classmethod
     def empty_numeric_to_default(cls, v):

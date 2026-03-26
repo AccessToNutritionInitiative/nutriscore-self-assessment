@@ -103,7 +103,7 @@ class HsrScoring:
     def _protein_threshold(value: float, threshold: list[float]) -> int:
         """
         x < list[1] -> 1
-        
+
         x <= list[i] -> i
         """
         for i, upper in enumerate(threshold):
