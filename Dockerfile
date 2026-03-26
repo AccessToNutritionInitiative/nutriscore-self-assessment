@@ -1,9 +1,6 @@
 # Use a Python image with uv pre-installed
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-# Setup a non-root user
-RUN groupadd --system --gid 999 nonroot \
-  && useradd --system --gid 999 --uid 999 --create-home nonroot
 
 # Install the project into `/app`
 WORKDIR /app
@@ -38,8 +35,5 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []
 
-# Use the non-root user to run our application
-RUN chown -R nonroot:nonroot /app
-USER nonroot
 
 CMD ["uv", "run", "fastapi", "run", "--host", "0.0.0.0", "--port", "8000", "src/nutri/interface/api/main.py"]
