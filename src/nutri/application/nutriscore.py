@@ -50,15 +50,9 @@ class NutriscoreService:
     @classmethod
     def _calculate_general(cls, product: Product) -> tuple[int, NutriscoreGrade]:
         # --- N-points (unfavorable) ---
-        n_energy = cls._score_from_thresholds(
-            product.energy_kj, [335, 670, 1005, 1340, 1675, 2010, 2345, 2680, 3015, 3350]
-        )
-        n_sugar = cls._score_from_thresholds(
-            product.sugar_g, [3.4, 6.8, 10, 14, 17, 20, 24, 27, 31, 34, 37, 41, 44, 48, 51]
-        )
-        n_sat_fat = cls._score_from_thresholds(
-            product.sat_fat_g, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        )
+        n_energy = cls._score_from_thresholds(product.energy_kj, [335, 670, 1005, 1340, 1675, 2010, 2345, 2680, 3015, 3350])
+        n_sugar = cls._score_from_thresholds(product.sugar_g, [3.4, 6.8, 10, 14, 17, 20, 24, 27, 31, 34, 37, 41, 44, 48, 51])
+        n_sat_fat = cls._score_from_thresholds(product.sat_fat_g, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         n_salt = cls._score_from_thresholds(
             product.salt_g,
             [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0],
@@ -83,15 +77,9 @@ class NutriscoreService:
         # --- N-points (unfavorable) ---
         # Energy for fats is derived from saturated fat content (sat_fat * 37 kJ/g)
         energy_from_sat_fat = product.sat_fat_g * 37
-        n_energy = cls._score_from_thresholds(
-            energy_from_sat_fat, [120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200]
-        )
-        n_sugar = cls._score_from_thresholds(
-            product.sugar_g, [3.4, 6.8, 10, 14, 17, 20, 24, 27, 31, 34, 37, 41, 44, 48, 51]
-        )
-        n_sat_fat = cls._score_from_thresholds(
-            product.sat_fat_g, [10, 16, 22, 28, 34, 40, 46, 52, 58, 64]
-        )
+        n_energy = cls._score_from_thresholds(energy_from_sat_fat, [120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200])
+        n_sugar = cls._score_from_thresholds(product.sugar_g, [3.4, 6.8, 10, 14, 17, 20, 24, 27, 31, 34, 37, 41, 44, 48, 51])
+        n_sat_fat = cls._score_from_thresholds(product.sat_fat_g, [10, 16, 22, 28, 34, 40, 46, 52, 58, 64])
         n_salt = cls._score_from_thresholds(
             product.salt_g,
             [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0],
