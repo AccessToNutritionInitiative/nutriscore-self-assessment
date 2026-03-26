@@ -239,12 +239,6 @@ with tab_single:
 # ── Bulk CSV ───────────────────────────────────────────────────────────────────
 with tab_bulk:
     st.subheader("Calculate rating for multiple products")
-    st.markdown("""
-        Error will occur if the uploaded file do not have the matching column name as the template. 
-        Please download the template, fill the values in, and reupload the file to get the result. 
-        - If values are not filled in the columns `is_concentrated`, `is_water` and `is_unsweeten`, it will return `False` by default. 
-        - If values are empty in the columns `satfat_g`, `sodium_g`, `protein_g`, `fibre_g`, and `fvnl_percent` for category `1-beverage`, it will return `0` by default.
-    """)
 
     st.download_button(
         label="Download template",
