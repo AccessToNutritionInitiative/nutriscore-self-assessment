@@ -22,16 +22,16 @@ class ProductRequest(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def empty_numeric_specific_cat(cls, values):
-        def _zero_if_empty(fields: tuple) -> None: 
-            for field in fields: 
-                if values.get(field) in _EMPTY: 
+        def _zero_if_empty(fields: tuple) -> None:
+            for field in fields:
+                if values.get(field) in _EMPTY:
                     values[field] = 0
 
         if values.get("category") == ProductCategory.BEVERAGE_1:
             _zero_if_empty(("sodium_mg", "satfat_g"))
 
-        if values.get("is_water") or values.get("is_unsweeten"): 
-            _zero_if_empty(("energy_kj", "sugar_g")) 
+        if values.get("is_water") or values.get("is_unsweeten"):
+            _zero_if_empty(("energy_kj", "sugar_g"))
 
         return values
 
