@@ -110,15 +110,18 @@ EXPLAINER_CATEGORISE = """
         """
 EXPLAINER_HSR = (
     "The Health Star Rating System is a front-of-pack labelling system that rates overall nutritional profile of packaged foods on a scale of ½ to 5 stars. "
-    "**The more stars, the healthier the choice.** "
+    "**The more stars, the healthier the choice.** \n\n"
+    "It is computed from *negative factors* (energy, saturated fat, sugar, sodium) minus *postive factors* (protein, fibre, % content of fruits, vegetables, nuts). "
+    "The final score is then mapped to a star rating depending on the product category"    
 )
 
 st.set_page_config(page_title="Health Star Rating Calculator", page_icon="💫", layout="centered")
 st.title("💫 Health Star Rating Calculator")
 st.caption("Powered by the ATNi Nutri API")
 
-st.markdown(EXPLAINER_HSR)
-st.link_button("Official HSR page", "https://www.healthstarrating.gov.au")
+with st.expander("What is Health Star Rating?"):
+    st.markdown(EXPLAINER_HSR)
+    st.link_button("Official HSR page", "https://www.healthstarrating.gov.au")
 
 tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
@@ -262,7 +265,7 @@ with tab_bulk:
     
     with st.expander("Expected input for each column"):
         st.markdown(
-            "| Column | Type | Range | Default |\n"
+            "| Column | Type | Input | Default |\n"
             "|--------|------|-------|---------|\n"            
             "| `category` | string | `1-beverage`, `1D-dairy-beverage`, `2-food`, `2D-dairy-food`, `3-fat`, `3D-cheese` | *required* |\n"
             "| `energy_kj` | float | 0 – 3700 | *required* |\n"
@@ -279,8 +282,7 @@ with tab_bulk:
 
     st.info(
         "Upload a csv with the following columns: \n\n"
-        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fibre_g`, `fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`. \n\n"
-        "Category has to be in the exact wording of `1-beverage`, `1D-dairy-beverage`, `2-food`, `2D-dairy-food`, `3-fat`, `3D-cheese`."
+        "`category`, `energy_kj`, `sugar_g`, `satfat_g`, `sodium_mg`, `protein_g`, `fibre_g`, `fvnl_percent`, `is_concentrated`, `is_water`, `is_unsweeten`."
     )
 
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"], max_upload_size=5)
