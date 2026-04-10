@@ -29,7 +29,7 @@ class FixedRecommandation(BaseModel):
 class OptionProposition(BaseModel):
     proposition: str
     score: float
-    text_input: bool = False
+    text_inputs: bool = False
 
 
 class TextProposition(BaseModel):
@@ -39,13 +39,11 @@ class TextProposition(BaseModel):
 
 class OptionPropositions(BaseModel):
     type: Literal["option"]
-    dependency: str = ""  # Question id | Such as "if yes"
     propositions: list[OptionProposition]
 
 
 class ChoicesPropositions(BaseModel):
     type: Literal["choices"]
-    dependency: str = ""  # Question id | Such as "if yes"
     count_score_coeff: Annotated[
         float,
         Field(
@@ -80,6 +78,7 @@ class Question(BaseModel):
     topic: Topic
     question: str
     question_id: str
+    dependency: str = ""  # Question id | Such as "if yes"
     recommandations: Annotated[
         ScoredRecommandations | FixedRecommandation | None,
         Field(discriminator="type", default=None),
