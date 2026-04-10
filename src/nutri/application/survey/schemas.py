@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Annotated
+from typing import Annotated, Literal
 from pydantic import BaseModel, Field
 
 
@@ -16,25 +16,75 @@ class Recommandation(BaseModel):
     recommandation: str
 
 
-class Proposition(BaseModel): ...
+class ScoredRecommandations(BaseModel):
+    type: Literal["scored"]
+    recommandations: list[Recommandation]
 
 
-class OptionProposition(Proposition):
+class FixedRecommandation(BaseModel):
+    type: Literal["fixed"]
+    recommandation: str
+
+
+class OptionProposition(BaseModel):
     proposition: str
     score: float
+    text_input: bool = False
 
 
-class ChoicesProposition(Proposition):
+class TextProposition(BaseModel):
+    type: Literal["text"]
     proposition: str
+
+
+class OptionPropositions(BaseModel):
+    type: Literal["option"]
+    dependency: str = ""  # Question id | Such as "if yes"
+    propositions: list[OptionProposition]
+
+
+class ChoicesPropositions(BaseModel):
+    type: Literal["choices"]
+    dependency: str = ""  # Question id | Such as "if yes"
     count_score_coeff: Annotated[
-        float, Field(description="Count the number of selection and multiply by the score coeff to get the final score. 0 if unscored.")
+        float,
+        Field(
+            description="Count the number of selection and multiply by the score coeff to get the final score. 0 if unscored.",
+            default=0,
+        ),
     ]
-    none_of_the_above: Annotated[bool, Field(description="None of the above choice that cancels all other choices.", default=False)]
+    count_score_map: Annotated[
+        list[float],
+        Field(
+            description="Map from count of selections (index) to score. When present, takes precedence over count_score_coeff.",
+            default_factory=list,
+        ),
+    ]
+    none_of_the_above: Annotated[
+        bool,
+        Field(
+            description="None of the above choice that cancels all other choices.",
+            default=False,
+        ),
+    ]
+    propositions: list[str]
+
+
+Annotated[
+    OptionPropositions | ChoicesPropositions | TextProposition,
+    Field(discriminator="type"),
+]
 
 
 class Question(BaseModel):
     topic: Topic
     question: str
     question_id: str
-    recommandations: list[Recommandation]
-    propositions: list[Proposition]
+    recommandations: Annotated[
+        ScoredRecommandations | FixedRecommandation | None,
+        Field(discriminator="type", default=None),
+    ]
+    propositions: Annotated[
+        OptionPropositions | ChoicesPropositions | TextProposition,
+        Field(discriminator="type"),
+    ]
