@@ -19,3 +19,18 @@ class QuestionResponse(BaseModel):
             dependency=question.dependency,
             propositions=question.propositions,
         )
+
+
+class AnswerRequest(BaseModel):
+    question_id: str
+    selected_option: str | None = None  # For "option" type questions
+    selected_choices: list[str] = []  # For "choices" type questions
+    text_input: str = ""  # For "text" type or option text_inputs
+
+
+class RecommandationResponse(BaseModel):
+    question_id: str
+    question: str
+    topic: Topic
+    score: float
+    recommandation: str
