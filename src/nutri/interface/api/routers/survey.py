@@ -1,27 +1,15 @@
 from fastapi import APIRouter
 
-from nutri.application.survey import SurveyService
-from nutri.interface.schemas.survey import (
-    RecommandationResponse,
-    SurveyRequest,
-    SurveyResponse,
-)
+from nutri.interface.schemas.survey import QuestionResponse
+from nutri.application.survey.service import SurveyService
+from nutri.settings import get_settings
+
+settings = get_settings()
 
 router = APIRouter(prefix="/survey", tags=["Survey"])
 
 
-@router.post("")
-async def get_recommandations(payload: SurveyRequest) -> SurveyResponse:
-    answers = payload.to_answers()
-    recos = SurveyService.get_recommandations(answers=answers)
-    return SurveyResponse(
-        recommandations=[
-            RecommandationResponse(
-                question=r.question,
-                question_text=r.question_text,
-                score=r.score,
-                content=r.content,
-            )
-            for r in recos
-        ]
-    )
+@router.get("/questions")
+def get_questions() -> list[QuestionResponse]:
+    questions = SurveyService.get_questions(config_path=settings.survey.config_path)
+    return [QuestionResponse.from_question(question=question) for question in questions]

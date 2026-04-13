@@ -1,0 +1,107 @@
+[
+  {
+    "topic": "Management & Products",
+    "question": "Do you have a business policy document?",
+    "question_id": "1.1.1",
+    "recommandations": {
+      "type": "scored",
+      "recommandations": [
+        {
+          "score": 5.0,
+          "recommandation": "A business plan will help keep your company financially healthy."
+        },
+        {
+          "score": 0.0,
+          "recommandation": "Consider identifying clear goals for your business."
+        }
+      ]
+    },
+    "propositions": {
+      "type": "option",
+      "propositions": [
+        {
+          "proposition": "Yes",
+          "score": 5.0
+        },
+        {
+          "proposition": "No",
+          "score": 0.0
+        }
+      ]
+    }
+  },
+  {
+    "topic": "Management & Products",
+    "question": "Are your criteria based on any international guidelines?",
+    "question_id": "1.2.2",
+    "recommandations": {
+      "type": "fixed",
+      "recommandation": "Following national/international guidelines helps develop healthier products."
+    },
+    "propositions": {
+      "type": "choices",
+      "count_score_coeff": 1.25,
+      "none_of_the_above": true,
+      "propositions": [
+        "National nutrition guidelines",
+        "Health Star Rating",
+        "Nutriscore",
+        "WHO Nutrient Profiling Models"
+      ]
+    }
+  },
+  {
+    "topic": "Management & Products",
+    "question": "If yes, how are your products analyzed?",
+    "question_id": "1.4.2",
+    "dependency": "1.4.1",
+    "recommandations": {
+      "type": "fixed",
+      "recommandation": "Chemical analysis in analytical laboratories is the preferred method."
+    },
+    "propositions": {
+      "type": "option",
+      "propositions": [
+        {
+          "proposition": "Lab analysis",
+          "score": 5.0
+        },
+        {
+          "proposition": "Calculation",
+          "score": 2.5
+        },
+        {
+          "proposition": "Other",
+          "score": 0
+        }
+      ]
+    }
+  },
+  {
+    "topic": "Marketing",
+    "question": "Is healthiness a factor in defining the price of a product?",
+    "question_id": "2.1.1",
+    "propositions": {
+      "type": "option",
+      "propositions": [
+        {
+          "proposition": "Yes",
+          "score": 0
+        },
+        {
+          "proposition": "No",
+          "score": 0
+        }
+      ]
+    }
+  },
+  {
+    "topic": "Engagement",
+    "question": "If yes, please explain how:",
+    "question_id": "5.4.2",
+    "propositions": {
+      "type": "text",
+      "proposition": "Please explain how your company engages with the community"
+    }
+  }
+]

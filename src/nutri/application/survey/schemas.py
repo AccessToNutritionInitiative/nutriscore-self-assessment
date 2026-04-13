@@ -68,12 +68,6 @@ class ChoicesPropositions(BaseModel):
     propositions: list[str]
 
 
-Annotated[
-    OptionPropositions | ChoicesPropositions | TextProposition,
-    Field(discriminator="type"),
-]
-
-
 class Question(BaseModel):
     topic: Topic
     question: str
