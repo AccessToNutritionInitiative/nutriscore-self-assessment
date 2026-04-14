@@ -49,6 +49,7 @@ with tab_single:
     st.subheader("Calculate score for one product")
 
     with st.form("single_product_form"):
+        product_name = st.text_input("Product name")
         col1, col2 = st.columns(2)
 
         with col1:
@@ -67,6 +68,8 @@ with tab_single:
             )
             has_sweeteners = st.checkbox("Contains sweeteners", disabled=category != "beverage")
             is_water = st.checkbox("Is water", disabled=category != "beverage")
+            is_cheese = st.checkbox("Is cheese", disabled=category != "general")
+            is_red_meat = st.checkbox("Is red meat", disabled=category != "general")
 
         submitted = st.form_submit_button(
             "Calculate Nutri-Score",
@@ -75,6 +78,7 @@ with tab_single:
 
     if submitted:
         payload = {
+            "product_name": product_name,
             "energy_kj": energy_kj,
             "sugar_g": sugar_g,
             "sat_fat_g": sat_fat_g,
@@ -84,6 +88,8 @@ with tab_single:
             "protein_g": protein_g,
             "has_sweeteners": has_sweeteners if category == "beverage" else False,
             "is_water": is_water if category == "beverage" else False,
+            "is_cheese": is_cheese if category == "general" else False,
+            "is_red_meat": is_red_meat if category == "general" else False,
             "category": category,
         }
         try:
@@ -151,6 +157,8 @@ with tab_bulk:
             "| `protein_g` | float | 0 – 100 | 0 |\n"
             "| `has_sweeteners` | bool | true / false | false |\n"
             "| `is_water` | bool | true / false | false |\n"
+            "| `is_cheese` | bool | true / false | false |\n"
+            "| `is_red_meat` | bool | true / false | false |\n"
             "| `category` | string | beverage, general, fats | *required* |"
         )
 

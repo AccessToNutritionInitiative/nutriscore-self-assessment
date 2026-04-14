@@ -62,13 +62,25 @@ class NutriscoreService:
         # --- P-points (favorable) ---
         p_fruit = cls._score_from_thresholds(product.fruit_veg_pct, [40, 60, 80], points=[0, 1, 2, 5])
         p_fibre = cls._score_from_thresholds(product.fibre_g, [3.0, 4.1, 5.2, 6.3, 7.4])
-        p_protein = cls._score_from_thresholds(product.protein_g, [2.4, 4.8, 7.2, 9.6, 12.0, 14.0, 17.0])
 
-        # Protein is excluded when n_total >= 11
-        if n_total >= 11:
-            score = n_total - p_fruit - p_fibre
-        else:
+        if product.is_cheese:
+            # Cheese: protein always counted (never excluded), max 7 points
+            p_protein = cls._score_from_thresholds(product.protein_g, [2.4, 4.8, 7.2, 9.6, 12.0, 14.0, 17.0])
             score = n_total - p_fruit - p_fibre - p_protein
+        elif product.is_red_meat:
+            # Red meat: protein capped at 2 points max, excluded if n_total >= 11
+            p_protein = cls._score_from_thresholds(product.protein_g, [2.4, 4.8])
+            if n_total >= 11:
+                score = n_total - p_fruit - p_fibre
+            else:
+                score = n_total - p_fruit - p_fibre - p_protein
+        else:
+            # General: protein excluded if n_total >= 11, max 7 points
+            p_protein = cls._score_from_thresholds(product.protein_g, [2.4, 4.8, 7.2, 9.6, 12.0, 14.0, 17.0])
+            if n_total >= 11:
+                score = n_total - p_fruit - p_fibre
+            else:
+                score = n_total - p_fruit - p_fibre - p_protein
 
         return score, cls._general_grade(score)
 

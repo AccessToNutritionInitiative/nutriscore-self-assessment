@@ -1,7 +1,7 @@
 [
   {
-    "name": "Still water",
     "product": {
+      "product_name": "Still water",
       "energy_kj": 0,
       "sugar_g": 0,
       "sat_fat_g": 0,
@@ -17,8 +17,8 @@
     "expected_grade": "A"
   },
   {
-    "name": "Orange juice 100%",
     "product": {
+      "product_name": "Orange juice 100%",
       "energy_kj": 201,
       "sugar_g": 9,
       "sat_fat_g": 0,
@@ -34,8 +34,8 @@
     "expected_grade": "C"
   },
   {
-    "name": "Diet cola (with sweeteners)",
     "product": {
+      "product_name": "Diet cola (with sweeteners)",
       "energy_kj": 2,
       "sugar_g": 0,
       "sat_fat_g": 0,
@@ -51,8 +51,8 @@
     "expected_grade": "C"
   },
   {
-    "name": "Redbull",
     "product": {
+      "product_name": "Redbull",
       "energy_kj": 195,
       "sugar_g": 11,
       "sat_fat_g": 0,
@@ -68,8 +68,8 @@
     "expected_grade": "E"
   },
   {
-    "name": "Cola",
     "product": {
+      "product_name": "Cola",
       "energy_kj": 180,
       "sugar_g": 10.6,
       "sat_fat_g": 0,
@@ -85,8 +85,8 @@
     "expected_grade": "E"
   },
   {
-    "name": "Soft drink with sweeteners",
     "product": {
+      "product_name": "Soft drink with sweeteners",
       "energy_kj": 29,
       "sugar_g": 1.2,
       "sat_fat_g": 0,

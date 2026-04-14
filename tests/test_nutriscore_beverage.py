@@ -17,7 +17,7 @@ def load_cases():
             ProductRequest.model_validate(case["product"]),
             case["expected_score"],
             case["expected_grade"],
-            id=case["name"],
+            id=case["product"]["product_name"],
         )
         for case in cases
     ]
