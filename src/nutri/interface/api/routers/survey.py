@@ -25,18 +25,14 @@ def submit_answers(answers: list[AnswerRequest]) -> list[RecommandationResponse]
         question = questions_by_id.get(answer.question_id)
         if question is None:
             continue
-        result = SurveyService.compute_result(
-            question=question,
-            selected_option=answer.selected_option,
-            selected_choices=answer.selected_choices,
-        )
+        recommandation = SurveyService.get_recommandation(question=question, score=answer.score)
         results.append(
             RecommandationResponse(
-                question_id=result.question_id,
-                question=result.question,
+                question_id=question.question_id,
+                question=question.question,
                 topic=question.topic,
-                score=result.score,
-                recommandation=result.recommandation,
+                score=answer.score,
+                recommandation=recommandation,
             )
         )
     return results

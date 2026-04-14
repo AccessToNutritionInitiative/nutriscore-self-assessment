@@ -1,17 +1,18 @@
+from collections import defaultdict
 import os
 
 import requests
 import streamlit as st
 
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
+from survey_schemas import (
+    ChoicesPropositions,
+    OptionPropositions,
+    Question,
+    QuestionResult,
+    TextProposition,
+)
 
-TOPICS = [
-    "Management & Products",
-    "Marketing",
-    "Workforce Programs",
-    "Labeling",
-    "Engagement",
-]
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Nutrition Self-Assessment", page_icon="📋", layout="centered")
 st.title("📋 Nutrition Self-Assessment")
@@ -26,7 +27,8 @@ def fetch_questions() -> list[dict]:
 
 
 try:
-    all_questions = fetch_questions()
+    raw_questions = fetch_questions()
+    all_questions = [Question.model_validate(q) for q in raw_questions]
 except requests.exceptions.ConnectionError:
     st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
     st.stop()
@@ -34,121 +36,87 @@ except requests.exceptions.HTTPError as exc:
     st.error(f"API error: {exc}")
     st.stop()
 
-# Group questions by topic, preserving order
-questions_by_topic: dict[str, list[dict]] = {t: [] for t in TOPICS}
+# Group questions by topic, preserving first-seen order
+questions_by_topic: dict[str, list[Question]] = defaultdict(list)
 for q in all_questions:
-    topic = q["topic"]
-    if topic in questions_by_topic:
-        questions_by_topic[topic].append(q)
+    questions_by_topic[q.topic].append(q)
+
+topics = list(questions_by_topic)
 
 # Collect all answers keyed by question_id
 answers_by_id: dict[str, dict] = {}
 
-tabs = st.tabs(TOPICS)
+tabs = st.tabs(topics)
 
-for tab, topic in zip(tabs, TOPICS):
+for tab, topic in zip(tabs, topics):
     with tab:
-        questions = questions_by_topic[topic]
-        for q in questions:
-            qid = q["question_id"]
-            props = q["propositions"]
-            dep = q.get("dependency", "")
+        for q in questions_by_topic[topic]:
+            qid = q.question_id
+            props = q.propositions
+            dep = q.dependency
 
             # Handle dependency: hide if parent not answered affirmatively
             if dep and dep != qid:
                 parent_answer = st.session_state.get(f"answer_{dep}")
                 if parent_answer is None:
                     continue
-                # For option parents: skip if "No" was selected
                 if isinstance(parent_answer, str) and parent_answer == "No":
                     continue
-                # For choices parents: skip if nothing selected
                 if isinstance(parent_answer, list) and len(parent_answer) == 0:
                     continue
 
-            st.markdown(f"**{qid}. {q['question']}**")
+            st.markdown(f"**{qid}. {q.question}**")
 
-            if props["type"] == "option":
-                options = [p["proposition"] for p in props["propositions"]]
+            if isinstance(props, OptionPropositions):
+                options = [p.proposition for p in props.propositions]
                 selected = st.radio(
-                    f"Select one",
+                    "Select one",
                     options=options,
                     index=None,
                     key=f"answer_{qid}",
                     label_visibility="collapsed",
                 )
                 if selected is not None:
-                    answers_by_id[qid] = {
-                        "question_id": qid,
-                        "selected_option": selected,
-                    }
-                    # Check if the selected option has text_inputs
-                    for p in props["propositions"]:
-                        if p.get("text_inputs") and p["proposition"] == selected:
-                            text_val = st.text_area(
-                                "Please provide details",
-                                key=f"text_{qid}",
-                            )
-                            if text_val:
-                                answers_by_id[qid]["text_input"] = text_val
+                    score = next(p.score for p in props.propositions if p.proposition == selected)
+                    answers_by_id[qid] = {"question_id": qid, "score": score}
+                    for p in props.propositions:
+                        if p.text_inputs and p.proposition == selected:
+                            st.text_area("Please provide details", key=f"text_{qid}")
 
-            elif props["type"] == "choices":
-                choice_options = list(props["propositions"])
-                has_none = props.get("none_of_the_above", False)
+            elif isinstance(props, ChoicesPropositions):
+                if props.none_of_the_above and st.session_state.get(f"none_{qid}", False):
+                    for i in range(len(props.propositions)):
+                        st.session_state[f"choice_{qid}_{i}"] = False
 
-                if has_none:
-                    none_checked = st.checkbox(
-                        "None of the above",
-                        key=f"none_{qid}",
-                    )
-                    if none_checked:
-                        st.session_state[f"answer_{qid}"] = []
-                        answers_by_id[qid] = {
-                            "question_id": qid,
-                            "selected_choices": [],
-                        }
+                st.caption("Select all that apply")
+                selected_choices = [choice for i, choice in enumerate(props.propositions) if st.checkbox(choice, key=f"choice_{qid}_{i}")]
+
+                none_checked = False
+                if props.none_of_the_above:
+                    none_checked = st.checkbox("None of the above", key=f"none_{qid}")
+
+                st.session_state[f"answer_{qid}"] = selected_choices
+                if selected_choices or none_checked:
+                    count = len(selected_choices)
+                    if props.count_score_map:
+                        score = props.count_score_map[min(count, len(props.count_score_map) - 1)]
                     else:
-                        selected_choices = st.multiselect(
-                            "Select all that apply",
-                            options=choice_options,
-                            key=f"answer_{qid}",
-                            label_visibility="collapsed",
-                        )
-                        if selected_choices:
-                            answers_by_id[qid] = {
-                                "question_id": qid,
-                                "selected_choices": selected_choices,
-                            }
-                else:
-                    selected_choices = st.multiselect(
-                        "Select all that apply",
-                        options=choice_options,
-                        key=f"answer_{qid}",
-                        label_visibility="collapsed",
-                    )
-                    if selected_choices:
-                        answers_by_id[qid] = {
-                            "question_id": qid,
-                            "selected_choices": selected_choices,
-                        }
+                        score = count * props.count_score_coeff
+                    answers_by_id[qid] = {"question_id": qid, "score": score}
 
-            elif props["type"] == "text":
+            elif isinstance(props, TextProposition):
                 text_val = st.text_area(
-                    props.get("proposition", "Your answer"),
+                    props.proposition,
                     key=f"answer_{qid}",
                     label_visibility="collapsed",
-                    placeholder=props.get("proposition", ""),
+                    placeholder=props.proposition,
                 )
                 if text_val:
-                    answers_by_id[qid] = {
-                        "question_id": qid,
-                        "text_input": text_val,
-                    }
+                    answers_by_id[qid] = {"question_id": qid, "score": 0.0}
 
             st.divider()
 
 # Submit button
-st.markdown("---")
 submitted = st.button("Submit assessment", type="primary", use_container_width=True)
 
 if submitted:
@@ -164,28 +132,22 @@ if submitted:
                     timeout=30,
                 )
                 resp.raise_for_status()
-                results = resp.json()
+                results = [QuestionResult.model_validate(r) for r in resp.json()]
 
             st.success(f"Assessment complete — {len(results)} recommendations generated.")
 
-            # Group results by topic
-            results_by_topic: dict[str, list[dict]] = {t: [] for t in TOPICS}
+            results_by_topic: defaultdict[str, list[QuestionResult]] = defaultdict(list)
             for r in results:
-                t = r["topic"]
-                if t in results_by_topic:
-                    results_by_topic[t].append(r)
+                results_by_topic[r.topic].append(r)
 
-            for topic in TOPICS:
-                topic_results = results_by_topic[topic]
-                if not topic_results:
-                    continue
+            for topic, topic_results in results_by_topic.items():
                 st.subheader(topic)
-                topic_score = sum(r["score"] for r in topic_results)
-                st.metric(f"Topic score", f"{topic_score:.1f}")
+                topic_score = sum(r.score for r in topic_results)
+                st.metric("Topic score", f"{topic_score:.1f}")
                 for r in topic_results:
-                    if r["recommandation"]:
-                        with st.expander(f"{r['question_id']}. {r['question']}"):
-                            st.markdown(r["recommandation"])
+                    if r.recommandation:
+                        with st.expander(f"{r.question_id}. {r.question}"):
+                            st.markdown(r.recommandation)
 
         except requests.exceptions.ConnectionError:
             st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
