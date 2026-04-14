@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Potato Chips",
+    "product": {
+      "energy_kj": 2289,
+      "sugar_g": 4.11,
+      "sat_fat_g": 10.97,
+      "salt_g": 1.315,
+      "fruit_veg_pct": 0,
+      "fibre_g": 4.29,
+      "protein_g": 6.58,
+      "category": "general"
+    },
+    "expected_score": 21,
+    "expected_grade": "E"
+  },
+  {
+    "name": "TJ A Complete Salad Baby Spinach",
+    "product": {
+      "energy_kj": 1037,
+      "sugar_g": 10.62,
+      "sat_fat_g": 3.1,
+      "salt_g": 0.53,
+      "fruit_veg_pct": 60,
+      "fibre_g": 2.65,
+      "protein_g": 3.54,
+      "category": "general"
+    },
+    "expected_score": 10,
+    "expected_grade": "C"
+  },
+  {
+    "name": "Chobani A Hint of Wild Blueberry Yogurt",
+    "product": {
+      "energy_kj": 335,
+      "sugar_g": 6.0,
+      "sat_fat_g": 1.0,
+      "salt_g": 0.1,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.0,
+      "protein_g": 8.0,
+      "category": "general"
+    },
+    "expected_score": -2,
+    "expected_grade": "A"
+  },
+  {
+    "name": "Mighty Meals A La Carte Chicken Tenders",
+    "product": {
+      "energy_kj": 711,
+      "sugar_g": 0.0,
+      "sat_fat_g": 0.0,
+      "salt_g": 0.0,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.0,
+      "protein_g": 14.0,
+      "category": "general"
+    },
+    "expected_score": -3,
+    "expected_grade": "A"
+  },
+  {
+    "name": "Hershey's I Love You Milk Chocolate Kisses",
+    "product": {
+      "energy_kj": 2041,
+      "sugar_g": 56.1,
+      "sat_fat_g": 17.07,
+      "salt_g": 0.2125,
+      "fruit_veg_pct": 0,
+      "fibre_g": 2.44,
+      "protein_g": 7.32,
+      "category": "general"
+    },
+    "expected_score": 32,
+    "expected_grade": "E"
+  }
+]
