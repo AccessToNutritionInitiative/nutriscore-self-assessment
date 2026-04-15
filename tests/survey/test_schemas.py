@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from nutri.application.survey.schemas import Question
+from nutri.domain.survey import Question
 from nutri.settings import get_settings
 
 

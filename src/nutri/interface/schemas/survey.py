@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from nutri.application.survey.schemas import OptionPropositions, ChoicesPropositions, Question, TextProposition, Topic
+from nutri.domain.survey import Answer, ChoicesPropositions, OptionPropositions, Question, Recommandation, TextProposition, Topic
 
 
 class QuestionResponse(BaseModel):
@@ -25,10 +25,17 @@ class AnswerRequest(BaseModel):
     question_id: str
     score: float
 
+    def to_answer(self) -> Answer:
+        return Answer(
+            question_id=self.question_id,
+            score=self.score,
+        )
+
 
 class RecommandationResponse(BaseModel):
     question_id: str
-    question: str
-    topic: Topic
-    score: float
     recommandation: str
+
+    @classmethod
+    def from_recommandation(cls, recommandation: Recommandation) -> "RecommandationResponse":
+        return cls(question_id=recommandation.question_id, recommandation=recommandation.recommandation)

@@ -16,23 +16,6 @@ def get_questions() -> list[QuestionResponse]:
 
 
 @router.post("/answers")
-def submit_answers(answers: list[AnswerRequest]) -> list[RecommandationResponse]:
-    questions = SurveyService.get_questions(config_path=settings.survey.config_path)
-    questions_by_id = {q.question_id: q for q in questions}
-
-    results = []
-    for answer in answers:
-        question = questions_by_id.get(answer.question_id)
-        if question is None:
-            continue
-        recommandation = SurveyService.get_recommandation(question=question, score=answer.score)
-        results.append(
-            RecommandationResponse(
-                question_id=question.question_id,
-                question=question.question,
-                topic=question.topic,
-                score=answer.score,
-                recommandation=recommandation,
-            )
-        )
-    return results
+def submit_answers(payload: list[AnswerRequest]) -> list[RecommandationResponse]:
+    recommmandations = SurveyService.get_recommandations(answers=[answer.to_answer() for answer in payload], config_path=settings.survey.config_path)
+    return [RecommandationResponse.from_recommandation(recommandation=recommandation) for recommandation in recommmandations]

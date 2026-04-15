@@ -3,14 +3,14 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field
 
 
-class Recommandation(BaseModel):
+class ScoredRecommandation(BaseModel):
     score: float
     recommandation: str
 
 
 class ScoredRecommandations(BaseModel):
     type: Literal["scored"]
-    recommandations: list[Recommandation]
+    recommandations: list[ScoredRecommandation]
 
 
 class FixedRecommandation(BaseModel):
@@ -57,9 +57,6 @@ class Question(BaseModel):
     ]
 
 
-class QuestionResult(BaseModel):
+class Recommandation(BaseModel):
     question_id: str
-    question: str
-    topic: str
-    score: float
     recommandation: str

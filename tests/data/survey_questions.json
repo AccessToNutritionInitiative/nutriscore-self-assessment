@@ -103,5 +103,51 @@
       "type": "text",
       "proposition": "Please explain how your company engages with the community"
     }
+  },
+  {
+    "topic": "Management & Products",
+    "question": "Does your company have/work with:",
+    "question_id": "1.7",
+    "recommandations": {
+      "type": "scored",
+      "recommandations": [
+        {
+          "score": 0.0,
+          "recommandation": "We recommend that you seek input on nutrition, food technology, quality, and safety from experts in order to ensure your products are nutritious, of high quality, and safe for consumption. This will help your company establish long-term nutritional and financial value"
+        },
+        {
+          "score": 2.0,
+          "recommandation": "We recommend you consider extending the range of nutrition, food technology, quality, and safety experts you work with."
+        },
+        {
+          "score": 4.0,
+          "recommandation": "We recommend you consider extending the range of nutrition, food technology, quality, and safety experts you work with."
+        },
+        {
+          "score": 6.0,
+          "recommandation": "Consider extending the range of experts you work with, to improve the nutritional quality of your products and ensure food quality and safety."
+        },
+        {
+          "score": 8.0,
+          "recommandation": "Consider extending the range of experts you work with, to improve the nutritional quality of your products and ensure food quality and safety."
+        },
+        {
+          "score": 10.0,
+          "recommandation": "Working with the relevant experts helps ensure that your products are nutritious, of high quality, and safe for consumption."
+        }
+      ]
+    },
+    "propositions": {
+      "type": "choices",
+      "count_score_coeff": 2.0,
+      "none_of_the_above": true,
+      "propositions": [
+        "Quality Assurance (QA) specialists",
+        "Nutritionists",
+        "Food technologists",
+        "Hygiene experts",
+        "External experts"
+      ]
+    }
   }
 ]

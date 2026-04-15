@@ -8,7 +8,7 @@ from survey_schemas import (
     ChoicesPropositions,
     OptionPropositions,
     Question,
-    QuestionResult,
+    Recommandation,
     TextProposition,
 )
 
@@ -132,22 +132,27 @@ if submitted:
                     timeout=30,
                 )
                 resp.raise_for_status()
-                results = [QuestionResult.model_validate(r) for r in resp.json()]
+                recommandations = [Recommandation.model_validate(r) for r in resp.json()]
 
-            st.success(f"Assessment complete — {len(results)} recommendations generated.")
+            st.success(f"Assessment complete — {len(recommandations)} recommendations generated.")
 
-            results_by_topic: defaultdict[str, list[QuestionResult]] = defaultdict(list)
-            for r in results:
-                results_by_topic[r.topic].append(r)
+            questions_by_id: dict[str, Question] = {q.question_id: q for q in all_questions}
+            scores_by_id: dict[str, float] = {a["question_id"]: a["score"] for a in payload}
 
-            for topic, topic_results in results_by_topic.items():
+            recos_by_topic: defaultdict[str, list[Recommandation]] = defaultdict(list)
+            for r in recommandations:
+                question = questions_by_id.get(r.question_id)
+                if question is not None:
+                    recos_by_topic[question.topic].append(r)
+
+            for topic, topic_recos in recos_by_topic.items():
                 st.subheader(topic)
-                topic_score = sum(r.score for r in topic_results)
+                topic_score = sum(scores_by_id.get(r.question_id, 0.0) for r in topic_recos)
                 st.metric("Topic score", f"{topic_score:.1f}")
-                for r in topic_results:
-                    if r.recommandation:
-                        with st.expander(f"{r.question_id}. {r.question}"):
-                            st.markdown(r.recommandation)
+                for r in topic_recos:
+                    question = questions_by_id[r.question_id]
+                    with st.expander(f"{r.question_id}. {question.question}"):
+                        st.markdown(r.recommandation)
 
         except requests.exceptions.ConnectionError:
             st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
