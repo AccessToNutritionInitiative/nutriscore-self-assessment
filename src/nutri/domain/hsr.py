@@ -130,6 +130,7 @@ class Thresholds:
     # Protein thresholds
     # index 1 threshold rule: 1.6 < x < 3.2
     # index 2 threshold rule: 3.2 <= x <= 4.8
+    # normal threshold rule: 4.8 < x <= 6.4
     PROTEIN: list[float] = [
         1.6,
         3.2,
