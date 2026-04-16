@@ -1,3 +1,3 @@
-energy_kj,sugar_g,sat_fat_g,salt_g,fruit_veg_pct,fibre_g,protein_g,has_sweeteners,is_water,category
-0,0,0,0,0,0,0,false,true,beverage
-201,9,0,0,100,0,0.5,false,false,beverage
+product_name,energy_kj,sugar_g,sat_fat_g,salt_g,fruit_veg_pct,fibre_g,protein_g,has_sweeteners,is_water,is_cheese,is_red_meat,category
+product1,0,0,0,0,0,0,0,false,true,false,false,beverage
+product2,201,9,0,0,100,0,0.5,false,false,false,false,beverage

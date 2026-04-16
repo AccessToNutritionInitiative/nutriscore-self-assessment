@@ -28,3 +28,5 @@ class Product:
     has_sweeteners: bool
     is_water: bool
     category: ProductCategory
+    is_cheese: bool = False
+    is_red_meat: bool = False

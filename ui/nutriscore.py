@@ -1,4 +1,3 @@
-import json
 import os
 from pathlib import Path
 
@@ -7,8 +6,7 @@ import requests
 import streamlit as st
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
-CATEGORIES = ["beverage", "general", "fats"]
-UNSUPPORTED_CATEGORIES = {"general", "fats"}
+CATEGORIES = ["general", "fats", "beverage"]
 GRADE_COLORS = {
     "A": "#038141",
     "B": "#85BB2F",
@@ -25,11 +23,11 @@ It is computed from **negative points** (energy, sugars, saturated fat, salt) mi
 The final score is then mapped to a grade depending on the product category.
 """
 EXPLAINER_CATEGORIES = """
-**Beverage** — drinks including water, juices, sodas, etc. Has specific thresholds and a sweetener penalty.
-
 **General** — all solid foods not classified as fats or beverages.
 
 **Fats** — added fats and oils (butter, olive oil, margarine, etc.). Uses a saturated-fat-to-lipid ratio instead of energy.
+
+**Beverage** — drinks including water, juices, sodas, etc. Has specific thresholds and a sweetener penalty.
 """
 
 st.set_page_config(page_title="Nutri-Score Calculator", page_icon="🥗", layout="centered")
@@ -47,9 +45,16 @@ tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
 # ── Single product ─────────────────────────────────────────────────────────────
 with tab_single:
-    st.subheader("Calculate score for one product")
+    st.subheader("Calculate score for a single product")
 
-    with st.form("single_product_form"):
+    category = st.radio(
+        "Category",
+        CATEGORIES,
+        horizontal=True,
+    )
+
+    with st.form("single_product_form", enter_to_submit=False):
+        product_name = st.text_input("Product name")
         col1, col2 = st.columns(2)
 
         with col1:
@@ -62,25 +67,32 @@ with tab_single:
         with col2:
             fibre_g = st.number_input("Fibre (g)", min_value=0.0, value=0.0, step=0.1)
             protein_g = st.number_input("Protein (g)", min_value=0.0, value=0.0, step=0.1)
-            category = st.selectbox(
-                "Category",
-                CATEGORIES,
-                format_func=lambda c: f"{c} — not supported yet" if c in UNSUPPORTED_CATEGORIES else c,
-            )
-            has_sweeteners = st.checkbox("Contains sweeteners")
-            is_water = st.checkbox("Is water")
 
-        if category in UNSUPPORTED_CATEGORIES:
-            st.warning("This category is not supported yet. Please select **beverage**.")
+            has_sweeteners = False
+            is_water = False
+            is_cheese = False
+            is_red_meat = False
+
+            if category == "beverage":
+                has_sweeteners = st.checkbox("Contains sweeteners")
+                is_water = st.checkbox("Is water")
+            elif category == "general":
+                general_type = st.radio(
+                    "Product type",
+                    options=["Cheese", "Red meat", "Neither"],
+                    index=0,
+                )
+                is_cheese = general_type == "Cheese"
+                is_red_meat = general_type == "Red meat"
 
         submitted = st.form_submit_button(
             "Calculate Nutri-Score",
             use_container_width=True,
-            disabled=category in UNSUPPORTED_CATEGORIES,
         )
 
-    if submitted and category not in UNSUPPORTED_CATEGORIES:
+    if submitted:
         payload = {
+            "product_name": product_name,
             "energy_kj": energy_kj,
             "sugar_g": sugar_g,
             "sat_fat_g": sat_fat_g,
@@ -88,8 +100,10 @@ with tab_single:
             "fruit_veg_pct": fruit_veg_pct,
             "fibre_g": fibre_g,
             "protein_g": protein_g,
-            "has_sweeteners": has_sweeteners,
-            "is_water": is_water,
+            "has_sweeteners": has_sweeteners if category == "beverage" else False,
+            "is_water": is_water if category == "beverage" else False,
+            "is_cheese": is_cheese if category == "general" else False,
+            "is_red_meat": is_red_meat if category == "general" else False,
             "category": category,
         }
         try:
@@ -157,6 +171,8 @@ with tab_bulk:
             "| `protein_g` | float | 0 – 100 | 0 |\n"
             "| `has_sweeteners` | bool | true / false | false |\n"
             "| `is_water` | bool | true / false | false |\n"
+            "| `is_cheese` | bool | true / false | false |\n"
+            "| `is_red_meat` | bool | true / false | false |\n"
             "| `category` | string | beverage, general, fats | *required* |"
         )
 

@@ -1,0 +1,237 @@
+[
+  {
+    "product": {
+      "product_name": "Potato Chips",
+      "energy_kj": 2289,
+      "sugar_g": 4.11,
+      "sat_fat_g": 10.97,
+      "salt_g": 1.315,
+      "fruit_veg_pct": 0,
+      "fibre_g": 4.29,
+      "protein_g": 6.58,
+      "category": "general"
+    },
+    "expected_score": 21,
+    "expected_grade": "E"
+  },
+  {
+    "product": {
+      "product_name": "TJ A Complete Salad Baby Spinach",
+      "energy_kj": 1037,
+      "sugar_g": 10.62,
+      "sat_fat_g": 3.1,
+      "salt_g": 0.53,
+      "fruit_veg_pct": 60,
+      "fibre_g": 2.65,
+      "protein_g": 3.54,
+      "category": "general"
+    },
+    "expected_score": 10,
+    "expected_grade": "C"
+  },
+  {
+    "product": {
+      "product_name": "Chobani A Hint of Wild Blueberry Yogurt",
+      "energy_kj": 335,
+      "sugar_g": 6.0,
+      "sat_fat_g": 1.0,
+      "salt_g": 0.1,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.0,
+      "protein_g": 8.0,
+      "category": "general"
+    },
+    "expected_score": -2,
+    "expected_grade": "A"
+  },
+  {
+    "product": {
+      "product_name": "Mighty Meals A La Carte Chicken Tenders",
+      "energy_kj": 711,
+      "sugar_g": 0.0,
+      "sat_fat_g": 0.0,
+      "salt_g": 0.0,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.0,
+      "protein_g": 14.0,
+      "category": "general"
+    },
+    "expected_score": -3,
+    "expected_grade": "A"
+  },
+  {
+    "product": {
+      "product_name": "Hershey's I Love You Milk Chocolate Kisses",
+      "energy_kj": 2041,
+      "sugar_g": 56.1,
+      "sat_fat_g": 17.07,
+      "salt_g": 0.2125,
+      "fruit_veg_pct": 0,
+      "fibre_g": 2.44,
+      "protein_g": 7.32,
+      "category": "general"
+    },
+    "expected_score": 32,
+    "expected_grade": "E"
+  },
+  {
+    "product": {
+      "product_name": "Brie Cheese",
+      "energy_kj": 1397,
+      "sugar_g": 0.45,
+      "sat_fat_g": 17.41,
+      "salt_g": 1.598,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 20.75,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 14,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Gorgonzola Cheese",
+      "energy_kj": 1477,
+      "sugar_g": 0.5,
+      "sat_fat_g": 18.669,
+      "salt_g": 3.544,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 21.4,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 24,
+    "expected_grade": "E"
+  },
+  {
+    "product": {
+      "product_name": "Camembert Cheese",
+      "energy_kj": 1255,
+      "sugar_g": 0.46,
+      "sat_fat_g": 15.259,
+      "salt_g": 2.139,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 19.8,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 16,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Cottage Cheese with Fruit",
+      "energy_kj": 406,
+      "sugar_g": 2.38,
+      "sat_fat_g": 2.311,
+      "salt_g": 0.874,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.2,
+      "protein_g": 10.69,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 3,
+    "expected_grade": "C"
+  },
+  {
+    "product": {
+      "product_name": "Gouda Cheese",
+      "energy_kj": 1490,
+      "sugar_g": 2.22,
+      "sat_fat_g": 17.614,
+      "salt_g": 2.081,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 24.94,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 17,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Veal Meat",
+      "energy_kj": 602,
+      "sugar_g": 0,
+      "sat_fat_g": 2.79,
+      "salt_g": 0.205,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 19.35,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 2,
+    "expected_grade": "B"
+  },
+  {
+    "product": {
+      "product_name": "Taco Meat",
+      "energy_kj": 728,
+      "sugar_g": 0.12,
+      "sat_fat_g": 3.963,
+      "salt_g": 1.11,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.2,
+      "protein_g": 19.58,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 8,
+    "expected_grade": "C"
+  },
+  {
+    "product": {
+      "product_name": "Beef Steak",
+      "energy_kj": 1054,
+      "sugar_g": 0,
+      "sat_fat_g": 5.877,
+      "salt_g": 0.9325,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 27.29,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 12,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Beef Stew Meat",
+      "energy_kj": 1268,
+      "sugar_g": 0,
+      "sat_fat_g": 7.92,
+      "salt_g": 0.955,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 28.4,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 14,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Beef Brisket",
+      "energy_kj": 1431,
+      "sugar_g": 0,
+      "sat_fat_g": 10.203,
+      "salt_g": 0.5625,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 24.84,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 16,
+    "expected_grade": "D"
+  }
+]
