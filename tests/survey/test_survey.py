@@ -1,6 +1,6 @@
 import pytest
 
-from nutri.application.survey.service import SurveyService
+from nutri.application.survey import SurveyService
 from nutri.domain.survey import Answer, Recommandation
 from nutri.settings import REPO_DIR
 
@@ -32,6 +32,7 @@ def expected_recommandations() -> list[Recommandation]:
 
 
 def test_get_recommandations(answers: list[Answer], expected_recommandations: list[Recommandation]):
-    recommandations = SurveyService.get_recommandations(answers=answers, config_path=CONFIG_PATH)
+    questions = SurveyService.get_questions(config_path=CONFIG_PATH)
+    recommandations = SurveyService._get_recommandations(answers=answers, questions=questions)
     for recommandation, expected_recommandation in zip(recommandations, expected_recommandations):
         assert recommandation == expected_recommandation

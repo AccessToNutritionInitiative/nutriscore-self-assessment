@@ -13,6 +13,8 @@ class SurveySettings(BaseModel):
 class Settings(BaseSettings):
     survey: SurveySettings = SurveySettings()
 
+    db_path: Path = REPO_DIR / "data/nutri.db"
+
 
 def get_settings():
     return Settings()

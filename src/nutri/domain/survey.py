@@ -1,6 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime
 from enum import StrEnum
-from typing import Annotated, Literal
+from typing import Annotated, Literal, NewType
+from uuid import UUID, uuid4
 from pydantic import BaseModel, Field
 
 
@@ -88,6 +90,17 @@ class Question(BaseModel):
 class Answer:
     question_id: str
     score: float
+    value: str | list[str] | None = None
+
+
+SubmissionId = NewType("SubmissionId", UUID)
+
+
+@dataclass
+class Answers:
+    answers: list[Answer]
+    submission_id: SubmissionId = field(default_factory=lambda: SubmissionId(uuid4()))
+    submitted_at: datetime = datetime.now()
 
 
 @dataclass

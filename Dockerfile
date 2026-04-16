@@ -1,6 +1,10 @@
 # Use a Python image with uv pre-installed
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
+# sqlite3 CLI is used by the entrypoint to apply migrations
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends sqlite3=3.53 \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install the project into `/app`
 WORKDIR /app
@@ -32,8 +36,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Reset the entrypoint, don't invoke `uv`
-ENTRYPOINT []
+RUN chmod +x /app/entrypoint.sh
 
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 CMD ["uv", "run", "fastapi", "run", "--host", "0.0.0.0", "--port", "8000", "src/nutri/interface/api/main.py"]

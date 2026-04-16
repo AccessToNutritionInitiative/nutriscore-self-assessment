@@ -14,9 +14,26 @@ from survey_schemas import (
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
+INTRO = """
+To support SMEs in the fight against malnutrition, ATNI initiated a 3-year project in April 2019 (ending March 2022), to design a voluntary self-assessment tool for SMEs called the **Nutrition Business Monitor (NBM)** in partnership with the Global Alliance for Improved Nutrition (GAIN). The aim of the tool is to evaluate the performance of SMEs on their commitments and practices related to increasing the affordability and accessibility of nutritious foods and beverages in their respective markets. The tool also produces a document of country-specific recommendations and information for each company, which is based on gaps and areas in need of improvement identified during completion of the tool.
+
+**How to use the file**
+
+This assessment is intended to be used as a self-assessment tool. You can navigate freely from one category to the other.
+
+When filling in the category, you can see your score appearing in the top row. You can also read the corresponding recommendations on the Recommendations Tab and view your overall results on the Results tab.
+
+**How to navigate the file?**
+
+Click on the relevant tab to toggle the category you want to fill in.
+"""
+
 st.set_page_config(page_title="Nutrition Self-Assessment", page_icon="📋", layout="centered")
 st.title("📋 Nutrition Self-Assessment")
 st.caption("Powered by the ATNi Nutri API")
+
+with st.expander("Introduction", expanded=True):
+    st.markdown(INTRO)
 
 
 @st.cache_data(ttl=600)
@@ -78,7 +95,7 @@ for tab, topic in zip(tabs, topics):
                 )
                 if selected is not None:
                     score = next(p.score for p in props.propositions if p.proposition == selected)
-                    answers_by_id[qid] = {"question_id": qid, "score": score}
+                    answers_by_id[qid] = {"question_id": qid, "score": score, "value": selected}
                     for p in props.propositions:
                         if p.text_inputs and p.proposition == selected:
                             st.text_area("Please provide details", key=f"text_{qid}")
@@ -102,7 +119,7 @@ for tab, topic in zip(tabs, topics):
                         score = props.count_score_map[min(count, len(props.count_score_map) - 1)]
                     else:
                         score = count * props.count_score_coeff
-                    answers_by_id[qid] = {"question_id": qid, "score": score}
+                    answers_by_id[qid] = {"question_id": qid, "score": score, "value": selected_choices}
 
             elif isinstance(props, TextProposition):
                 text_val = st.text_area(
@@ -112,7 +129,7 @@ for tab, topic in zip(tabs, topics):
                     placeholder=props.proposition,
                 )
                 if text_val:
-                    answers_by_id[qid] = {"question_id": qid, "score": 0.0}
+                    answers_by_id[qid] = {"question_id": qid, "score": 0.0, "value": text_val}
 
             st.divider()
 

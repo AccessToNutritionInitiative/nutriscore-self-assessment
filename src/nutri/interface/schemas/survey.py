@@ -24,11 +24,13 @@ class QuestionResponse(BaseModel):
 class AnswerRequest(BaseModel):
     question_id: str
     score: float
+    value: str | list[str] | None = None
 
     def to_answer(self) -> Answer:
         return Answer(
             question_id=self.question_id,
             score=self.score,
+            value=self.value,
         )
 
 
