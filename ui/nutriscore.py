@@ -1,4 +1,3 @@
-import json
 import os
 from pathlib import Path
 
@@ -7,7 +6,7 @@ import requests
 import streamlit as st
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
-CATEGORIES = ["beverage", "general", "fats"]
+CATEGORIES = ["general", "fats", "beverage"]
 GRADE_COLORS = {
     "A": "#038141",
     "B": "#85BB2F",
@@ -24,11 +23,11 @@ It is computed from **negative points** (energy, sugars, saturated fat, salt) mi
 The final score is then mapped to a grade depending on the product category.
 """
 EXPLAINER_CATEGORIES = """
-**Beverage** — drinks including water, juices, sodas, etc. Has specific thresholds and a sweetener penalty.
-
 **General** — all solid foods not classified as fats or beverages.
 
 **Fats** — added fats and oils (butter, olive oil, margarine, etc.). Uses a saturated-fat-to-lipid ratio instead of energy.
+
+**Beverage** — drinks including water, juices, sodas, etc. Has specific thresholds and a sweetener penalty.
 """
 
 st.set_page_config(page_title="Nutri-Score Calculator", page_icon="🥗", layout="centered")
@@ -46,9 +45,15 @@ tab_single, tab_bulk = st.tabs(["Single Product", "Bulk CSV"])
 
 # ── Single product ─────────────────────────────────────────────────────────────
 with tab_single:
-    st.subheader("Calculate score for one product")
+    st.subheader("Calculate score for a single product")
 
-    with st.form("single_product_form"):
+    category = st.radio(
+        "Category",
+        CATEGORIES,
+        horizontal=True,
+    )
+
+    with st.form("single_product_form", enter_to_submit=False):
         product_name = st.text_input("Product name")
         col1, col2 = st.columns(2)
 
@@ -62,14 +67,23 @@ with tab_single:
         with col2:
             fibre_g = st.number_input("Fibre (g)", min_value=0.0, value=0.0, step=0.1)
             protein_g = st.number_input("Protein (g)", min_value=0.0, value=0.0, step=0.1)
-            category = st.selectbox(
-                "Category",
-                CATEGORIES,
-            )
-            has_sweeteners = st.checkbox("Contains sweeteners", disabled=category != "beverage")
-            is_water = st.checkbox("Is water", disabled=category != "beverage")
-            is_cheese = st.checkbox("Is cheese", disabled=category != "general")
-            is_red_meat = st.checkbox("Is red meat", disabled=category != "general")
+
+            has_sweeteners = False
+            is_water = False
+            is_cheese = False
+            is_red_meat = False
+
+            if category == "beverage":
+                has_sweeteners = st.checkbox("Contains sweeteners")
+                is_water = st.checkbox("Is water")
+            elif category == "general":
+                general_type = st.radio(
+                    "Product type",
+                    options=["Cheese", "Red meat", "Neither"],
+                    index=0,
+                )
+                is_cheese = general_type == "Cheese"
+                is_red_meat = general_type == "Red meat"
 
         submitted = st.form_submit_button(
             "Calculate Nutri-Score",
