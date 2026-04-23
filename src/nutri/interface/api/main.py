@@ -53,8 +53,3 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.get("/")
 def welcome():
     return "Welcome to the ATNi API."
-
-
-@app.get("/test")
-def test():
-    return {"score": 10, "grade": "A"}
