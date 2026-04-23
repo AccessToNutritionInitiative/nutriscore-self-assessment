@@ -8,6 +8,7 @@ pg = st.navigation(
     [
         st.Page(page="nutriscore.py", title="Nutri-Score Calculator", icon="🥗"),
         st.Page(page="hsr.py", title="Health Star Rating Calculator", icon="💫"),
+        st.Page(page="survey.py", title="Nutrition Self-Assessment", icon="📋"),
     ]
 )
 pg.run()

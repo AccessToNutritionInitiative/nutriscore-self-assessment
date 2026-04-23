@@ -8,7 +8,7 @@ ENV PORT=8501
 WORKDIR /app
 
 # Install UI dependencies
-RUN uv pip install streamlit pandas requests
+RUN uv pip install streamlit pandas requests pydantic
 
 COPY . .
 

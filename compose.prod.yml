@@ -18,6 +18,8 @@ services:
 
   api:
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
+    environment:
+      - ENV=prod
     labels:
       - traefik.http.routers.api.entrypoints=websecure
       - traefik.http.routers.api.tls.certresolver=letsencrypt

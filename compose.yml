@@ -9,12 +9,15 @@ services:
 
   api:
     restart: unless-stopped
+    environment:
+      - DB_PATH=/app/data/nutri.db
+    volumes:
+      - nutri-data:/app/data
     labels:
       - traefik.enable=true
       - traefik.http.services.api.loadbalancer.server.port=8000
       - traefik.http.routers.api.rule=Host(`nutriapi.${DOMAIN}`)
       - traefik.http.routers.api.entrypoints=web
-
 
   ui:
     restart: unless-stopped
@@ -25,3 +28,6 @@ services:
       - traefik.http.services.ui.loadbalancer.server.port=8501
       - traefik.http.routers.ui.rule=Host(`nutricheck.${DOMAIN}`)
       - traefik.http.routers.ui.entrypoints=web
+
+volumes:
+  nutri-data:

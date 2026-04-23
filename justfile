@@ -1,4 +1,5 @@
 app := "src/nutri/interface/api/main.py"
+db_path := env_var_or_default("DB_PATH", "data/nutri.db")
 
 default:
     @just --choose
@@ -6,6 +7,11 @@ default:
 # Sync your local environment with the project
 init:
     uv sync
+
+# Apply SQLite migrations in order
+migrate:
+    mkdir -p "$(dirname {{db_path}})"
+    for f in migrations/*.sql; do echo "Applying $f"; sqlite3 {{db_path}} < "$f"; done
 
 # Start server locally
 dev:
