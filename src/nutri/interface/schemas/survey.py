@@ -1,6 +1,16 @@
 from pydantic import BaseModel
 
-from nutri.domain.survey import Answer, Answers, ChoicesPropositions, CompanySize, OptionPropositions, Question, Recommandation, TextProposition, Topic
+from nutri.domain.survey import (
+    Answer,
+    Answers,
+    ChoicesPropositions,
+    CompanySize,
+    OptionPropositions,
+    Question,
+    Recommandation,
+    TextProposition,
+    Topic,
+)
 
 
 class QuestionResponse(BaseModel):
