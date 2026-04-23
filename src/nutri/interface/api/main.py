@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from nutri.interface.api import routers
+from nutri.settings import get_settings
 
 
 @asynccontextmanager
@@ -13,11 +14,16 @@ async def lifespan(app: FastAPI):
     yield
 
 
+_is_prod = get_settings().env == "prod"
+
 app = FastAPI(
     title="Nutri API",
     description="REST API for Nutri-Score calculation.",
     version="0.1.0",
     lifespan=lifespan,
+    docs_url=None if _is_prod else "/docs",
+    redoc_url=None if _is_prod else "/redoc",
+    openapi_url=None if _is_prod else "/openapi.json",
 )
 
 app.add_middleware(

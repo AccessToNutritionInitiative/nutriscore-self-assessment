@@ -1,6 +1,14 @@
+from enum import StrEnum
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
+
+
+class CompanySize(StrEnum):
+    micro = "Micro (1-9 employees)"
+    small = "Small (10-49 employees)"
+    medium = "Medium (50-249 employees)"
+    large = "Large (250+ employees)"
 
 
 class ScoredRecommandation(BaseModel):

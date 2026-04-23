@@ -9,6 +9,8 @@ services:
 
   api:
     restart: unless-stopped
+    environment:
+      - DB_PATH=/app/data/nutri.db
     volumes:
       - nutri-data:/app/data
     labels:

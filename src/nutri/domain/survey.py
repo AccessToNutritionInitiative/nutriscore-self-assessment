@@ -14,6 +14,13 @@ class Topic(StrEnum):
     engagement = "Engagement"
 
 
+class CompanySize(StrEnum):
+    micro = "Micro (1-9 employees)"
+    small = "Small (10-49 employees)"
+    medium = "Medium (50-249 employees)"
+    large = "Large (250+ employees)"
+
+
 class ScoredRecommandation(BaseModel):
     score: float
     recommandation: str
@@ -99,6 +106,8 @@ SubmissionId = NewType("SubmissionId", UUID)
 @dataclass
 class Answers:
     answers: list[Answer]
+    country: str
+    company_size: CompanySize
     submission_id: SubmissionId = field(default_factory=lambda: SubmissionId(uuid4()))
     submitted_at: datetime = datetime.now()
 

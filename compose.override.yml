@@ -12,6 +12,8 @@ services:
   api:
     build:
         context: .
+    volumes:
+      - ./data:/app/data
   
   ui:
     build:

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from nutri.domain.survey import Answer, ChoicesPropositions, OptionPropositions, Question, Recommandation, TextProposition, Topic
+from nutri.domain.survey import Answer, Answers, ChoicesPropositions, CompanySize, OptionPropositions, Question, Recommandation, TextProposition, Topic
 
 
 class QuestionResponse(BaseModel):
@@ -31,6 +31,19 @@ class AnswerRequest(BaseModel):
             question_id=self.question_id,
             score=self.score,
             value=self.value,
+        )
+
+
+class SubmissionRequest(BaseModel):
+    country: str
+    company_size: CompanySize
+    answers: list[AnswerRequest]
+
+    def to_answers(self) -> Answers:
+        return Answers(
+            answers=[a.to_answer() for a in self.answers],
+            country=self.country,
+            company_size=self.company_size,
         )
 
 

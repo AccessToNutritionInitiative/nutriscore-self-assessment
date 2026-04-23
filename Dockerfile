@@ -3,7 +3,7 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
 # sqlite3 CLI is used by the entrypoint to apply migrations
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends sqlite3=3.53 \
+  && apt-get install -y --no-install-recommends sqlite3=3.40.1-2+deb12u2 \
   && rm -rf /var/lib/apt/lists/*
 
 # Install the project into `/app`
