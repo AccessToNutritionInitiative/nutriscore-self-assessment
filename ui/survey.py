@@ -138,7 +138,7 @@ def render_results(results: SurveyResults) -> None:
         render_grade_badge(results.grade)
     with col_score:
         st.metric("Overall score", f"{results.overall_pct:.1f}%")
-        st.caption(f"{results.overall_score:.1f} / {max_score:.1f} pts")
+        st.caption(f"{results.overall_score:.1f} / {max_score:.0f} pts")
     with col_meta:
         if by_topic:
             best_topic, best_payload = max(by_topic.items(), key=lambda kv: kv[1].pct)
@@ -272,11 +272,7 @@ for tab, topic in zip(tabs, topics):
                         st.session_state[f"choice_{qid}_{i}"] = False
 
                 st.caption("Select all that apply")
-                selected_choices = [
-                    choice
-                    for i, choice in enumerate(props.propositions)
-                    if st.checkbox(choice, key=f"choice_{qid}_{i}")
-                ]
+                selected_choices = [choice for i, choice in enumerate(props.propositions) if st.checkbox(choice, key=f"choice_{qid}_{i}")]
 
                 none_checked = False
                 if props.none_of_the_above:
@@ -316,9 +312,7 @@ with st.sidebar:
     )
     st.caption("Updates as you answer")
     for topic in topics:
-        topic_answers = [
-            a for a in answers_by_id.values() if questions_by_id[a["question_id"]].topic == topic
-        ]
+        topic_answers = [a for a in answers_by_id.values() if questions_by_id[a["question_id"]].topic == topic]
         topic_score = sum(a["score"] for a in topic_answers)
         topic_max = max_score_by_topic.get(topic, 0.0)
         topic_pct = (topic_score / topic_max * 100) if topic_max else 0.0
