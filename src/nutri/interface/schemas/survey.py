@@ -18,6 +18,7 @@ class QuestionResponse(BaseModel):
     topic: Topic
     question: str
     question_id: str
+    info: str | None
     dependency: str
     propositions: OptionPropositions | ChoicesPropositions | TextProposition
 
@@ -27,6 +28,7 @@ class QuestionResponse(BaseModel):
             topic=question.topic,
             question=question.question,
             question_id=question.question_id,
+            info=question.info,
             dependency=question.dependency,
             propositions=question.propositions,
         )

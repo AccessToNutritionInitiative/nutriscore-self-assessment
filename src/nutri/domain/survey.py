@@ -82,6 +82,7 @@ class Question(BaseModel):
     topic: Topic
     question: str
     question_id: str
+    info: str = ""  # Question information icon
     dependency: str = ""  # Question id | Such as "if yes"
     recommandations: Annotated[
         ScoredRecommandations | FixedRecommandation | None,

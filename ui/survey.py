@@ -248,7 +248,7 @@ for tab, topic in zip(tabs, topics):
                 if isinstance(parent_answer, list) and len(parent_answer) == 0:
                     continue
 
-            st.markdown(f"**{qid}. {q.question}**")
+            st.markdown(f"**{qid}. {q.question}**", help=q.info or None)
 
             if isinstance(props, OptionPropositions):
                 options = [p.proposition for p in props.propositions]

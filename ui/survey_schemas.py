@@ -54,6 +54,7 @@ class Question(BaseModel):
     topic: str
     question: str
     question_id: str
+    info: str
     dependency: str = ""
     recommandations: Annotated[
         ScoredRecommandations | FixedRecommandation | None,
