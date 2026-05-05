@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from nutri.application.ports.survey_repository import ISurveyRepository
 from nutri.application.survey import SurveyService
 from nutri.interface import dependencies
-from nutri.interface.schemas.survey import QuestionResponse, RecommandationResponse, SubmissionRequest
+from nutri.interface.schemas.survey import QuestionResponse, RecommandationResponse, SubmissionPayload
 from nutri.settings import get_settings
 
 settings = get_settings()
@@ -20,7 +20,7 @@ def get_questions() -> list[QuestionResponse]:
 
 @router.post("/answers")
 def submit_answers(
-    payload: SubmissionRequest, survey_repository: Annotated[ISurveyRepository, Depends(dependencies.get_survey_repository)]
+    payload: SubmissionPayload, survey_repository: Annotated[ISurveyRepository, Depends(dependencies.get_survey_repository)]
 ) -> list[RecommandationResponse]:
     keep_data = True
     recommmandations = SurveyService.submit_answers(

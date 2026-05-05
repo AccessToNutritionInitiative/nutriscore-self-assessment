@@ -106,6 +106,7 @@ SubmissionId = NewType("SubmissionId", UUID)
 @dataclass
 class Answers:
     answers: list[Answer]
+    company_name: str
     country: str
     company_size: CompanySize
     submission_id: SubmissionId = field(default_factory=lambda: SubmissionId(uuid4()))

@@ -63,6 +63,7 @@ for q in all_questions:
 topics = list(questions_by_topic)
 
 st.subheader("About your company")
+company_name = st.text_input("Company name", placeholder="Enter your company name", max_chars=50)
 col_country, col_size = st.columns(2)
 with col_country:
     country = st.selectbox("Country", options=COUNTRIES, index=None, placeholder="Select your country")
@@ -152,12 +153,15 @@ for tab, topic in zip(tabs, topics):
 submitted = st.button("Submit assessment", type="primary", use_container_width=True)
 
 if submitted:
-    if not country or not company_size:
-        st.warning("Please select your country and company size before submitting.")
+    if not company_name or len(company_name) < 2 or not country or not company_size:
+        st.warning(
+            "Please enter your company name, country, and company size before submitting. Company name needs to be at least 2 characters long."
+        )
     elif not answers_by_id:
         st.warning("Please answer at least one question before submitting.")
     else:
         payload = {
+            "company_name": company_name,
             "country": country,
             "company_size": company_size,
             "answers": list(answers_by_id.values()),

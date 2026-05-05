@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import BaseModel, Field
 
 from nutri.domain.survey import (
     Answer,
@@ -31,7 +32,7 @@ class QuestionResponse(BaseModel):
         )
 
 
-class AnswerRequest(BaseModel):
+class AnswerPayload(BaseModel):
     question_id: str
     score: float
     value: str | list[str] | None = None
@@ -44,14 +45,16 @@ class AnswerRequest(BaseModel):
         )
 
 
-class SubmissionRequest(BaseModel):
+class SubmissionPayload(BaseModel):
+    company_name: Annotated[str, Field(min_length=2, max_length=50)]
     country: str
     company_size: CompanySize
-    answers: list[AnswerRequest]
+    answers: list[AnswerPayload]
 
     def to_answers(self) -> Answers:
         return Answers(
             answers=[a.to_answer() for a in self.answers],
+            company_name=self.company_name,
             country=self.country,
             company_size=self.company_size,
         )

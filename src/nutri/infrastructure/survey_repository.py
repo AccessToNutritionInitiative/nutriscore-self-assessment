@@ -29,10 +29,11 @@ class SqliteSurveyRepository(ISurveyRepository):
         data = json.dumps(rows)
         with sqlite3.connect(self.db_path) as conn:
             conn.execute(
-                "INSERT INTO submissions (submission_id, submitted_at, country, company_size, answers) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO submissions (submission_id, submitted_at, company_name, country, company_size, answers) VALUES (?, ?, ?, ?, ?, ?)",
                 (
                     str(answers.submission_id),
                     answers.submitted_at.isoformat(),
+                    answers.company_name,
                     answers.country,
                     answers.company_size.value,
                     data,
