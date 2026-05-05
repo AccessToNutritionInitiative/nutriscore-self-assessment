@@ -34,6 +34,7 @@ class QuestionResponse(BaseModel):
 
 class SurveyResponse(BaseModel):
     max_score: float
+    max_score_by_topic: dict[Topic, float]
     questions: list[QuestionResponse]
 
 

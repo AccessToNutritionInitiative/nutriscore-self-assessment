@@ -1,6 +1,7 @@
 from collections import defaultdict
 import os
 
+import pandas as pd
 import requests
 import streamlit as st
 
@@ -12,10 +13,20 @@ from survey_schemas import (
     Question,
     Recommandation,
     SurveyResponse,
+    SurveyResults,
     TextProposition,
+    TopicResult,
 )
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
+
+GRADE_COLORS = {
+    "A": "#038141",
+    "B": "#85BB2F",
+    "C": "#FECB02",
+    "D": "#EE8100",
+    "E": "#E63E11",
+}
 
 INTRO = """
 To support SMEs in the fight against malnutrition, ATNI initiated a 3-year project in April 2019 (ending March 2022), to design a voluntary self-assessment tool for SMEs called the **Nutrition Business Monitor (NBM)** in partnership with the Global Alliance for Improved Nutrition (GAIN). The aim of the tool is to evaluate the performance of SMEs on their commitments and practices related to increasing the affordability and accessibility of nutritious foods and beverages in their respective markets. The tool also produces a document of country-specific recommendations and information for each company, which is based on gaps and areas in need of improvement identified during completion of the tool.
@@ -24,7 +35,7 @@ To support SMEs in the fight against malnutrition, ATNI initiated a 3-year proje
 
 This assessment is intended to be used as a self-assessment tool. You can navigate freely from one category to the other.
 
-When filling in the category, you can see your score appearing in the top row. You can also read the corresponding recommendations on the Recommendations Tab and view your overall results on the Results tab.
+When filling in the category, your running score appears in the sidebar. Once you submit, you'll see an overall grade, a topic-by-topic breakdown, and tailored recommendations.
 
 **How to navigate the file?**
 
@@ -35,8 +46,35 @@ st.set_page_config(page_title="Nutrition Self-Assessment", page_icon="📋", lay
 st.title("📋 Nutrition Self-Assessment")
 st.caption("Powered by the ATNi Nutri API")
 
-with st.expander("Introduction", expanded=True):
-    st.markdown(INTRO)
+
+def percentage_to_grade(pct: float) -> str:
+    if pct >= 80:
+        return "A"
+    if pct >= 60:
+        return "B"
+    if pct >= 40:
+        return "C"
+    if pct >= 20:
+        return "D"
+    return "E"
+
+
+def render_grade_badge(grade: str) -> None:
+    color = GRADE_COLORS.get(grade, "#888888")
+    st.markdown(
+        f"""
+        <div style="
+            background-color:{color};
+            color:white;
+            font-size:4rem;
+            font-weight:bold;
+            text-align:center;
+            border-radius:12px;
+            padding:0.4rem 1rem;
+        ">{grade}</div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 @st.cache_data(ttl=600)
@@ -50,6 +88,7 @@ try:
     survey = SurveyResponse.model_validate(fetch_survey())
     all_questions = survey.questions
     max_score = survey.max_score
+    max_score_by_topic = survey.max_score_by_topic
 except requests.exceptions.ConnectionError:
     st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
     st.stop()
@@ -61,8 +100,118 @@ except requests.exceptions.HTTPError as exc:
 questions_by_topic: dict[str, list[Question]] = defaultdict(list)
 for q in all_questions:
     questions_by_topic[q.topic].append(q)
-
 topics = list(questions_by_topic)
+questions_by_id: dict[str, Question] = {q.question_id: q for q in all_questions}
+
+
+def build_report_markdown(results: SurveyResults) -> str:
+    lines = [
+        "# Nutrition Self-Assessment Report",
+        "",
+        f"**Company:** {results.company_name}  ",
+        f"**Country:** {results.country}  ",
+        f"**Size:** {results.company_size}  ",
+        "",
+        f"## Overall score: {results.overall_pct:.1f}% — Grade {results.grade}",
+        "",
+    ]
+    for topic, payload in results.by_topic.items():
+        lines.append(f"### {topic}")
+        lines.append(f"Score: **{payload.score:.1f} / {payload.max_score:.1f}** ({payload.pct:.1f}%)")
+        lines.append("")
+        for r in payload.recos:
+            q = questions_by_id[r.question_id]
+            lines.append(f"- **{r.question_id}. {q.question}**")
+            lines.append("")
+            lines.append(f"  {r.recommandation}")
+            lines.append("")
+    return "\n".join(lines)
+
+
+def render_results(results: SurveyResults) -> None:
+    by_topic = results.by_topic
+
+    st.success(f"Assessment complete — {results.n_recos} recommendations generated.")
+
+    col_grade, col_score, col_meta = st.columns([1, 1, 2])
+    with col_grade:
+        render_grade_badge(results.grade)
+    with col_score:
+        st.metric("Overall score", f"{results.overall_pct:.1f}%")
+        st.caption(f"{results.overall_score:.1f} / {max_score:.1f} pts")
+    with col_meta:
+        if by_topic:
+            best_topic, best_payload = max(by_topic.items(), key=lambda kv: kv[1].pct)
+            worst_topic, worst_payload = min(by_topic.items(), key=lambda kv: kv[1].pct)
+            st.markdown(f"**Strongest:** {best_topic} ({best_payload.pct:.0f}%)")
+            st.markdown(f"**Weakest:** {worst_topic} ({worst_payload.pct:.0f}%)")
+            st.caption(f"{results.company_name} — {results.country}")
+
+    st.divider()
+
+    st.subheader("Score by topic")
+    chart_df = pd.DataFrame(
+        {"Score (%)": [v.pct for v in by_topic.values()]},
+        index=list(by_topic.keys()),
+    )
+    st.bar_chart(chart_df, horizontal=True, x_label="% of max", height=max(120, 40 * len(by_topic)))
+
+    st.divider()
+
+    for topic, payload in by_topic.items():
+        with st.container(border=True):
+            col_a, col_b = st.columns([3, 1])
+            with col_a:
+                st.subheader(topic)
+            with col_b:
+                st.metric("Score", f"{payload.score:.1f} / {payload.max_score:.1f}")
+            st.progress(min(payload.pct / 100.0, 1.0), text=f"{payload.pct:.0f}%")
+
+            if not payload.recos:
+                st.caption("No recommendations for this topic — well done.")
+                continue
+
+            for r in payload.recos:
+                question = questions_by_id[r.question_id]
+                if len(r.recommandation) > 400:
+                    with st.expander(f"{r.question_id}. {question.question}"):
+                        st.markdown(r.recommandation)
+                else:
+                    st.markdown(f"**{r.question_id}. {question.question}**")
+                    st.markdown(r.recommandation)
+
+    st.divider()
+
+    col_dl, col_reset = st.columns(2)
+    with col_dl:
+        report_md = build_report_markdown(results)
+        safe_name = "".join(c if c.isalnum() else "_" for c in results.company_name)
+        st.download_button(
+            "📥 Download report",
+            data=report_md.encode(),
+            file_name=f"nutrition_assessment_{safe_name}.md",
+            mime="text/markdown",
+            use_container_width=True,
+        )
+    with col_reset:
+        if st.button("🔄 Start a new assessment", use_container_width=True):
+            for k in list(st.session_state.keys()):
+                if k.startswith(("answer_", "choice_", "none_", "text_")) or k == "survey_results":
+                    del st.session_state[k]
+            st.rerun()
+
+
+# ── Phase: results ─────────────────────────────────────────────────────────────
+if "survey_results" in st.session_state:
+    with st.expander("Introduction"):
+        st.markdown(INTRO)
+    render_results(st.session_state["survey_results"])
+    st.stop()
+
+
+# ── Phase: form ────────────────────────────────────────────────────────────────
+with st.expander("Introduction", expanded=True):
+    st.markdown(INTRO)
 
 st.subheader("About your company")
 company_name = st.text_input("Company name", placeholder="Enter your company name", max_chars=50)
@@ -78,7 +227,6 @@ with col_size:
     )
 st.divider()
 
-# Collect all answers keyed by question_id
 answers_by_id: dict[str, dict] = {}
 
 tabs = st.tabs(topics)
@@ -90,7 +238,7 @@ for tab, topic in zip(tabs, topics):
             props = q.propositions
             dep = q.dependency
 
-            # Handle dependency: hide if parent not answered affirmatively
+            # Hide dependent question if parent not answered affirmatively
             if dep and dep != qid:
                 parent_answer = st.session_state.get(f"answer_{dep}")
                 if parent_answer is None:
@@ -124,7 +272,11 @@ for tab, topic in zip(tabs, topics):
                         st.session_state[f"choice_{qid}_{i}"] = False
 
                 st.caption("Select all that apply")
-                selected_choices = [choice for i, choice in enumerate(props.propositions) if st.checkbox(choice, key=f"choice_{qid}_{i}")]
+                selected_choices = [
+                    choice
+                    for i, choice in enumerate(props.propositions)
+                    if st.checkbox(choice, key=f"choice_{qid}_{i}")
+                ]
 
                 none_checked = False
                 if props.none_of_the_above:
@@ -151,7 +303,27 @@ for tab, topic in zip(tabs, topics):
 
             st.divider()
 
-# Submit button
+# Live score panel in sidebar
+running_score = sum(a["score"] for a in answers_by_id.values())
+running_pct = (running_score / max_score * 100) if max_score else 0.0
+
+with st.sidebar:
+    st.divider()
+    st.markdown("### Live score")
+    st.progress(
+        min(running_pct / 100, 1.0),
+        text=f"{running_pct:.0f}% — {running_score:.1f} / {max_score:.1f}",
+    )
+    st.caption("Updates as you answer")
+    for topic in topics:
+        topic_answers = [
+            a for a in answers_by_id.values() if questions_by_id[a["question_id"]].topic == topic
+        ]
+        topic_score = sum(a["score"] for a in topic_answers)
+        topic_max = max_score_by_topic.get(topic, 0.0)
+        topic_pct = (topic_score / topic_max * 100) if topic_max else 0.0
+        st.caption(f"**{topic}** — {topic_score:.1f} / {topic_max:.1f} ({topic_pct:.0f}%)")
+
 submitted = st.button("Submit assessment", type="primary", use_container_width=True)
 
 if submitted:
@@ -178,29 +350,39 @@ if submitted:
                 resp.raise_for_status()
                 recommandations = [Recommandation.model_validate(r) for r in resp.json()]
 
-            st.success(f"Assessment complete — {len(recommandations)} recommendations generated.")
-
-            questions_by_id: dict[str, Question] = {q.question_id: q for q in all_questions}
             scores_by_id: dict[str, float] = {a["question_id"]: a["score"] for a in payload["answers"]}
-
             overall_score = sum(scores_by_id.values())
             overall_pct = (overall_score / max_score * 100) if max_score else 0.0
-            st.metric("Overall score (%)", f"{overall_pct:.1f}%")
 
-            recos_by_topic: defaultdict[str, list[Recommandation]] = defaultdict(list)
+            recos_by_topic_lookup: defaultdict[str, list[Recommandation]] = defaultdict(list)
             for r in recommandations:
                 question = questions_by_id.get(r.question_id)
                 if question is not None:
-                    recos_by_topic[question.topic].append(r)
+                    recos_by_topic_lookup[question.topic].append(r)
 
-            for topic, topic_recos in recos_by_topic.items():
-                st.subheader(topic)
-                topic_score = sum(scores_by_id.get(r.question_id, 0.0) for r in topic_recos)
-                st.metric("Topic score", f"{topic_score:.1f}")
-                for r in topic_recos:
-                    question = questions_by_id[r.question_id]
-                    with st.expander(f"{r.question_id}. {question.question}"):
-                        st.markdown(r.recommandation)
+            by_topic_results: dict[str, TopicResult] = {}
+            for topic in topics:
+                topic_score = sum(scores_by_id.get(q.question_id, 0.0) for q in questions_by_topic[topic])
+                topic_max = max_score_by_topic[topic]
+                topic_pct = (topic_score / topic_max * 100) if topic_max else 0.0
+                by_topic_results[topic] = TopicResult(
+                    score=topic_score,
+                    max_score=topic_max,
+                    pct=topic_pct,
+                    recos=recos_by_topic_lookup.get(topic, []),
+                )
+
+            st.session_state["survey_results"] = SurveyResults(
+                company_name=company_name,
+                country=country,
+                company_size=company_size,
+                overall_score=overall_score,
+                overall_pct=overall_pct,
+                grade=percentage_to_grade(overall_pct),
+                n_recos=len(recommandations),
+                by_topic=by_topic_results,
+            )
+            st.rerun()
 
         except requests.exceptions.ConnectionError:
             st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)

@@ -13,6 +13,7 @@ from nutri.domain.survey import (
     Answer,
     Recommandation,
     ScoredRecommandations,
+    Topic,
 )
 
 
@@ -26,6 +27,13 @@ class SurveyService:
     @classmethod
     def get_max_score(cls, questions: list[Question]) -> float:
         return sum(cls._get_question_max_score(q) for q in questions)
+
+    @classmethod
+    def get_max_score_by_topic(cls, questions: list[Question]) -> dict[Topic, float]:
+        max_by_topic: dict[Topic, float] = {}
+        for q in questions:
+            max_by_topic[q.topic] = max_by_topic.get(q.topic, 0.0) + cls._get_question_max_score(q)
+        return max_by_topic
 
     @staticmethod
     def _get_question_max_score(question: Question) -> float:

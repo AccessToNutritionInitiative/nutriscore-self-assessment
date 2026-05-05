@@ -16,8 +16,10 @@ router = APIRouter(prefix="/survey", tags=["Survey"])
 def get_questions() -> SurveyResponse:
     questions = SurveyService.get_questions(config_path=settings.survey.config_path)
     max_score = SurveyService.get_max_score(questions)
+    max_score_by_topic = SurveyService.get_max_score_by_topic(questions)
     return SurveyResponse(
         max_score=max_score,
+        max_score_by_topic=max_score_by_topic,
         questions=[QuestionResponse.from_question(q) for q in questions],
     )
 
