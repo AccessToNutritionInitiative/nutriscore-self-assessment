@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from nutri.application.ports.survey_repository import ISurveyRepository
 from nutri.application.survey import SurveyService
 from nutri.interface import dependencies
-from nutri.interface.schemas.survey import QuestionResponse, RecommandationResponse, SubmissionPayload
+from nutri.interface.schemas.survey import QuestionResponse, RecommandationResponse, SubmissionPayload, SurveyResponse
 from nutri.settings import get_settings
 
 settings = get_settings()
@@ -13,9 +13,13 @@ router = APIRouter(prefix="/survey", tags=["Survey"])
 
 
 @router.get("/questions")
-def get_questions() -> list[QuestionResponse]:
+def get_questions() -> SurveyResponse:
     questions = SurveyService.get_questions(config_path=settings.survey.config_path)
-    return [QuestionResponse.from_question(question=question) for question in questions]
+    max_score = SurveyService.get_max_score(questions)
+    return SurveyResponse(
+        max_score=max_score,
+        questions=[QuestionResponse.from_question(q) for q in questions],
+    )
 
 
 @router.post("/answers")

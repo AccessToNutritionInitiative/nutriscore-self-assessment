@@ -68,3 +68,8 @@ class Question(BaseModel):
 class Recommandation(BaseModel):
     question_id: str
     recommandation: str
+
+
+class SurveyResponse(BaseModel):
+    max_score: float
+    questions: list[Question]

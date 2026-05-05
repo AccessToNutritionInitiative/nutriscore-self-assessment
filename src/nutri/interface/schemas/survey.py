@@ -32,6 +32,11 @@ class QuestionResponse(BaseModel):
         )
 
 
+class SurveyResponse(BaseModel):
+    max_score: float
+    questions: list[QuestionResponse]
+
+
 class AnswerPayload(BaseModel):
     question_id: str
     score: float

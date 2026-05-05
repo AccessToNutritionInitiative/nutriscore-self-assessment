@@ -11,6 +11,7 @@ from survey_schemas import (
     OptionPropositions,
     Question,
     Recommandation,
+    SurveyResponse,
     TextProposition,
 )
 
@@ -39,15 +40,16 @@ with st.expander("Introduction", expanded=True):
 
 
 @st.cache_data(ttl=600)
-def fetch_questions() -> list[dict]:
+def fetch_survey() -> dict:
     resp = requests.get(f"{API_BASE_URL}/survey/questions", timeout=10)
     resp.raise_for_status()
     return resp.json()
 
 
 try:
-    raw_questions = fetch_questions()
-    all_questions = [Question.model_validate(q) for q in raw_questions]
+    survey = SurveyResponse.model_validate(fetch_survey())
+    all_questions = survey.questions
+    max_score = survey.max_score
 except requests.exceptions.ConnectionError:
     st.error("Cannot reach the API. Make sure the server is running on " + API_BASE_URL)
     st.stop()
@@ -180,6 +182,10 @@ if submitted:
 
             questions_by_id: dict[str, Question] = {q.question_id: q for q in all_questions}
             scores_by_id: dict[str, float] = {a["question_id"]: a["score"] for a in payload["answers"]}
+
+            overall_score = sum(scores_by_id.values())
+            overall_pct = (overall_score / max_score * 100) if max_score else 0.0
+            st.metric("Overall score (%)", f"{overall_pct:.1f}%")
 
             recos_by_topic: defaultdict[str, list[Recommandation]] = defaultdict(list)
             for r in recommandations:

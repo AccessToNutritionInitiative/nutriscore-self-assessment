@@ -4,7 +4,16 @@ import json
 from loguru import logger
 
 from nutri.application.ports.survey_repository import ISurveyRepository
-from nutri.domain.survey import Answers, FixedRecommandation, Question, Answer, Recommandation, ScoredRecommandations
+from nutri.domain.survey import (
+    Answers,
+    ChoicesPropositions,
+    FixedRecommandation,
+    OptionPropositions,
+    Question,
+    Answer,
+    Recommandation,
+    ScoredRecommandations,
+)
 
 
 class SurveyService:
@@ -12,8 +21,22 @@ class SurveyService:
     def get_questions(config_path: Path) -> list[Question]:
         with config_path.open("r") as f:
             raw_questions = json.load(f)
-        questions = [Question.model_validate(q) for q in raw_questions]
-        return questions
+        return [Question.model_validate(q) for q in raw_questions]
+
+    @classmethod
+    def get_max_score(cls, questions: list[Question]) -> float:
+        return sum(cls._get_question_max_score(q) for q in questions)
+
+    @staticmethod
+    def _get_question_max_score(question: Question) -> float:
+        props = question.propositions
+        if isinstance(props, OptionPropositions):
+            return max(p.score for p in props.propositions)
+        if isinstance(props, ChoicesPropositions):
+            if props.count_score_map:
+                return max(props.count_score_map)
+            return len(props.propositions) * props.count_score_coeff
+        return 0.0
 
     @classmethod
     def submit_answers(cls, answers: Answers, keep_data: bool, config_path: Path, survey_repository: ISurveyRepository) -> list[Recommandation]:
