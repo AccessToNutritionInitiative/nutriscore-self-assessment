@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from pathlib import Path
 import json
 
@@ -5,14 +6,15 @@ from loguru import logger
 
 from nutri.application.ports.survey_repository import ISurveyRepository
 from nutri.domain.survey import (
-    Answers,
     ChoicesPropositions,
     FixedRecommandation,
     OptionPropositions,
     Question,
-    Answer,
     Recommandation,
+    WriteAnswer,
     ScoredRecommandations,
+    ReadSubmission,
+    Submission,
     Topic,
 )
 
@@ -47,17 +49,22 @@ class SurveyService:
         return 0.0
 
     @classmethod
-    def submit_answers(cls, answers: Answers, keep_data: bool, config_path: Path, survey_repository: ISurveyRepository) -> list[Recommandation]:
+    def list_submissions(cls, days: int, survey_repository: ISurveyRepository) -> list[ReadSubmission]:
+        since = datetime.now() - timedelta(days=days)
+        return survey_repository.list_submissions(since=since)
+
+    @classmethod
+    def submit_answers(cls, submission: Submission, keep_data: bool, config_path: Path, survey_repository: ISurveyRepository) -> list[Recommandation]:
         with config_path.open("r") as f:
             raw_questions = json.load(f)
         questions = [Question.model_validate(q) for q in raw_questions]
-        recommandations = cls._get_recommandations(answers=answers.answers, questions=questions)
+        recommandations = cls._get_recommandations(answers=submission.answers, questions=questions)
         if keep_data:
-            survey_repository.store_answers(answers=answers, questions=questions)
+            survey_repository.store_answers(submission=submission, questions=questions)
         return recommandations
 
     @staticmethod
-    def _get_recommandations(answers: list[Answer], questions: list[Question]) -> list[Recommandation]:
+    def _get_recommandations(answers: list[WriteAnswer], questions: list[Question]) -> list[Recommandation]:
         questions_dict = {question.question_id: question for question in questions}
         recommandations: list[Recommandation] = []
         for answer in answers:

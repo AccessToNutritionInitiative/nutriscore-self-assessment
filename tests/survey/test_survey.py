@@ -1,20 +1,20 @@
 import pytest
 
 from nutri.application.survey import SurveyService
-from nutri.domain.survey import Answer, Recommandation
+from nutri.domain.survey import WriteAnswer, Recommandation
 from nutri.settings import REPO_DIR
 
 CONFIG_PATH = REPO_DIR / "tests/data/survey_questions.json"
 
 
 @pytest.fixture
-def answers() -> list[Answer]:
+def answers() -> list[WriteAnswer]:
     return [
-        Answer(question_id="1.1.1", score=5),
-        Answer(question_id="1.2.2", score=2.5),
-        Answer(question_id="1.4.2", score=2.5),
-        Answer(question_id="2.1.1", score=0),
-        Answer(question_id="1.7", score=8.0),
+        WriteAnswer(question_id="1.1.1", score=5),
+        WriteAnswer(question_id="1.2.2", score=2.5),
+        WriteAnswer(question_id="1.4.2", score=2.5),
+        WriteAnswer(question_id="2.1.1", score=0),
+        WriteAnswer(question_id="1.7", score=8.0),
     ]
 
 
@@ -31,7 +31,7 @@ def expected_recommandations() -> list[Recommandation]:
     ]
 
 
-def test_get_recommandations(answers: list[Answer], expected_recommandations: list[Recommandation]):
+def test_get_recommandations(answers: list[WriteAnswer], expected_recommandations: list[Recommandation]):
     questions = SurveyService.get_questions(config_path=CONFIG_PATH)
     recommandations = SurveyService._get_recommandations(answers=answers, questions=questions)
     for recommandation, expected_recommandation in zip(recommandations, expected_recommandations):

@@ -95,9 +95,16 @@ class Question(BaseModel):
 
 
 @dataclass
-class Answer:
+class WriteAnswer:
     question_id: str
     score: float
+    value: str | list[str] | None = None
+
+
+@dataclass
+class ReadAnswer:
+    question_id: str
+    question: str | None = None
     value: str | list[str] | None = None
 
 
@@ -105,13 +112,23 @@ SubmissionId = NewType("SubmissionId", UUID)
 
 
 @dataclass
-class Answers:
-    answers: list[Answer]
+class Submission:
+    answers: list[WriteAnswer]
     company_name: str
     country: str
     company_size: CompanySize
     submission_id: SubmissionId = field(default_factory=lambda: SubmissionId(uuid4()))
     submitted_at: datetime = datetime.now()
+
+
+@dataclass
+class ReadSubmission:
+    answers: list[ReadAnswer]
+    company_name: str
+    country: str
+    company_size: CompanySize
+    submission_id: SubmissionId
+    submitted_at: datetime
 
 
 @dataclass
