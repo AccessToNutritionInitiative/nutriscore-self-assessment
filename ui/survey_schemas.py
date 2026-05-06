@@ -54,6 +54,7 @@ class Question(BaseModel):
     topic: str
     question: str
     question_id: str
+    info: str
     dependency: str = ""
     recommandations: Annotated[
         ScoredRecommandations | FixedRecommandation | None,
@@ -68,3 +69,27 @@ class Question(BaseModel):
 class Recommandation(BaseModel):
     question_id: str
     recommandation: str
+
+
+class SurveyResponse(BaseModel):
+    max_score: float
+    max_score_by_topic: dict[str, float]
+    questions: list[Question]
+
+
+class TopicResult(BaseModel):
+    score: float
+    max_score: float
+    pct: float
+    recos: list[Recommandation]
+
+
+class SurveyResults(BaseModel):
+    company_name: str
+    country: str
+    company_size: str
+    overall_score: float
+    overall_pct: float
+    grade: str
+    n_recos: int
+    by_topic: dict[str, TopicResult]

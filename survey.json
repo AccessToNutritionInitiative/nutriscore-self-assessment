@@ -3,6 +3,7 @@
     "topic": "Management & Products",
     "question": "Do you have a business policy document?",
     "question_id": "1.1.1",
+    "info": "Test info",
     "recommandations": {
       "type": "scored",
       "recommandations": [

@@ -6,10 +6,18 @@ MIGRATIONS_DIR="${MIGRATIONS_DIR:-/app/migrations}"
 
 mkdir -p "$(dirname "$DB_PATH")"
 
+sqlite3 "$DB_PATH" "CREATE TABLE IF NOT EXISTS _migrations (name TEXT PRIMARY KEY);"
+
 for migration in "$MIGRATIONS_DIR"/*.sql; do
     [ -e "$migration" ] || continue
-    echo "Applying migration: $migration"
+    name=$(basename "$migration")
+    already_applied=$(sqlite3 "$DB_PATH" "SELECT 1 FROM _migrations WHERE name='$name';")
+    if [ -n "$already_applied" ]; then
+        continue
+    fi
+    echo "Applying migration: $name"
     sqlite3 "$DB_PATH" < "$migration"
+    sqlite3 "$DB_PATH" "INSERT INTO _migrations (name) VALUES ('$name');"
 done
 
 exec "$@"
