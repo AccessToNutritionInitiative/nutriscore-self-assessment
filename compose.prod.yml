@@ -20,6 +20,7 @@ services:
     image: ghcr.io/accesstonutritioninitiative/nutriscore-self-assessment/api:latest
     environment:
       - ENV=prod
+      - ADMIN_API_KEY=$ADMIN_API_KEY
     volumes:
       - ./data:/app/data
     labels:
