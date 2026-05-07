@@ -261,10 +261,13 @@ for tab, topic in zip(tabs, topics):
                 )
                 if selected is not None:
                     score = next(p.score for p in props.propositions if p.proposition == selected)
-                    answers_by_id[qid] = {"question_id": qid, "score": score, "value": selected}
+                    value: str | list[str] = selected
                     for p in props.propositions:
                         if p.text_inputs and p.proposition == selected:
-                            st.text_area("Please provide details", key=f"text_{qid}")
+                            text_detail = st.text_area("Please provide details", key=f"text_{qid}")
+                            if text_detail:
+                                value = [selected, text_detail]
+                    answers_by_id[qid] = {"question_id": qid, "score": score, "value": value}
 
             elif isinstance(props, ChoicesPropositions):
                 if props.none_of_the_above and st.session_state.get(f"none_{qid}", False):
