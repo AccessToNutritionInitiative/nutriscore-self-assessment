@@ -1,10 +1,12 @@
-# Nutri-Score Self-Assessment
+# Nutrition Self-Assessment
 
-A self-assessment tool for computing the [Nutri-Score](https://www.santepubliquefrance.fr/determinants-de-sante/nutrition-et-activite-physique/articles/nutri-score) and [Health Star Rating](https://www.healthstarrating.gov.au/) of food and beverage products.
+A web application built for the [Access to Nutrition Initiative (ATNi)](https://accesstonutrition.org/) to help food and beverage SMEs assess and improve their nutrition practices.
 
-It exposes a **FastAPI** backend for score calculation and a **Streamlit** UI for manual entry or bulk CSV processing.
+The project bundles three tools behind a single FastAPI backend and a Streamlit UI:
 
-> **Note:** Only the `beverage` category is currently supported.
+- **Nutrition Self-Assessment.** A multi-topic questionnaire (Management & Products, Marketing, Workforce, Labeling, Engagement) that scores company practices. The entire questionnaire — questions, scoring rules, and recommendations — is data-driven from `survey.json`. See [SURVEY.md](SURVEY.md) to learn how to customize it.
+- **Nutri-Score Calculator.** Computes the [Nutri-Score](https://www.santepubliquefrance.fr/determinants-de-sante/nutrition-et-activite-physique/articles/nutri-score) of a product from its nutrient composition. Single-product entry and bulk CSV upload are both supported.
+- **Health Star Rating Calculator.** Same idea, for the [Health Star Rating](https://www.healthstarrating.gov.au/) system.
 
 ## Getting started
 
@@ -12,49 +14,21 @@ It exposes a **FastAPI** backend for score calculation and a **Streamlit** UI fo
 
 ```bash
 just init       # install dependencies
-just dev        # start the API server  (http://localhost:8000)
-just ui         # start the Streamlit UI (http://localhost:8501)
+just dev        # start the API (http://localhost:8000)
+just ui         # start the UI  (http://localhost:8501)
 ```
 
-### Bulk CSV format
 
-To score multiple products at once, upload a CSV with the following columns:
+Run `just` with no arguments to see the full list of recipes (tests, formatting, type-check, production deploy).
 
-```
-energy_kj, sugar_g, sat_fat_g, salt_g, fruit_veg_pct, fibre_g, protein_g, has_sweeteners, is_water, category
-```
-
-See [`tests/data/beverages.csv`](tests/data/beverages.csv) for an example.
-
-## Other commands
+Alternatively, the project also ships as a Docker stack. Copy `.env.template` to `.env` and set `DOMAIN=localhost`, then:
 
 ```bash
-just test        # run tests
-just format      # format & lint with ruff
-just type-check  # type-check with ty
+docker compose up --build
 ```
+
+The UI is served at http://nutricheck.localhost and the API at http://nutriapi.localhost.
 
 ## Production
 
-The application runs on a VPS, hosted on Hostinger, behind [Traefik](https://traefik.io/) with automatic HTTPS via Let's Encrypt. [Watchtower](https://containrrr.dev/watchtower/) watches for new container images in this Github repository (ghcr.io) and updates the production (ui & api) automatically.
-
-To learn more about how the services were deployed, check this detailed [article](https://theembedding1.substack.com/p/deploy-production-applications-on).
-
-### Accessing the VPS
-
-```bash
-ssh atni@<host>
-cd projects/nutriscore-self-assessment
-```
-
-### Managing production
-
-A `.env.prod` must exist in the project repository in the VPS. Copy the .env.template and fill it with your own credentials.
-
-The following `just` commands are available **on the VPS** only:
-
-```bash
-just prod-up     # start (or recreate) all production containers in detached mode
-just prod-logs   # tail the production logs
-just prod-stop   # stop and remove all production containers
-```
+The application runs on a Hostinger VPS behind [Traefik](https://traefik.io/) (automatic HTTPS via Let's Encrypt), with [Watchtower](https://containrrr.dev/watchtower/) auto-updating containers from this repo's `ghcr.io` images. See the deployment write-up [here](https://theembedding1.substack.com/p/deploy-production-applications-on) for details.

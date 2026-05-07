@@ -5,13 +5,15 @@ default:
     @just --choose
 
 # Sync your local environment with the project
-init:
-    uv sync
+init: uv-sync migrate
 
 # Apply SQLite migrations in order
 migrate:
     mkdir -p "$(dirname {{db_path}})"
     for f in migrations/*.sql; do echo "Applying $f"; sqlite3 {{db_path}} < "$f"; done
+
+uv-sync:
+  uv sync
 
 # Start server locally
 dev:
