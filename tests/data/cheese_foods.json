@@ -1,0 +1,82 @@
+[
+  {
+    "product": {
+      "product_name": "Brie Cheese",
+      "energy_kj": 1397,
+      "sugar_g": 0.45,
+      "sat_fat_g": 17.41,
+      "salt_g": 1.598,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 20.75,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 14,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Gorgonzola Cheese",
+      "energy_kj": 1477,
+      "sugar_g": 0.5,
+      "sat_fat_g": 18.669,
+      "salt_g": 3.544,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 21.4,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 24,
+    "expected_grade": "E"
+  },
+  {
+    "product": {
+      "product_name": "Camembert Cheese",
+      "energy_kj": 1255,
+      "sugar_g": 0.46,
+      "sat_fat_g": 15.259,
+      "salt_g": 2.139,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 19.8,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 16,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Cottage Cheese with Fruit",
+      "energy_kj": 406,
+      "sugar_g": 2.38,
+      "sat_fat_g": 2.311,
+      "salt_g": 0.874,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.2,
+      "protein_g": 10.69,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 3,
+    "expected_grade": "C"
+  },
+  {
+    "product": {
+      "product_name": "Gouda Cheese",
+      "energy_kj": 1490,
+      "sugar_g": 2.22,
+      "sat_fat_g": 17.614,
+      "salt_g": 2.081,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 24.94,
+      "is_cheese": true,
+      "category": "general"
+    },
+    "expected_score": 17,
+    "expected_grade": "D"
+  }
+]

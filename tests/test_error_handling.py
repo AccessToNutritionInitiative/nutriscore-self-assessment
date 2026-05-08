@@ -11,7 +11,7 @@ WRONG_CSV = Path(__file__).parent / "data" / "wrong_beverages.csv"
 
 
 def test_single_product_invalid_payload():
-    response = client.post("/nutriscore", json={"energy_kj": -1, "sugar_g": 5.0, "category": "beverage"})
+    response = client.post("/nutriscore", json={"product_name": "Test", "energy_kj": -1, "sugar_g": 5.0, "category": "beverage"})
     assert response.status_code == 422
     body = response.json()
     assert body["errors"][0]["field"] == "energy_kj"
