@@ -16,6 +16,7 @@ class ProductRequest(BaseModel):
     is_water: bool = False
     is_cheese: bool = False
     is_red_meat: bool = False
+    total_fat_g: float = Field(default=0, ge=0, le=100)
     category: ProductCategory
 
     @model_validator(mode="after")
@@ -26,6 +27,8 @@ class ProductRequest(BaseModel):
             raise ValueError("is_water and has_sweeteners are only valid for the beverage category")
         if self.is_cheese and self.is_red_meat:
             raise ValueError("a product cannot be both cheese and red meat")
+        if self.category == ProductCategory.FATS and self.total_fat_g == 0:
+            raise ValueError("total_fat_g is required for the fats category")
         return self
 
     def to_product(self) -> Product:
@@ -41,6 +44,7 @@ class ProductRequest(BaseModel):
             is_water=self.is_water,
             is_cheese=self.is_cheese,
             is_red_meat=self.is_red_meat,
+            total_fat_g=self.total_fat_g,
             category=self.category,
         )
 

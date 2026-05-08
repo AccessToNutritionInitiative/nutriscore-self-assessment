@@ -1,0 +1,82 @@
+[
+  {
+    "product": {
+      "product_name": "Unsalted Butter Stick",
+      "energy_kj": 2999.928,
+      "sugar_g": 0.06,
+      "sat_fat_g": 51.368,
+      "salt_g": 0.0275,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 0.85,
+      "total_fat_g": 81.11,
+      "category": "fats"
+    },
+    "expected_score": 19,
+    "expected_grade": "E"
+  },
+  {
+    "product": {
+      "product_name": "Canola Vegetable Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 6.532,
+      "salt_g": 0,
+      "fruit_veg_pct": 100,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": -3,
+    "expected_grade": "B"
+  },
+  {
+    "product": {
+      "product_name": "Peanut Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 15.548,
+      "salt_g": 0,
+      "fruit_veg_pct": 100,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": 1,
+    "expected_grade": "B"
+  },
+  {
+    "product": {
+      "product_name": "Vegetable Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 11.61,
+      "salt_g": 0,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": 4,
+    "expected_grade": "C"
+  },
+  {
+    "product": {
+      "product_name": "Rapeseed Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 6.532,
+      "salt_g": 0,
+      "fruit_veg_pct": 100,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": -3,
+    "expected_grade": "B"
+  }
+]

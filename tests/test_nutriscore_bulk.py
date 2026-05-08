@@ -9,6 +9,7 @@ BEVERAGES_CSV = Path(__file__).parent / "data" / "beverages.csv"
 GENERAL_CSV = Path(__file__).parent / "data" / "general_foods.csv"
 CHEESE_CSV = Path(__file__).parent / "data" / "cheese_foods.csv"
 RED_MEAT_CSV = Path(__file__).parent / "data" / "red_meat_foods.csv"
+FATS_CSV = Path(__file__).parent / "data" / "fats_foods.csv"
 
 client = TestClient(app)
 
@@ -30,6 +31,7 @@ def test_bulk_rejects_non_csv():
     (GENERAL_CSV, 5),
     (CHEESE_CSV, 5),
     (RED_MEAT_CSV, 5),
+    (FATS_CSV, 5),
 ])
 def test_bulk_returns_200(csv_file, expected_count):
     with csv_file.open("rb") as f:
@@ -67,6 +69,13 @@ def test_bulk_returns_200(csv_file, expected_count):
         {"score": 12, "grade": "D"},
         {"score": 14, "grade": "D"},
         {"score": 16, "grade": "D"},
+    ]),
+    (FATS_CSV, [
+        {"score": 19, "grade": "E"},
+        {"score": -3, "grade": "B"},
+        {"score": 1,  "grade": "B"},
+        {"score": 4,  "grade": "C"},
+        {"score": -3, "grade": "B"},
     ]),
 ])
 def test_bulk_scores_and_grades(csv_file, expected):

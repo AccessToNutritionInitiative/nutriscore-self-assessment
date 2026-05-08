@@ -72,6 +72,7 @@ with tab_single:
             is_water = False
             is_cheese = False
             is_red_meat = False
+            total_fat_g = 0.0
 
             if category == "beverage":
                 has_sweeteners = st.checkbox("Contains sweeteners")
@@ -84,6 +85,8 @@ with tab_single:
                 )
                 is_cheese = general_type == "Cheese"
                 is_red_meat = general_type == "Red meat"
+            elif category == "fats":
+                total_fat_g = st.number_input("Total fat (g)", min_value=0.0, value=0.0, step=0.1)
 
         submitted = st.form_submit_button(
             "Calculate Nutri-Score",
@@ -104,6 +107,7 @@ with tab_single:
             "is_water": is_water if category == "beverage" else False,
             "is_cheese": is_cheese if category == "general" else False,
             "is_red_meat": is_red_meat if category == "general" else False,
+            "total_fat_g": total_fat_g if category == "fats" else 0,
             "category": category,
         }
         try:
@@ -173,6 +177,7 @@ with tab_bulk:
             "| `is_water` | bool | true / false | false |\n"
             "| `is_cheese` | bool | true / false | false |\n"
             "| `is_red_meat` | bool | true / false | false |\n"
+            "| `total_fat_g` | float | 0 – 100 | *required for fats* |\n"
             "| `category` | string | beverage, general, fats | *required* |"
         )
 

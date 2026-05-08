@@ -91,7 +91,9 @@ class NutriscoreService:
         energy_from_sat_fat = product.sat_fat_g * 37
         n_energy = cls._score_from_thresholds(energy_from_sat_fat, [120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200])
         n_sugar = cls._score_from_thresholds(product.sugar_g, [3.4, 6.8, 10, 14, 17, 20, 24, 27, 31, 34, 37, 41, 44, 48, 51])
-        n_sat_fat = cls._score_from_thresholds(product.sat_fat_g, [10, 16, 22, 28, 34, 40, 46, 52, 58, 64])
+        # Fats use sat_fat/total_fat ratio (%) with lower-inclusive, upper-exclusive boundaries
+        sat_fat_ratio = (product.sat_fat_g / product.total_fat_g) * 100
+        n_sat_fat = cls._score_from_thresholds(sat_fat_ratio, [10, 16, 22, 28, 34, 40, 46, 52, 58, 64], strict_upper=True)
         n_salt = cls._score_from_thresholds(
             product.salt_g,
             [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0],
@@ -116,20 +118,24 @@ class NutriscoreService:
         value: float,
         thresholds: list[float],
         points: list[int] | None = None,
+        strict_upper: bool = False,
     ) -> int:
         """
         Return points based on where value falls among thresholds.
 
-        Default points are 0, 1, 2, ... len(thresholds).
-        value <= thresholds[0] → points[0]
-        value >  thresholds[-1] → points[-1]
+        Default (strict_upper=False): value <= threshold  — upper inclusive
+        strict_upper=True:            value < threshold   — upper exclusive (fats sat_fat ratio)
         """
         if points is None:
             points = list(range(len(thresholds) + 1))
 
         for i, threshold in enumerate(thresholds):
-            if value <= threshold:
-                return points[i]
+            if strict_upper:
+                if value < threshold:
+                    return points[i]
+            else:
+                if value <= threshold:
+                    return points[i]
         return points[-1]
 
     @staticmethod
