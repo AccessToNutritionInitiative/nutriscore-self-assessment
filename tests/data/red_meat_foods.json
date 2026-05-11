@@ -1,0 +1,82 @@
+[
+  {
+    "product": {
+      "product_name": "Veal Meat",
+      "energy_kj": 602,
+      "sugar_g": 0,
+      "sat_fat_g": 2.79,
+      "salt_g": 0.205,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 19.35,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 2,
+    "expected_grade": "B"
+  },
+  {
+    "product": {
+      "product_name": "Taco Meat",
+      "energy_kj": 728,
+      "sugar_g": 0.12,
+      "sat_fat_g": 3.963,
+      "salt_g": 1.11,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0.2,
+      "protein_g": 19.58,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 8,
+    "expected_grade": "C"
+  },
+  {
+    "product": {
+      "product_name": "Beef Steak",
+      "energy_kj": 1054,
+      "sugar_g": 0,
+      "sat_fat_g": 5.877,
+      "salt_g": 0.9325,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 27.29,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 12,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Beef Stew Meat",
+      "energy_kj": 1268,
+      "sugar_g": 0,
+      "sat_fat_g": 7.92,
+      "salt_g": 0.955,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 28.4,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 14,
+    "expected_grade": "D"
+  },
+  {
+    "product": {
+      "product_name": "Beef Brisket",
+      "energy_kj": 1431,
+      "sugar_g": 0,
+      "sat_fat_g": 10.203,
+      "salt_g": 0.5625,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 24.84,
+      "is_red_meat": true,
+      "category": "general"
+    },
+    "expected_score": 16,
+    "expected_grade": "D"
+  }
+]

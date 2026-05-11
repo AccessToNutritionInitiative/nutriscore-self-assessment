@@ -1,0 +1,99 @@
+[
+  {
+    "product": {
+      "product_name": "Unsalted Butter Stick",
+      "energy_kj": 2999.928,
+      "sugar_g": 0.06,
+      "sat_fat_g": 51.368,
+      "salt_g": 0.0275,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 0.85,
+      "total_fat_g": 81.11,
+      "category": "fats"
+    },
+    "expected_score": 19,
+    "expected_grade": "E"
+  },
+  {
+    "product": {
+      "product_name": "Canola Vegetable Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 6.532,
+      "salt_g": 0,
+      "fruit_veg_pct": 100,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": -3,
+    "expected_grade": "B"
+  },
+  {
+    "product": {
+      "product_name": "Peanut Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 15.548,
+      "salt_g": 0,
+      "fruit_veg_pct": 100,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": 1,
+    "expected_grade": "B"
+  },
+  {
+    "product": {
+      "product_name": "Vegetable Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 11.61,
+      "salt_g": 0,
+      "fruit_veg_pct": 0,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": 4,
+    "expected_grade": "C"
+  },
+  {
+    "_note": "Synthetic boundary test — no real fats product found that achieves grade A (score <= -6). Values chosen to verify the A grade threshold in code only.",
+    "product": {
+      "product_name": "Synthetic Fats Grade A Boundary Test",
+      "energy_kj": 3700,
+      "sugar_g": 0,
+      "sat_fat_g": 1.0,
+      "salt_g": 0,
+      "fruit_veg_pct": 100,
+      "fibre_g": 5.0,
+      "protein_g": 0,
+      "total_fat_g": 100,
+      "category": "fats"
+    },
+    "expected_score": -7,
+    "expected_grade": "A"
+  },
+  {
+    "product": {
+      "product_name": "Rapeseed Oil",
+      "energy_kj": 3401.592,
+      "sugar_g": 0,
+      "sat_fat_g": 6.532,
+      "salt_g": 0,
+      "fruit_veg_pct": 100,
+      "fibre_g": 0,
+      "protein_g": 0,
+      "total_fat_g": 92,
+      "category": "fats"
+    },
+    "expected_score": -3,
+    "expected_grade": "B"
+  }
+]
