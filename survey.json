@@ -411,7 +411,7 @@
         {
           "proposition": "Specific market need",
           "score": 0.0,
-          "text_input": true
+          "text_inputs": true
         }
       ]
     }
